@@ -13,9 +13,9 @@ Covered in the initial scaffold:
 
 Still required as phases land: hysteresis, state transitions, allocation/starvation, confidence gating, recovery ramps, timing edges.
 
-## Simulation tests (planned)
+## Simulation tests
 
-Model healthy / weak / high-\(R\) batteries; stalled intake; drive accel; elevator startup; simultaneous loads; absent current sensing; sudden collapse; measurement noise.
+`org.allsparks.amper.sim.TraceGenerator` provides deterministic traces (healthy, weak/high-R, noise, missing, stale, stalled intake, simultaneous starts, loop spikes). `CsvReplay` reads schema-1 CSV. **Simulated results are not hardware validation.**
 
 ## Robot tests (procedures)
 
@@ -32,4 +32,4 @@ Adult supervision required. Mechanical precautions first.
 
 **Do not intentionally create an uncontrolled brownout merely to test recovery.**
 
-Phase 0 acceptance emphasizes unchanged motor behavior and measured loop overhead.
+Phase 0 acceptance emphasizes unchanged motor behavior and measured loop overhead. Use [hardware-test-card.md](../validation/hardware-test-card.md). Status: [STATUS.md](../validation/STATUS.md).

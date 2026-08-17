@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':amper-ftc')
+    compileOnly project(':amper-ftc-stubs')
+}
+
+// Examples are compile-checked against FTC API stubs. They are not an
+// Android application and are not a substitute for Control Hub validation.
+tasks.named('jar', Jar) {
+    manifest {
+        attributes(
+                'Implementation-Title': 'AMPER Examples',
+                'Implementation-Version': archiveVersion
+        )
+    }
+}

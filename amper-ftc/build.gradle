@@ -1,0 +1,50 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+dependencies {
+    api project(':amper-core')
+    compileOnly project(':amper-ftc-stubs')
+
+    testImplementation project(':amper-ftc-stubs')
+    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+}
+
+tasks.named('jar', Jar) {
+    manifest {
+        attributes(
+                'Implementation-Title': 'AMPER FTC',
+                'Implementation-Version': archiveVersion,
+                'Automatic-Module-Name': 'org.allsparks.amper.ftc'
+        )
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'amper-ftc'
+            pom {
+                name = 'AMPER FTC'
+                description = 'FTC SDK adapters for AMPER. Compile against the official FTC SDK on the robot.'
+                url = 'https://github.com/The-Allsparks/AMPER'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+            }
+        }
+    }
+}

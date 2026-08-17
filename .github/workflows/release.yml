@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  artifacts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - name: Grant Gradle permissions
+        run: chmod +x gradlew
+      - name: Build publishable jars
+        run: ./gradlew :amper-core:build :amper-ftc:build --no-daemon
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: amper-jars
+          path: |
+            amper-core/build/libs/*.jar
+            amper-ftc/build/libs/*.jar
+      # Publishing to GitHub Packages is opt-in after software gates pass.
+      # Do not publish from this workflow until maintainers set secrets and
+      # a version is tagged. Hardware validation is still required before
+      # calling Phase 0/1 competition-validated.

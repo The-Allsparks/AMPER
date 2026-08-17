@@ -4,11 +4,12 @@ AMPER teaches and eventually coordinates robot electrical demand on FIRST Tech C
 
 ## Start here
 
-1. Read the [glossary](glossary.md).
-2. Skim [research](research.md) for what FTC can actually measure.
-3. Read [architecture](architecture.md) before changing control behavior.
-4. Follow [phases](phases.md); enable only one phase at a time after acceptance tests.
-5. Use [integration](integration.md) to wire Phase 0 without rewriting every subsystem.
+1. [Install AMPER](../install.md) and complete the [five-minute setup](../quickstart.md).
+2. Read the [glossary](glossary.md).
+3. Skim [research](research.md) for what FTC can actually measure.
+4. Read [architecture](architecture.md) before changing control behavior.
+5. Follow [phases](phases.md); enable only one phase at a time after acceptance tests.
+6. Use [integration](integration.md) for the OpMode loop contract.
 
 ## Companion project
 
@@ -38,4 +39,8 @@ AMPER teaches and eventually coordinates robot electrical demand on FIRST Tech C
 | [assessment.md](assessment.md) | Benefit vs complexity judgment |
 | [risks.md](risks.md) | Open questions |
 | [conventions.md](conventions.md) | Org convention assessment |
-| [Examples](../../examples/README.md) | Integration sketches |
+| [Examples](../../examples/README.md) | Compile-checked OpModes |
+| [../install.md](../install.md) | FTC SDK install |
+| [../logging.md](../logging.md) | CSV export |
+| [../status/issue-matrix.md](../status/issue-matrix.md) | Issues vs implementation |
+| [../validation/STATUS.md](../validation/STATUS.md) | Hardware status (not yet run) |

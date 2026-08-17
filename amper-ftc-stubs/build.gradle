@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+// Compile-only stand-ins for FTC SDK + Android types used by amper-ftc and
+// amper-examples. NOT published. Robot projects must compile against the
+// official FTC SDK (org.firstinspires.ftc:RobotCore/Hardware) instead.
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.named('jar', Jar) {
+    manifest {
+        attributes(
+                'Implementation-Title': 'AMPER FTC compile stubs (CI only)',
+                'Implementation-Version': archiveVersion
+        )
+    }
+}
