@@ -1,0 +1,91 @@
+# Phased implementation
+
+Every phase must be independently feature-flagged, testable, observable, reversible, fail-safe on missing measurements, and **disabled by default** until acceptance tests pass.
+
+| Phase | Name | Motor intervention | Status in `0.1.0-SNAPSHOT` |
+|-------|------|--------------------|----------------------------|
+| 0 | Measurement validation | No | **Implemented (scaffold)** |
+| 1 | Passive instrumentation | No | Designed |
+| 2 | Independent subsystem protection | Optional local | Designed / disabled |
+| 3 | Reactive voltage protection | Yes | Designed / disabled |
+| 4 | Priority-based coordination | Yes | API stub only |
+| 5 | Predictive sag estimation | Shadow only first | Research |
+| 6 | Predictive load shaping | Yes | Research |
+| 7 | Adaptive modeling | Experimental | Research |
+
+---
+
+## Phase 0 — Measurement validation
+
+**Teach:** What can the robot actually measure?
+
+Implement: hardware-independent interfaces; REV adapters; voltage/current sampling; timestamps; loop duration; stale/invalid detection; validation procedures.
+
+**Acceptance**
+
+- Measurements tested under known conditions
+- Loop overhead measured
+- Unsupported sensing degrades cleanly
+- Motor behavior unchanged
+
+## Phase 1 — Passive instrumentation
+
+**Teach:** What causes robot voltage to fall?
+
+Filtering, minima, command/current logging, start/stop events, driver warnings, match summaries, exportable logs — **warnings must not modify outputs**.
+
+## Phase 2 — Independent subsystem protection
+
+**Teach:** How can one subsystem behave responsibly?
+
+Optional slew limits, accel ramps, stall/jam detection, intake recovery, output caps, timeouts, careful voltage-normalized commands.
+
+Explain PWM (Hub) vs ramp limiting vs higher-level time slicing — do not market PWM as a novel AMPER invention.
+
+## Phase 3 — Reactive voltage protection
+
+**Teach:** How does the robot respond when voltage is already falling?
+
+State machine: `NORMAL`, `WATCH`, `LIMITING`, `CRITICAL`, `RECOVERY`, `SENSOR_FAULT` with hysteresis.
+
+## Phase 4 — Priority-based coordination
+
+**Teach:** How does the robot decide which work matters most right now?
+
+Request/grant API with state-dependent priorities. Suggested order: survival → safety/gravity hold → minimum mobility → scoring → normal drive accel → auxiliary.
+
+## Phase 5 — Predictive voltage-sag estimation
+
+**Teach:** Can the robot estimate what will happen before starting another load?
+
+Only after real-robot datasets. Model is an approximation. Shadow mode required before actuation.
+
+## Phase 6 — Predictive load shaping
+
+**Teach:** How can small timing changes prevent a large electrical problem?
+
+Stagger starts, soften noncritical ramps, reserve demand for scoring — optimize driver-perceived continuity.
+
+## Phase 7 — Optional adaptive modeling
+
+**Teach:** How can a model improve without becoming untrustworthy?
+
+Per-battery profiles, health hints, wiring resistance growth — avoid opaque ML unless necessary.
+
+---
+
+## Student checklist before advancing a phase
+
+For every phase, document:
+
+1. Problem solved  
+2. Observations  
+3. Controls (if any)  
+4. Cannot solve  
+5. Why the algorithm works  
+6. What to graph  
+7. How to enable / disable  
+8. Incorrect behavior signs  
+9. Evidence required to advance  
+
+Short exercises should use recorded robot CSV from `PowerEventLogger`.
