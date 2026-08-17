@@ -2,7 +2,7 @@
 
 This roadmap adapts the Allsparks orchestrator phases to AMPER. AMPER’s readiness gate is: **observe and characterize before actively limiting power**.
 
-Parent tracking issue: [#24](https://github.com/The-Allsparks/AMPER/issues/24). Existing issues **#1–#16** remain the phase backlog. Audit-derived issues: **#25–#32**.
+Parent tracking issue: [#24](https://github.com/The-Allsparks/AMPER/issues/24). Existing issues **#1–#16** remain the phase backlog. Audit-derived issues: **#25–#36**.
 
 ## Foundation
 
@@ -71,14 +71,18 @@ Parent tracking issue: [#24](https://github.com/The-Allsparks/AMPER/issues/24). 
 ## Child issues (dependency order)
 
 1. [#18](https://github.com/The-Allsparks/AMPER/pull/18) land 0.1.0-rc.1 software (in flight)
-2. [#25](https://github.com/The-Allsparks/AMPER/issues/25) branch protection
-3. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy
-4. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software-complete vs hardware split onto #6
-5. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**)
-6. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate (first software issue after #18)
-7. [#28](https://github.com/The-Allsparks/AMPER/issues/28) init vs match lifecycle
-8. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions
-9. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline
-10. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6/#26)
-11. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
-12. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
+2. [#34](https://github.com/The-Allsparks/AMPER/issues/34) `publishTelemetry` when Phase 1 is off
+3. [#33](https://github.com/The-Allsparks/AMPER/issues/33) stall dwell vs SKIPPED current
+4. [#35](https://github.com/The-Allsparks/AMPER/issues/35) weak-battery latch
+5. [#36](https://github.com/The-Allsparks/AMPER/issues/36) SDK 11.2 CI compile
+6. [#25](https://github.com/The-Allsparks/AMPER/issues/25) branch protection
+7. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy
+8. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
+9. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**)
+10. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate
+11. [#28](https://github.com/The-Allsparks/AMPER/issues/28) init vs match lifecycle
+12. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions
+13. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline
+14. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6/#26)
+15. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
+16. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates

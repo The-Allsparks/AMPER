@@ -8,7 +8,7 @@
 | **Auditor identity** | `TA-C-GHill` |
 | **Hardware validation** | None. Desktop tests and simulated traces only. |
 
-This audit inspects the **0.1.0-rc.1 product** on the open draft PR [#18](https://github.com/The-Allsparks/AMPER/pull/18), not only `main`. `main` does not yet contain the installable FTC library.
+This audit inspects the **0.1.0-rc.1 product** on open PR [#18](https://github.com/The-Allsparks/AMPER/pull/18), not only `main`. `main` does not yet contain the installable FTC library.
 
 ---
 
@@ -20,7 +20,9 @@ The implementation is **software-complete for Phase 0/1** and **not Control Hub 
 
 There is **no BLOCKER** that prevents continued passive development. There is **no evidence** of a Phase 0/1 path that writes `setPower` / `setVelocity`.
 
-Highest-value remaining work is: **merge the in-flight 0.1.0-rc.1 PR after human approval**, **run issue #6 hardware characterization**, then tighten Phase 2 safety seams. Do not enable Phases 3–7.
+A second read-only pass confirmed that verdict and added Phase 0/1 defects: stall dwell vs `SKIPPED` current (#33), silent `publishTelemetry` when Phase 1 is off (#34), latched weak-battery warnings (#35), and stub-only SDK compile in CI (#36).
+
+Highest-value remaining work is: **merge PR #18 after human approval**, then **#34** (DS telemetry when Phase 1 is off), then **#33** / **#35**. Hardware remains **#6**. Do not enable Phases 3–7.
 
 ---
 
@@ -48,7 +50,7 @@ Not AMPER’s job: PID/feedforward, mechanism safety, vision, pathing, radio/DS 
 | Phases 4–7 | Stubs / not implemented. Pass-through grants. Shadow recorder only for Phase 5. |
 | SystemCore | Boundary type only. Issue #16 blocked. |
 | Hardware | [docs/validation/STATUS.md](../validation/STATUS.md): **not yet run** |
-| Release | Draft PR #18, CI green (Ubuntu + Windows + docs-structure). No git tag. No GitHub Packages publish. |
+| Release | PR #18 ready for review, CI green. No git tag. No GitHub Packages publish. |
 
 ---
 
@@ -89,7 +91,7 @@ Not AMPER’s job: PID/feedforward, mechanism safety, vision, pathing, radio/DS 
 | A4 | MEDIUM | ARCHITECTURE | `VoltageStateMachine` is dead code in the robot path. Fine for Phase 3 foundation; do not advertise it as integrated. |
 | A5 | LOW | ARCHITECTURE | `PowerCoordinator` ignores its own `intervene` branch and always pass-throughs. Honest stub; keep it that way until Phase 4. |
 | A6 | INFORMATIONAL | ARCHITECTURE | No compile-time coupling to ViDAR, Pedro, MIMIC, BEACON, TRACE, or HELM. Docs only mention ViDAR. Correct dependency direction. |
-| A7 | MEDIUM | ARCHITECTURE | Convention docs still say Java 11 source/target; `build.gradle` and `docs/install.md` correctly target Java 8 for FTC SDK 11.2. |
+| A7 | LOW | DOCUMENTATION | Convention docs said Java 11; install/build are Java 8. **Fixed in PR #18** (`3231ce5`). |
 
 ---
 
@@ -103,6 +105,8 @@ Not AMPER’s job: PID/feedforward, mechanism safety, vision, pathing, radio/DS 
 | C4 | INFORMATIONAL | CORRECTNESS | Missing voltage is `NaN` + `MISSING`, not 0. Covered by `AmperLifecycleAndSafetyTest.missingVoltageIsNotValidAndNotZero`. | |
 | C5 | INFORMATIONAL | CORRECTNESS | Duplicate `observe()` inside the configured window does not resample. Tested. | |
 | C6 | MEDIUM | CORRECTNESS | `GravityHoldPolicy.enforce(allowed, requestedSign)` uses request sign; a `0` request becomes **positive** hold (`sign = +1`). Wrong-direction hold is possible if a team enables Phase 2 gravity policy without a declared hold direction. Not reachable from Phase 0/1. | `GravityHoldPolicy.java` lines 42–48; test expects `enforce(0.0, 1.0) == 0.15` |
+| C7 | HIGH | CORRECTNESS | Stall dwell clears when current is `SKIPPED`. Round-robin `recommended()` sampling therefore cannot accumulate multi-motor stall warnings. | `StallSuspicionTracker.looksStalled`; `CurrentSample.isUsable`; issue #33 |
+| C8 | HIGH | CORRECTNESS | Weak-battery classification uses whole-match max−min filtered voltage, so one sag can latch `SUSPECTED_WEAK_BATTERY` for the rest of the match. | `BatteryEstimator`; `DriverFeedback.classify`; issue #35 |
 
 Do not treat placeholder voltage thresholds as defects. They are labeled `CONSERVATIVE_PLACEHOLDER`.
 
@@ -119,7 +123,7 @@ Do not treat placeholder voltage thresholds as defects. They are labeled `CONSER
 | S5 | HIGH | SAFETY | Same as A3: Phase 2 local protection is not session-flag gated. **Do not enable on a robot until #6 characterization and an explicit flag gate exist.** |
 | S6 | HIGH | SAFETY | Same as C6: gravity hold sign inferred from request, including zero. Phase 2 blocked. |
 | S7 | INFORMATIONAL | SAFETY | Replay/CSV tools do not instantiate FTC motors. `CsvReplay` / `amper-tools` are desktop. |
-| S8 | MEDIUM | SAFETY | `PassiveArchitectureTest` excludes `sim/` and would miss an accidental `setPower` if someone later added a hardware-shaped sim API. `SimulatedMotor.setVelocity` is a telemetry setter, not an FTC write, but the class comment claims it has no `setVelocity`. |
+| S8 | LOW | SAFETY | `PassiveArchitectureTest` excludes `sim/` and does not scan `amper-ftc`. FTC write protection is the spy test. `SimulatedMotor` javadoc **fixed** in `3231ce5`. |
 
 No path was found that energizes motors from logging, replay, or Phase 0/1 observe.
 
@@ -147,10 +151,11 @@ Create a **desktop** microbench issue; do not invent Hub numbers.
 | ID | Sev | Type | Finding |
 |----|-----|------|---------|
 | U1 | MEDIUM | USABILITY | README / examples enable Phase 1 via `passiveDefaults()`, while `AmperFeatureFlags.defaults()` keeps Phase 1 off. Documented, but first-use copies the example (Phase 1 on). Acceptable if warnings stay advisory. |
-| U2 | MEDIUM | USABILITY | [quickstart.md](../quickstart.md) says init should show `AMPER.V`, but the snippet only calls `observe`/`publishTelemetry` from `loop()`. |
+| U2 | LOW | USABILITY | Quickstart init telemetry wording. **Fixed in PR #18** (`3231ce5`). |
 | U3 | LOW | USABILITY | Expansion Hub voltage requires an exact configured name. Correct (no silent guess); error lists available names. |
 | U4 | INFORMATIONAL | USABILITY | Disable paths exist: `disabled()`, `measurementOnly()`, `persistLogs(false)`. |
 | U5 | LOW | USABILITY | Public surface is wider than the student path (`PowerCoordinator`, `VoltageStateMachine`, `LocalProtection`). Javadoc marks them experimental; examples do not use them. |
+| U6 | HIGH | USABILITY | `publishTelemetry` stays silent after the first `observe()` when Phase 1 is off or AMPER is disabled, despite javadoc promising a one-line state (#34). |
 
 ---
 
@@ -199,7 +204,7 @@ Gaps:
 | Dep1 | HIGH | COMPATIBILITY | Dependabot opened Gradle wrapper **9.7.0** (#21) and JUnit BOM **6.1.3** (#20). Both **failed CI**. Do not merge. FTC SDK 11.2 TeamCode uses Gradle 9.1; AMPER **itself** currently builds with wrapper **8.7**. Keep AMPER’s wrapper until a compatibility analysis exists. |
 | Dep2 | MEDIUM | SECURITY | GitHub Actions use floating majors (`actions/checkout@v4`, `setup-java@v4`, `upload-artifact@v4`). Dependabot PRs #22/#23 bump checkout 4→7 and setup-java 4→5; CI green but unreviewed. Prefer SHA pins. |
 | Dep3 | INFORMATIONAL | COMPATIBILITY | Library bytecode Java 8, CI Temurin 17: matches FTC SDK 11.2 `build.common.gradle`. |
-| Dep4 | LOW | COMPATIBILITY | `amper-ftc-stubs` are CI stand-ins. Robot compile must use official RobotCore. Documented. |
+| Dep4 | HIGH | COMPATIBILITY | `ftcSdkVersion = '11.2.0'` is unused; `amper-ftc` compiles only against stubs. CI cannot catch SDK drift. Issue #36. |
 | Dep5 | INFORMATIONAL | SECURITY | No secrets in repo. Release workflow does not publish packages yet. MIT license compatible with ViDAR. |
 | Dep6 | LOW | COMPATIBILITY | Dependabot Gradle updates are not grouped to minor/patch, unlike Actions. That is why majors opened. |
 
@@ -249,15 +254,17 @@ No circular dependencies found.
 
 ## Recommended work order
 
-1. Finish draft PR #18 (audit/ledger already part of this pass) and request human merge. Do not start a competing implementation PR.
-2. Enable branch protection / required CI on `main` (human GitHub settings).
-3. Close or split software-complete portions of #1–#5 after maintainer citation review; keep hardware on #6.
-4. Reject or redesign Dependabot Gradle 9.7 / JUnit 6 majors.
-5. Issue #6 Control Hub characterization (hardware; blocked here).
-6. Gate `LocalProtection` on `AmperFeatureFlags` (Phase 2 seam).
-7. Gravity hold direction (Phase 2; blocked on #6 + flag gate).
-8. Desktop allocation / logger ring-buffer work only after a microbench.
-9. Phase 3–7 remain behind readiness gates.
+1. Merge PR #18 after human approval. Do not start a competing implementation PR.
+2. [#34](https://github.com/The-Allsparks/AMPER/issues/34) `publishTelemetry` when Phase 1 / AMPER is disabled (first software slice after #18).
+3. [#33](https://github.com/The-Allsparks/AMPER/issues/33) stall dwell vs `SKIPPED` current.
+4. [#35](https://github.com/The-Allsparks/AMPER/issues/35) weak-battery latch.
+5. [#36](https://github.com/The-Allsparks/AMPER/issues/36) compile `amper-ftc` against FTC SDK 11.2 in CI.
+6. [#25](https://github.com/The-Allsparks/AMPER/issues/25) branch protection (human).
+7. [#29](https://github.com/The-Allsparks/AMPER/issues/29) reject Gradle 9.7 / JUnit 6 majors.
+8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (hardware; blocked here).
+9. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate (Phase 2 seam).
+10. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (blocked).
+11. Phase 3–7 remain behind readiness gates.
 
 ---
 
@@ -285,4 +292,4 @@ No circular dependencies found.
 - Key tests: `PassiveArchitectureTest`, `AmperLifecycleAndSafetyTest`, `AmperFtcIntegrationTest`
 - CI workflow: `.github/workflows/ci.yml` (`./gradlew check javadocAll assembleReleaseArtifacts`)
 
-Finding IDs in this document map to GitHub issues **#24–#32**. Existing issues #1–#16 are **not** duplicated.
+Finding IDs in this document map to GitHub issues **#24–#36**. Existing issues #1–#16 are **not** duplicated.

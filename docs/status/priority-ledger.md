@@ -10,7 +10,7 @@ An issue is **ready** only when requirements are clear, dependencies are resolve
 
 | Issue | Priority | Readiness | Dependencies | Status | Subagent | Branch | Pull request | CI | Merge | Blocker | Next action |
 |-------|----------|-----------|--------------|--------|----------|--------|--------------|----|-------|---------|-------------|
-| 0.1.0-rc.1 software delivery | HIGH | In review | none | Draft PR contains Phase 0/1 library + logging | orchestrator | `release/passive-0.1.0-rc.1` | [#18](https://github.com/The-Allsparks/AMPER/pull/18) | green | not authorized | Human merge approval | Mark ready, do not merge automatically |
+| 0.1.0-rc.1 software delivery | HIGH | Ready for human merge | none | Ready for review; audit follow-up pending this commit | orchestrator | `release/passive-0.1.0-rc.1` | [#18](https://github.com/The-Allsparks/AMPER/pull/18) | green on `3231ce5` | not authorized | Human merge approval | Do not merge automatically |
 
 Do **not** start another implementation PR until #18 is merged, closed, or explicitly split.
 
@@ -43,7 +43,11 @@ Do **not** start another implementation PR until #18 is merged, closed, or expli
 | R2 / in-flight | PR #18 | HIGH | Ready for human merge after this docs pass | none | Open draft | Human approval |
 | R1 | [#25](https://github.com/The-Allsparks/AMPER/issues/25) Protect `main` | HIGH | Ready (settings) | Human GitHub admin | Open | Human decision |
 | Dep1 | [#29](https://github.com/The-Allsparks/AMPER/issues/29) Gradle/JUnit majors | HIGH | Ready | none | Open; PRs #20 #21 failed | Close those PRs with a pointer here |
-| A3 / S5 | [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate | HIGH | Ready after #18 | none for the seam itself | Open | First software issue after #18 |
+| A3 / S5 | [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate | HIGH | Ready after #18 | none for the seam itself | Open | After #34–#36 |
+| C7 | [#33](https://github.com/The-Allsparks/AMPER/issues/33) Stall dwell vs SKIPPED current | HIGH | Ready after #18 | none | Open | After #34 |
+| U6 | [#34](https://github.com/The-Allsparks/AMPER/issues/34) `publishTelemetry` when disabled | HIGH | Ready after #18 | none | Open | **First software issue after #18** |
+| C8 | [#35](https://github.com/The-Allsparks/AMPER/issues/35) Weak-battery latch | HIGH | Ready after #18 | none | Open | After #33 |
+| Dep4 | [#36](https://github.com/The-Allsparks/AMPER/issues/36) Compile against FTC SDK 11.2 in CI | HIGH | Ready after #18 | Maven resolution | Open | After #35; stop if secrets required |
 | C6 / S6 | [#27](https://github.com/The-Allsparks/AMPER/issues/27) Gravity hold direction | HIGH | **Blocked** | #6, #26, #7 | Open | Do not implement actuation |
 | C1 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) `observe()` match reset | MEDIUM | Ready after #18 | none | Open | Small lifecycle test |
 | P1 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub overhead | HIGH | **Blocked** | Hardware | Open | Hardware |
