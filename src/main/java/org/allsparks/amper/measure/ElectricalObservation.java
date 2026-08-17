@@ -13,6 +13,7 @@ public final class ElectricalObservation {
     private final VoltageSample filteredVoltage;
     private final double voltageMinimumThisMatch;
     private final CurrentSample batteryCurrent;
+    private final List<MotorSnapshot> motors;
     private final List<CurrentSample> motorCurrents;
     private final boolean sensingValid;
 
@@ -23,7 +24,7 @@ public final class ElectricalObservation {
             VoltageSample filteredVoltage,
             double voltageMinimumThisMatch,
             CurrentSample batteryCurrent,
-            List<CurrentSample> motorCurrents,
+            List<MotorSnapshot> motors,
             boolean sensingValid) {
         this.loopStartNanos = loopStartNanos;
         this.loopDurationNanos = loopDurationNanos;
@@ -31,8 +32,13 @@ public final class ElectricalObservation {
         this.filteredVoltage = Objects.requireNonNull(filteredVoltage, "filteredVoltage");
         this.voltageMinimumThisMatch = voltageMinimumThisMatch;
         this.batteryCurrent = Objects.requireNonNull(batteryCurrent, "batteryCurrent");
-        this.motorCurrents = Collections.unmodifiableList(new ArrayList<>(
-                Objects.requireNonNull(motorCurrents, "motorCurrents")));
+        this.motors = Collections.unmodifiableList(new ArrayList<>(
+                Objects.requireNonNull(motors, "motors")));
+        List<CurrentSample> currents = new ArrayList<>(this.motors.size());
+        for (MotorSnapshot motor : this.motors) {
+            currents.add(motor.current());
+        }
+        this.motorCurrents = Collections.unmodifiableList(currents);
         this.sensingValid = sensingValid;
     }
 
@@ -60,11 +66,26 @@ public final class ElectricalObservation {
         return batteryCurrent;
     }
 
+    public List<MotorSnapshot> motors() {
+        return motors;
+    }
+
     public List<CurrentSample> motorCurrents() {
         return motorCurrents;
     }
 
     public boolean sensingValid() {
         return sensingValid;
+    }
+
+    public double totalAbsCommandedEffort() {
+        double sum = 0.0;
+        for (MotorSnapshot motor : motors) {
+            double effort = motor.commandedEffort();
+            if (!Double.isNaN(effort)) {
+                sum += Math.abs(effort);
+            }
+        }
+        return sum;
     }
 }

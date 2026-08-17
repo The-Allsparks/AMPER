@@ -6,15 +6,25 @@ These sketches show integration intent. They are **not** full FTC OpModes (no `h
 
 1. Construct `RevHubTelemetrySource` with a voltage supplier.
 2. Optionally add `RevMotorTelemetry` per motor with current suppliers.
-3. Call `PowerMonitor.update()` once per loop.
-4. Log with `PowerEventLogger.recordObservation`.
-5. Leave all `setPower` / velocity PID calls unchanged.
+3. Call `AmperSession.observe()` (or `PowerMonitor.update()`) once per loop.
+4. Leave all `setPower` / velocity PID calls unchanged.
 
-See [integration](../docs/power-management/integration.md).
+See [integration.md](../docs/power-management/integration.md).
 
 ## Phase 1 — warnings without actuation
 
-Use filtered voltage and match minimums for Driver Station messages. Do not modify outputs when warnings fire.
+```java
+PowerPolicy policy = PowerPolicy.builder()
+    .featureFlags(AmperFeatureFlags.passiveTelemetry())
+    .build();
+AmperSession amper = AmperSession.create(policy, hub, motors);
+ElectricalObservation obs = amper.observe();
+if (amper.driverTelemetry().publishedThisCycle()) {
+    // telemetry.addData("AMPER", amper.driverTelemetry().state());
+}
+```
+
+Do not modify motor outputs when warnings fire. Call `amper.recordMatchSummary()` at the end of the OpMode.
 
 ## Later phases
 

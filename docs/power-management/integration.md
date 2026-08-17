@@ -9,6 +9,7 @@
 
 See Java sources:
 
+- `org.allsparks.amper.AmperSession`
 - `org.allsparks.amper.api.PowerRequest`
 - `org.allsparks.amper.api.PowerGrant`
 - `org.allsparks.amper.policy.PowerPolicy`
@@ -18,31 +19,33 @@ Effort fields use dimensionless \(\approx [-1, 1]\) unless your team documents o
 
 `estimatedCurrentAmps` may be `NaN` when unknown — do not invent currents.
 
-## Iterative OpMode (Phase 0 sketch)
+## Iterative OpMode (Phase 0 / 1 sketch)
 
 ```java
 // Pseudocode — wire suppliers to FTC SDK on the Control Hub.
-PowerPolicy policy = PowerPolicy.defaults();
+PowerPolicy policy = PowerPolicy.builder()
+    .featureFlags(AmperFeatureFlags.passiveTelemetry()) // Phase 1 warnings; still no motor writes
+    .build();
 PowerTelemetrySource hub = RevHubTelemetrySource.voltageOnly(
     "Control Hub",
     () -> controlHubVoltageSensor.getVoltage());
-PowerMonitor monitor = new PowerMonitor(
+AmperSession amper = new AmperSession(
+    policy,
     new SystemNanoClock(),
     hub,
-    motorTelemetryList,
-    policy.voltageFilterAlpha(),
-    policy.staleAfterNanos(),
-    policy.minValidVolts(),
-    policy.maxValidVolts());
-PowerEventLogger logger = new PowerEventLogger(5000);
+    motorTelemetryList);
 
 while (opModeIsActive()) {
-    ElectricalObservation obs = monitor.update();
-    logger.recordObservation(obs);
+    ElectricalObservation obs = amper.observe();
     // Existing subsystem code unchanged — still sets motor powers directly.
+    if (amper.driverTelemetry().publishedThisCycle()) {
+        telemetry.addData("AMPER", amper.driverTelemetry().state());
+    }
     telemetry.addData("V", obs.filteredVoltage().volts());
     telemetry.update();
 }
+amper.recordMatchSummary();
+// Optionally copy amper.exportCsv() off the robot after the match.
 ```
 
 ## LinearOpMode

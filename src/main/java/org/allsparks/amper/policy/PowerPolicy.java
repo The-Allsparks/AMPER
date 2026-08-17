@@ -19,6 +19,13 @@ public final class PowerPolicy {
     private final double minValidVolts;
     private final double maxValidVolts;
     private final long telemetryMinPeriodNanos;
+    private final double mechanismStartEffort;
+    private final double mechanismStopEffort;
+    private final double stallCurrentAmps;
+    private final double stallVelocityTicksPerSecond;
+    private final long stallDwellNanos;
+    private final double weakBatterySagVolts;
+    private final int loggerCapacity;
 
     private PowerPolicy(Builder builder) {
         this.featureFlags = builder.featureFlags;
@@ -32,6 +39,13 @@ public final class PowerPolicy {
         this.minValidVolts = builder.minValidVolts;
         this.maxValidVolts = builder.maxValidVolts;
         this.telemetryMinPeriodNanos = builder.telemetryMinPeriodNanos;
+        this.mechanismStartEffort = builder.mechanismStartEffort;
+        this.mechanismStopEffort = builder.mechanismStopEffort;
+        this.stallCurrentAmps = builder.stallCurrentAmps;
+        this.stallVelocityTicksPerSecond = builder.stallVelocityTicksPerSecond;
+        this.weakBatterySagVolts = builder.weakBatterySagVolts;
+        this.stallDwellNanos = builder.stallDwellNanos;
+        this.loggerCapacity = builder.loggerCapacity;
     }
 
     public static PowerPolicy defaults() {
@@ -86,6 +100,34 @@ public final class PowerPolicy {
         return telemetryMinPeriodNanos;
     }
 
+    public double mechanismStartEffort() {
+        return mechanismStartEffort;
+    }
+
+    public double mechanismStopEffort() {
+        return mechanismStopEffort;
+    }
+
+    public double stallCurrentAmps() {
+        return stallCurrentAmps;
+    }
+
+    public double stallVelocityTicksPerSecond() {
+        return stallVelocityTicksPerSecond;
+    }
+
+    public long stallDwellNanos() {
+        return stallDwellNanos;
+    }
+
+    public double weakBatterySagVolts() {
+        return weakBatterySagVolts;
+    }
+
+    public int loggerCapacity() {
+        return loggerCapacity;
+    }
+
     public static final class Builder {
         private AmperFeatureFlags featureFlags = AmperFeatureFlags.defaults();
         // Conservative placeholders for later phases; unused while intervention is off.
@@ -99,6 +141,13 @@ public final class PowerPolicy {
         private double minValidVolts = 5.0;
         private double maxValidVolts = 16.0;
         private long telemetryMinPeriodNanos = 100_000_000L;
+        private double mechanismStartEffort = 0.10;
+        private double mechanismStopEffort = 0.05;
+        private double stallCurrentAmps = 8.0;
+        private double stallVelocityTicksPerSecond = 50.0;
+        private long stallDwellNanos = 150_000_000L;
+        private double weakBatterySagVolts = 1.5;
+        private int loggerCapacity = 4000;
 
         public Builder featureFlags(AmperFeatureFlags featureFlags) {
             this.featureFlags = featureFlags;
@@ -152,6 +201,41 @@ public final class PowerPolicy {
 
         public Builder telemetryMinPeriodNanos(long value) {
             this.telemetryMinPeriodNanos = value;
+            return this;
+        }
+
+        public Builder mechanismStartEffort(double value) {
+            this.mechanismStartEffort = value;
+            return this;
+        }
+
+        public Builder mechanismStopEffort(double value) {
+            this.mechanismStopEffort = value;
+            return this;
+        }
+
+        public Builder stallCurrentAmps(double value) {
+            this.stallCurrentAmps = value;
+            return this;
+        }
+
+        public Builder stallVelocityTicksPerSecond(double value) {
+            this.stallVelocityTicksPerSecond = value;
+            return this;
+        }
+
+        public Builder stallDwellNanos(long value) {
+            this.stallDwellNanos = value;
+            return this;
+        }
+
+        public Builder weakBatterySagVolts(double value) {
+            this.weakBatterySagVolts = value;
+            return this;
+        }
+
+        public Builder loggerCapacity(int value) {
+            this.loggerCapacity = value;
             return this;
         }
 

@@ -9,6 +9,18 @@
 | `minValidVolts` / `maxValidVolts` | 5 / 16 | Out-of-range guard |
 | logger capacity | team choice | Bound memory |
 
+## Phase 1 (warnings only)
+
+| Parameter | Default | Notes |
+|-----------|---------|-------|
+| `mechanismStartEffort` / `mechanismStopEffort` | 0.10 / 0.05 | Start/stop hysteresis on \|command\| |
+| `stallCurrentAmps` / `stallVelocityTicksPerSecond` / `stallDwellNanos` | 8 A / 50 ticks/s / 150 ms | Placeholders — tune per motor |
+| `weakBatterySagVolts` | 1.5 V | Suspected weak pack hint |
+| `telemetryMinPeriodNanos` | 100 ms | Driver-state publish rate limit |
+| `loggerCapacity` | 4000 | Drop-oldest ring |
+
+These thresholds are **not** validated on Allsparks hardware yet.
+
 ## Later phases (placeholders — do not treat as validated)
 
 | Parameter | Placeholder | Enable only after |
@@ -18,6 +30,6 @@
 
 ## Feature flags
 
-Defaults: Phase 0 on; everything else off; Phase 5 shadow-only if estimate code exists.
+Defaults: Phase 0 on; Phase 1 off until you call `AmperFeatureFlags.passiveTelemetry()`; intervention off; Phase 5 shadow-only if estimate code exists.
 
 Never ship competition code with intervention flags enabled “just to try.”

@@ -36,8 +36,8 @@ Repository: **[The-Allsparks/AMPER](https://github.com/The-Allsparks/AMPER)**
 | Item | Status |
 |------|--------|
 | **Version** | `0.1.0-SNAPSHOT` |
-| **Implemented phase** | **Phase 0 — Measurement validation** (passive only) |
-| **Phase 1** | Documented; not feature-complete |
+| **Implemented phase** | **Phase 0** (measurement) and **Phase 1** (passive telemetry, flag default off) |
+| **Phase 1** | Implemented in library; enable `AmperFeatureFlags.passiveTelemetry()` after desktop tests. Not hardware-validated yet. |
 | **Phases 2–7** | Designed / experimental / disabled by default |
 | **Active motor intervention** | **Disabled.** Do not enable without review and acceptance tests. |
 | **Predictive power management** | **Not production-ready.** Shadow/research only after real-robot data exists. |
@@ -52,7 +52,7 @@ Supported targets for this scaffold:
 
 ### Current limitations
 
-* Phase 0 provides interfaces, REV adapters (supplier-wired), filtering, logging foundations, and unit tests. It does **not** change motor output.
+* Phase 0–1 provide measurement, logging, driver warnings, and match summaries. They do **not** change motor output.
 * Hub/motor current sampling cost, latency, and reliability must be measured on your robot before trusting warnings.
 * AMPER does **not** implement FRC-style roboRIO staged brownout firmware, TalonFX supply current limits, or unverified SystemCore features.
 * Multi-hub timing, servo-rail current, and regenerative edge cases are only partially characterized in documentation.

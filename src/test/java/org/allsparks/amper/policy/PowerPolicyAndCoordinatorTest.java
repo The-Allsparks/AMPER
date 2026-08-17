@@ -19,6 +19,9 @@ class PowerPolicyAndCoordinatorTest {
         assertTrue(flags.isPhase0Measurement());
         assertFalse(flags.isPhase1PassiveTelemetry());
         assertFalse(flags.isAnyInterventionEnabled());
+        AmperFeatureFlags passive = AmperFeatureFlags.passiveTelemetry();
+        assertTrue(passive.isPhase1PassiveTelemetry());
+        assertFalse(passive.isAnyInterventionEnabled());
     }
 
     @Test

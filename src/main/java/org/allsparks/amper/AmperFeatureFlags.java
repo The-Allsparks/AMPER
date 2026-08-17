@@ -145,4 +145,9 @@ public final class AmperFeatureFlags {
             return new AmperFeatureFlags(this);
         }
     }
+
+    /** Phase 0 + Phase 1 only. No motor-output intervention. */
+    public static AmperFeatureFlags passiveTelemetry() {
+        return builder().phase1PassiveTelemetry(true).build();
+    }
 }

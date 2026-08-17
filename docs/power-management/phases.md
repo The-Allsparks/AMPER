@@ -4,8 +4,8 @@ Every phase must be independently feature-flagged, testable, observable, reversi
 
 | Phase | Name | Motor intervention | Status in `0.1.0-SNAPSHOT` |
 |-------|------|--------------------|----------------------------|
-| 0 | Measurement validation | No | **Implemented (scaffold)** |
-| 1 | Passive instrumentation | No | Designed |
+| 0 | Measurement validation | No | **Implemented** |
+| 1 | Passive instrumentation | No | **Implemented** (disabled by default; enable the Phase 1 flag) |
 | 2 | Independent subsystem protection | Optional local | Designed / disabled |
 | 3 | Reactive voltage protection | Yes | Designed / disabled |
 | 4 | Priority-based coordination | Yes | API stub only |
@@ -33,6 +33,27 @@ Implement: hardware-independent interfaces; REV adapters; voltage/current sampli
 **Teach:** What causes robot voltage to fall?
 
 Filtering, minima, command/current logging, start/stop events, driver warnings, match summaries, exportable logs — **warnings must not modify outputs**.
+
+**Enable:** `AmperFeatureFlags.passiveTelemetry()` on `PowerPolicy`. Defaults remain Phase 1 off.
+
+**What it observes:** bus voltage, optional currents, commanded effort, loop duration.
+
+**What it controls:** nothing. Driver Station lines are advisory.
+
+**What it cannot solve:** bad batteries, loose XT30, stalls caused by mechanical binding (it can only *flag* suspected stalls).
+
+**Graph:** filtered voltage vs time, overlaid with `mechanism_start` / `mechanism_stop` and `sumAbsCmd`.
+
+**Incorrect behavior:** warnings that coincide with `setPower` changes you did not write — that would be a bug; file it.
+
+**Evidence before Phase 2:** at least one practice session CSV where a known mechanism start lines up with sag, and loop time remains acceptable.
+
+### Exercise
+
+1. Enable Phase 1 on a wheels-off robot.
+2. Run intake, then drive, then both.
+3. Export CSV and circle the largest voltage drop.
+4. Write one sentence: which command started just before the drop?
 
 ## Phase 2 — Independent subsystem protection
 

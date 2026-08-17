@@ -27,8 +27,17 @@ src/main/java/org/allsparks/amper/
 - [x] Policy + feature flags (intervention off)
 - [x] Unit tests for filter/monitor/logger/flags
 - [x] Docs + CI
+- [x] Command snapshots on each observation (`MotorSnapshot`)
+- [x] `AmperSession` facade and loop-overhead stats
 
-## Next Phase 0 hardware tasks (issues)
+## Phase 1 library (this follow-up)
+
+- [x] Mechanism start/stop events
+- [x] Rate-limited driver warnings (no output changes)
+- [x] Match summary export
+- [x] Stall *suspicion* logging (not protection)
+
+## Next Phase 0/1 hardware tasks (issues)
 
 1. Wire adapters to live `VoltageSensor` / `DcMotorEx` on Control Hub.
 2. Measure loop overhead with 0 / N current polls.

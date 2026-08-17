@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.allsparks.amper.clock.AmperClock;
 import org.allsparks.amper.filter.LowPassFilter;
 import org.allsparks.amper.filter.MinTracker;
+import org.allsparks.amper.policy.PowerPolicy;
 
 /**
  * Passive electrical monitor. Reads and filters observations; never commands
@@ -43,6 +44,22 @@ public final class PowerMonitor {
         this.maxValidVolts = maxValidVolts;
     }
 
+    public static PowerMonitor create(
+            AmperClock clock,
+            PowerTelemetrySource telemetrySource,
+            List<MotorElectricalTelemetry> motors,
+            PowerPolicy policy) {
+        Objects.requireNonNull(policy, "policy");
+        return new PowerMonitor(
+                clock,
+                telemetrySource,
+                motors,
+                policy.voltageFilterAlpha(),
+                policy.staleAfterNanos(),
+                policy.minValidVolts(),
+                policy.maxValidVolts());
+    }
+
     public ElectricalObservation update() {
         long loopStart = clock.nanoTime();
 
@@ -59,9 +76,9 @@ public final class PowerMonitor {
         }
 
         CurrentSample batteryCurrent = telemetrySource.readBatteryCurrent(loopStart);
-        List<CurrentSample> motorCurrents = new ArrayList<>(motors.size());
+        List<MotorSnapshot> snapshots = new ArrayList<>(motors.size());
         for (MotorElectricalTelemetry motor : motors) {
-            motorCurrents.add(motor.readCurrent(loopStart));
+            snapshots.add(readMotor(motor, loopStart));
         }
 
         boolean sensingValid = raw.isUsable();
@@ -74,7 +91,7 @@ public final class PowerMonitor {
                 filtered,
                 voltageMinimum.minimumOrNaN(),
                 batteryCurrent,
-                motorCurrents,
+                snapshots,
                 sensingValid);
         return lastObservation;
     }
@@ -107,5 +124,32 @@ public final class PowerMonitor {
                     sample.volts(), sample.capturedAtNanos(), MeasurementValidity.OUT_OF_RANGE, sample.sourceId());
         }
         return sample;
+    }
+
+    private static MotorSnapshot readMotor(MotorElectricalTelemetry motor, long nowNanos) {
+        CurrentSample current;
+        try {
+            current = motor.readCurrent(nowNanos);
+        } catch (RuntimeException ex) {
+            current = CurrentSample.missing(nowNanos, motor.motorId());
+        }
+        return new MotorSnapshot(
+                motor.motorId(),
+                current,
+                readDoubleQuietly(motor::commandedEffort),
+                readDoubleQuietly(motor::velocityTicksPerSecond),
+                readDoubleQuietly(motor::positionTicks));
+    }
+
+    private static double readDoubleQuietly(DoubleRead read) {
+        try {
+            return read.get();
+        } catch (RuntimeException ex) {
+            return Double.NaN;
+        }
+    }
+
+    private interface DoubleRead {
+        double get();
     }
 }

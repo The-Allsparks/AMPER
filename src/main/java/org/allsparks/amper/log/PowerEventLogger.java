@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import org.allsparks.amper.measure.ElectricalObservation;
-import org.allsparks.amper.measure.CurrentSample;
+import org.allsparks.amper.measure.MotorSnapshot;
 import org.allsparks.amper.measure.VoltageSample;
 
 /**
@@ -50,11 +50,15 @@ public final class PowerEventLogger {
         fields.put("battValidity", observation.batteryCurrent().validity().name());
         fields.put("loopNs", Long.toString(observation.loopDurationNanos()));
         fields.put("sensingValid", Boolean.toString(observation.sensingValid()));
+        fields.put("sumAbsCmd", format(observation.totalAbsCommandedEffort()));
 
         int index = 0;
-        for (CurrentSample motor : observation.motorCurrents()) {
-            fields.put("m" + index + "A", format(motor.amps()));
-            fields.put("m" + index + "Validity", motor.validity().name());
+        for (MotorSnapshot motor : observation.motors()) {
+            fields.put("m" + index + "Id", motor.motorId());
+            fields.put("m" + index + "A", format(motor.current().amps()));
+            fields.put("m" + index + "Validity", motor.current().validity().name());
+            fields.put("m" + index + "Cmd", format(motor.commandedEffort()));
+            fields.put("m" + index + "Vel", format(motor.velocityTicksPerSecond()));
             index++;
         }
 

@@ -13,23 +13,20 @@ Write and review this architecture **before** enabling active motor control.
 ```text
 OpMode / scheduler
     │
-    ├─► PowerTelemetrySource / MotorElectricalTelemetry  (adapters)
-    │         │
-    │         ▼
-    │      PowerMonitor  ──► ElectricalObservation
-    │         │
-    │         ├─► BatteryEstimator  (observations + future estimates w/ confidence)
-    │         └─► PowerEventLogger  (exportable)
-    │
-    ├─► subsystem intent ──► PowerRequest
-    │         │
-    │         ▼
-    │      PowerCoordinator ◄── PowerPolicy / AmperFeatureFlags
-    │         │
-    │         ▼
-    │      PowerGrant (advisory until intervention phases enabled)
-    │
-    └─► subsystem applies motor outputs (subsystems own PID/FF/safety)
+    └─► AmperSession.observe()   (never writes motors)
+            │
+            ├─► PowerMonitor  ──► ElectricalObservation (voltage, currents, commands)
+            ├─► BatteryEstimator
+            ├─► MechanismActivityTracker / StallSuspicionTracker / DriverFeedback
+            ├─► PowerEventLogger  (exportable CSV)
+            │
+            ├─► (Phase 4+) subsystem intent ──► PowerRequest
+            │         ▼
+            │      PowerCoordinator ◄── PowerPolicy / AmperFeatureFlags
+            │         ▼
+            │      PowerGrant (advisory until intervention phases enabled)
+            │
+            └─► subsystem applies motor outputs (subsystems own PID/FF/safety)
 ```
 
 ## `PowerMonitor`

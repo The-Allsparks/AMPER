@@ -36,7 +36,9 @@ class PowerMonitorTest {
         assertTrue(obs.sensingValid());
         assertEquals(12.4, obs.rawVoltage().volts(), 1e-9);
         assertEquals(0.75, motor.commandedEffort(), 1e-9);
-        assertEquals(1, obs.motorCurrents().size());
+        assertEquals(1, obs.motors().size());
+        assertEquals("fl", obs.motors().get(0).motorId());
+        assertEquals(0.75, obs.motors().get(0).commandedEffort(), 1e-9);
         assertEquals(2.5, obs.motorCurrents().get(0).amps(), 1e-9);
     }
 
@@ -78,6 +80,7 @@ class PowerMonitorTest {
         String csv = logger.exportCsv();
         assertTrue(csv.contains("LOOP_SAMPLE"));
         assertTrue(csv.contains("rawV=12.0000"));
+        assertTrue(csv.contains("sumAbsCmd=0.0000"));
     }
 
     @Test
