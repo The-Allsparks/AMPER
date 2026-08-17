@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "AMPER: Adaptive Motor Power and Energy Regulation for FTC"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - name: "The Allsparks"
+    alias: "FTC Team 36117"
+    website: "https://github.com/The-Allsparks"
+repository-code: "https://github.com/The-Allsparks/AMPER"
+url: "https://github.com/The-Allsparks/AMPER"
+abstract: >-
+  AMPER is a phased electrical-awareness and power-coordination library for
+  FIRST Tech Challenge robots. It begins with passive voltage and current
+  instrumentation and progresses through optional reactive and predictive
+  power-management phases that remain disabled until validated.
+keywords:
+  - FIRST Tech Challenge
+  - FTC
+  - power management
+  - brownout prevention
+  - battery monitoring
+  - robotics
+license: MIT
+version: "0.1.0-SNAPSHOT"
+date-released: "2026-08-17"
