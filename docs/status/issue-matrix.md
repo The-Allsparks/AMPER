@@ -2,6 +2,8 @@
 
 Generated for the `0.1.0-rc.1` software pass. Desktop tests are **not** Control Hub validation. Do not close hardware-only issues from CI.
 
+Later findings live in the [initial deep audit](../audits/initial-deep-audit.md) and [priority ledger](priority-ledger.md). Do not duplicate #1–#16.
+
 | Issue | Title | Software | Hardware | This PR | Close? |
 |-------|-------|----------|----------|---------|--------|
 | #1 | Research and source verification | Implemented and tested (docs + link checker). Access date 2026-08-17 | n/a | Docs retained and extended | Close after maintainer review of citations |

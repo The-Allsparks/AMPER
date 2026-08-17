@@ -18,7 +18,7 @@ Prepared before AMPER creation. AMPER did **not** previously exist under `The-Al
 | Public OSS | ViDAR / tools | Public |
 | License | ViDAR (reusable FTC library) | **MIT** (not Apache-2.0) |
 | Branch | Org default | `main` |
-| Java + Gradle test module | ViDAR `java-pure` | Root `java-library`, Java 11, CI Temurin 17 |
+| Java + Gradle test module | FTC SDK 11.2, not ViDAR `java-pure` | Root `java-library`, **Java 8 bytecode**, CI Temurin 17 |
 | LF + `.gitattributes` | ViDAR | Yes |
 | CoC / SECURITY / PR template / Dependabot | ftc-dev-tools | Adapted (AMPER safety language) |
 | Issue templates | ftc-dev-tools | Bug / feature / phase work |

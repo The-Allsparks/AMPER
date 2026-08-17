@@ -83,6 +83,9 @@ Disable without changing motors: `AmperPolicies.disabled()` or `AmperPolicies.me
 | [Install](docs/install.md) | FTC SDK dependency / includeBuild |
 | [Five-minute setup](docs/quickstart.md) | First telemetry |
 | [Issue matrix](docs/status/issue-matrix.md) | Issues #1–#16 vs code |
+| [Roadmap](docs/status/roadmap.md) | 0.1.x phases and readiness gates |
+| [Priority ledger](docs/status/priority-ledger.md) | Ready vs blocked work |
+| [Initial deep audit](docs/audits/initial-deep-audit.md) | 2026-08-17 architecture/safety audit |
 | [Logging and export](docs/logging.md) | AdvantageScope CSV, `/AMPER` keys, WPILOG converter |
 | [Compatibility](docs/compatibility.md) | FTC SDK / Java matrix |
 | [Release](docs/release.md) | SemVer, checklist, artifacts |

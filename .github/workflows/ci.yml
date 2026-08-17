@@ -48,6 +48,9 @@ jobs:
           test -f docs/install.md
           test -f docs/quickstart.md
           test -f docs/status/issue-matrix.md
+          test -f docs/status/roadmap.md
+          test -f docs/status/priority-ledger.md
+          test -f docs/audits/initial-deep-audit.md
           test -f docs/validation/STATUS.md
           test -f docs/power-management/research.md
           test -f docs/power-management/architecture.md

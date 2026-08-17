@@ -41,9 +41,11 @@ public void stop() {
 }
 ```
 
-## 2. Init on the Driver Station
+## 2. Run the OpMode
 
-You should see `AMPER` and `AMPER.V` lines. If init fails with "Expected exactly one voltage sensor containing 'Control Hub'", list configured names and pass an explicit name:
+AMPER telemetry is published from `loop()` (or your LinearOpMode loop), not from `init()` in the snippet above. After you press Play you should see `AMPER` and `AMPER.V` on the Driver Station.
+
+If `init` fails with "Expected exactly one voltage sensor containing 'Control Hub'", list configured names and pass an explicit name:
 
 ```java
 .voltageSensor("Control Hub", "Control Hub")

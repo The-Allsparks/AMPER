@@ -4,7 +4,11 @@ import org.allsparks.amper.measure.CurrentSample;
 import org.allsparks.amper.measure.MeasurementValidity;
 import org.allsparks.amper.measure.MotorElectricalTelemetry;
 
-/** Mutable motor telemetry for simulation. Has no setPower / setVelocity. */
+/**
+ * Mutable motor telemetry for simulation. This is not an FTC motor: {@link #setCommand},
+ * {@link #setVelocity}, and {@link #setPosition} only update observed values. They do not
+ * command hardware.
+ */
 public final class SimulatedMotor implements MotorElectricalTelemetry {
     private final String id;
     private double amps = Double.NaN;

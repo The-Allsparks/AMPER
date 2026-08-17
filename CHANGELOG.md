@@ -10,6 +10,12 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 ### Added
 
 - Canonical `/AMPER` log model with AdvantageScope table/list CSV, schema sidecar, and desktop WPILOG conversion (WPILib DataLog format 1.0). Robot-side format is AdvantageScope CSV; native WPILOG is not used on the current Control Hub.
+- Initial deep audit, 0.1.x roadmap, and priority ledger (`docs/audits/`, `docs/status/`).
+
+### Fixed
+
+- Convention docs now match Java 8 bytecode (FTC SDK 11.2), not ViDAR Java 11.
+- Quickstart no longer claims Driver Station `AMPER.V` lines during `init()`.
 
 ## [0.1.0-rc.1] - 2026-08-17
 
