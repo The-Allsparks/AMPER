@@ -7,6 +7,10 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
+### Added
+
+- Canonical `/AMPER` log model with AdvantageScope table/list CSV, schema sidecar, and desktop WPILOG conversion (WPILib DataLog format 1.0). Robot-side format is AdvantageScope CSV; native WPILOG is not used on the current Control Hub.
+
 ## [0.1.0-rc.1] - 2026-08-17
 
 ### Added

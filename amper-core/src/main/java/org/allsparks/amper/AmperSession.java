@@ -11,7 +11,12 @@ import org.allsparks.amper.battery.BatteryEstimator;
 import org.allsparks.amper.battery.BatteryObservation;
 import org.allsparks.amper.clock.AmperClock;
 import org.allsparks.amper.clock.SystemNanoClock;
+import org.allsparks.amper.log.AdvantageScopeCsv;
+import org.allsparks.amper.log.CanonicalLog;
+import org.allsparks.amper.log.CanonicalLogPublisher;
 import org.allsparks.amper.log.CsvFormat;
+import org.allsparks.amper.log.LogNameSanitizer;
+import org.allsparks.amper.log.LogSchemaSidecar;
 import org.allsparks.amper.log.PowerEvent;
 import org.allsparks.amper.log.PowerEventLogger;
 import org.allsparks.amper.log.PowerEventType;
@@ -54,11 +59,14 @@ public final class AmperSession {
     private final LoopOverheadStats loopStats;
     private final SessionLogSink logSink;
     private final String exportFilename;
+    private final CanonicalLog canonicalLog;
+    private final CanonicalLogPublisher canonicalPublisher;
     private long samples;
     private DriverTelemetry lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "NORMAL");
     private BatteryObservation lastBattery;
     private AmperLifecycle lifecycle = AmperLifecycle.CONSTRUCTED;
     private int duplicateObserves;
+    private int sinkFailures;
     private ElectricalObservation lastObservation;
 
     public AmperSession(
@@ -95,6 +103,8 @@ public final class AmperSession {
         this.exportFilename = exportFilename == null || exportFilename.trim().isEmpty()
                 ? "amper-session.csv"
                 : exportFilename;
+        this.canonicalLog = new CanonicalLog(policy.loggerCapacity(), new LogNameSanitizer());
+        this.canonicalPublisher = new CanonicalLogPublisher(this.canonicalLog, meta);
     }
 
     public static AmperSession create(
@@ -170,6 +180,7 @@ public final class AmperSession {
         } else {
             lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "PHASE1_DISABLED");
         }
+        publishCanonical(observation);
         lastObservation = observation;
         return observation;
     }
@@ -234,6 +245,20 @@ public final class AmperSession {
         return logger.exportCsv();
     }
 
+    /** AdvantageScope table-layout CSV. Primary robot-side export. */
+    public String exportAdvantageScopeTableCsv() {
+        return AdvantageScopeCsv.table(canonicalLog);
+    }
+
+    /** AdvantageScope list-layout CSV. */
+    public String exportAdvantageScopeListCsv() {
+        return AdvantageScopeCsv.list(canonicalLog);
+    }
+
+    public String exportSchemaSidecar() {
+        return LogSchemaSidecar.toJson(canonicalLog, logger.metadata());
+    }
+
     /**
      * Record the match summary and write CSV through the configured sink.
      * Safe to call more than once; subsequent calls are no-ops after close.
@@ -261,18 +286,33 @@ public final class AmperSession {
         if (logSink == null || logger.exported()) {
             return;
         }
+        boolean csvOk = false;
         try {
-            logSink.export(CsvFormat.sanitizeFilename(exportFilename), logger.exportCsv());
-            logger.markExported();
+            logSink.export(CsvFormat.sanitizeLeaf(exportFilename), exportAdvantageScopeTableCsv());
+            csvOk = true;
         } catch (IOException ex) {
-            Map<String, String> fields = new LinkedHashMap<String, String>();
-            fields.put("error", ex.getClass().getSimpleName());
-            logger.record(new PowerEvent(clock.nanoTime(), PowerEventType.EXPORT, "export_failed", fields));
+            recordSinkFailure(ex);
+        }
+        try {
+            logSink.export(CsvFormat.sidecarFilename(exportFilename), exportSchemaSidecar());
+        } catch (IOException ex) {
+            recordSinkFailure(ex);
+        }
+        if (csvOk) {
+            logger.markExported();
         }
     }
 
     public PowerEventLogger logger() {
         return logger;
+    }
+
+    public CanonicalLog canonicalLog() {
+        return canonicalLog;
+    }
+
+    public int sinkFailureCount() {
+        return sinkFailures;
     }
 
     public PowerMonitor monitor() {
@@ -305,9 +345,39 @@ public final class AmperSession {
         driverFeedback.reset();
         loopStats.reset();
         logger.clear();
+        canonicalPublisher.reset();
         lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "NORMAL");
         lastBattery = null;
         lastObservation = null;
+        sinkFailures = 0;
+    }
+
+    private void publishCanonical(ElectricalObservation observation) {
+        String eventType = null;
+        String eventMessage = null;
+        for (PowerEvent event : logger.snapshot()) {
+            if (event.timestampNanos() == observation.loopStartNanos()
+                    && event.type() != PowerEventType.LOOP_SAMPLE
+                    && event.type() != PowerEventType.SENSOR_INVALID) {
+                eventType = event.type().name();
+                eventMessage = event.message();
+            }
+        }
+        canonicalPublisher.record(
+                observation,
+                lastDriver,
+                logger.droppedCount() + canonicalLog.droppedCount(),
+                eventType,
+                eventMessage,
+                stallTracker.suspectedMotorIds());
+    }
+
+    private void recordSinkFailure(Exception ex) {
+        sinkFailures++;
+        Map<String, String> fields = new LinkedHashMap<String, String>();
+        fields.put("error", ex.getClass().getSimpleName());
+        fields.put("count", Integer.toString(sinkFailures));
+        logger.record(new PowerEvent(clock.nanoTime(), PowerEventType.EXPORT, "export_failed", fields));
     }
 
     private void recordLifecycle(String name) {

@@ -7,7 +7,7 @@ Generated for the `0.1.0-rc.1` software pass. Desktop tests are **not** Control 
 | #1 | Research and source verification | Implemented and tested (docs + link checker). Access date 2026-08-17 | n/a | Docs retained and extended | Close after maintainer review of citations |
 | #2 | Phase 0 measurement abstraction | Implemented and tested | Not hardware-validated | Core monitor, validity, timestamps | Split: keep hardware items on #6 |
 | #3 | REV Hub telemetry adapter | Partially implemented before; **FTC SDK adapter added** | Not hardware-validated | `AmperFtc` / `FtcVoltageSource` / `FtcMotorTelemetry` | Keep open until Hub measurements exist, or split software vs hardware |
-| #4 | Logging format and export | Implemented and tested (schema 1, bounded log, file sink) | On-robot retrieve not validated | `FtcSessionLogSink`, analyze tools | Software criteria met; keep open until a team retrieves a Hub file **or** split |
+| #4 | Logging format and export | AdvantageScope CSV + canonical `/AMPER` keys + desktop WPILOG converter | On-robot retrieve not validated | Fixture, sidecar, CI WPILOG artifact | Software criteria expanded; keep open until a team opens a Hub file in AdvantageScope **or** split |
 | #5 | Phase 1 passive telemetry | Implemented and tested | Not hardware-validated | Warnings, telemetry sink, examples | Same as #2: software yes, hardware on #6 |
 | #6 | Controlled robot characterization | Procedure + OpMode ready | **Not run** | `AmperCharacterizationOpMode`, test card | **Do not close** |
 | #7 | Phase 2 drivetrain ramp limiting | Foundations implemented, **disabled by default**, experimental | Not characterized | `SlewRateLimiter`, `LocalProtection` | Keep open |

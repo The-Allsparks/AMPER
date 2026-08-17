@@ -20,7 +20,7 @@ public final class FileSessionLogSink implements SessionLogSink {
 
     @Override
     public void export(String filename, String csvContents) throws IOException {
-        String safe = CsvFormat.sanitizeFilename(filename);
+        String safe = CsvFormat.sanitizeLeaf(filename);
         if (!directory.exists() && !directory.mkdirs()) {
             throw new IOException("unable to create log directory: " + directory.getAbsolutePath());
         }

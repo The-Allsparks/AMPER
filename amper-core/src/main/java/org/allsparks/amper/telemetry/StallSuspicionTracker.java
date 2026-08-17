@@ -1,7 +1,10 @@
 package org.allsparks.amper.telemetry;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import org.allsparks.amper.log.PowerEvent;
 import org.allsparks.amper.log.PowerEventLogger;
 import org.allsparks.amper.log.PowerEventType;
@@ -14,11 +17,13 @@ import org.allsparks.amper.policy.PowerPolicy;
  * Warning only; never changes motor output.
  */
 public final class StallSuspicionTracker {
-    private final Map<String, Long> dwellStartedNanos = new LinkedHashMap<>();
+    private final Map<String, Long> dwellStartedNanos = new LinkedHashMap<String, Long>();
+    private final Set<String> suspectedIds = new LinkedHashSet<String>();
     private boolean suspected;
 
     public boolean update(ElectricalObservation observation, PowerPolicy policy, PowerEventLogger logger) {
         suspected = false;
+        suspectedIds.clear();
         for (MotorSnapshot motor : observation.motors()) {
             if (looksStalled(motor, policy)) {
                 Long started = dwellStartedNanos.get(motor.motorId());
@@ -28,8 +33,9 @@ public final class StallSuspicionTracker {
                 }
                 if (observation.loopStartNanos() - started >= policy.stallDwellNanos()) {
                     suspected = true;
+                    suspectedIds.add(motor.motorId());
                     if (logger != null) {
-                        Map<String, String> fields = new LinkedHashMap<>();
+                        Map<String, String> fields = new LinkedHashMap<String, String>();
                         fields.put("motor", motor.motorId());
                         fields.put("amps", Double.toString(motor.current().amps()));
                         fields.put("cmd", Double.toString(motor.commandedEffort()));
@@ -52,8 +58,13 @@ public final class StallSuspicionTracker {
         return suspected;
     }
 
+    public Set<String> suspectedMotorIds() {
+        return Collections.unmodifiableSet(suspectedIds);
+    }
+
     public void reset() {
         dwellStartedNanos.clear();
+        suspectedIds.clear();
         suspected = false;
     }
 

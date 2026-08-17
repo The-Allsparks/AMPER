@@ -13,6 +13,24 @@ application {
     mainClass = 'org.allsparks.amper.tools.AmperAnalyze'
 }
 
+tasks.register('generateLoggingFixtures', JavaExec) {
+    group = 'documentation'
+    description = 'Write committed AdvantageScope CSV fixtures under docs/logging/fixtures.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.allsparks.amper.tools.AmperConvert'
+    args = ['--write-fixtures', "${rootProject.projectDir}/docs/logging/fixtures"]
+    dependsOn classes
+}
+
+tasks.register('generateWpiLogFixture', JavaExec) {
+    group = 'verification'
+    description = 'Write a WPILOG CI artifact from the AMPER fixture log.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.allsparks.amper.tools.AmperConvert'
+    args = ['--fixture-wpilog', "${project.buildDir}/wpilog-fixture/amper-fixture.wpilog"]
+    dependsOn classes
+}
+
 tasks.named('test', Test) {
     useJUnitPlatform()
 }
