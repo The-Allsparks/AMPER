@@ -7,7 +7,7 @@ import org.allsparks.amper.log.FileSessionLogSink;
 import org.allsparks.amper.log.SessionLogSink;
 
 /**
- * Writes AMPER CSV after the match, not in the control loop.
+ * Writes AdvantageScope CSV after the match, not in the control loop.
  *
  * <p>Preferred location: {@code /sdcard/FIRST/amper/} (the conventional FIRST
  * folder on the Robot Controller). Fallback: {@code Context#getExternalFilesDir("amper")}.

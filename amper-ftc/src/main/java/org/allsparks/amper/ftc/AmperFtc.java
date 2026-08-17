@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.allsparks.amper.AmperSession;
 import org.allsparks.amper.log.SessionMetadata;
@@ -124,11 +126,14 @@ public final class AmperFtc {
             if (policySourceIndex < 0 || policySourceIndex >= voltages.size()) {
                 throw new IllegalArgumentException("policySourceIndex out of range");
             }
+            Map<String, String> extra = new LinkedHashMap<String, String>();
+            extra.put("hubCount", Integer.toString(voltages.size()));
+            extra.put("hardwarePlatform", "FTC_REV_HUB");
             SessionMetadata metadata = new SessionMetadata(
                     sessionId,
                     "",
                     policy.voltageThresholdProvenance().name(),
-                    java.util.Collections.singletonMap("hubCount", Integer.toString(voltages.size())));
+                    extra);
             FtcSessionLogSink sink = persistLogs ? new FtcSessionLogSink(hardwareMap.appContext) : null;
             return new AmperSession(
                     policy,

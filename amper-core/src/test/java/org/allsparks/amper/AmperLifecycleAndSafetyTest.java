@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 import org.allsparks.amper.adapters.rev.RevHubTelemetrySource;
 import org.allsparks.amper.log.FileSessionLogSink;
+import org.allsparks.amper.log.SessionLogSink;
 import org.allsparks.amper.log.SessionMetadata;
 import org.allsparks.amper.measure.ElectricalObservation;
 import org.allsparks.amper.measure.MeasurementValidity;
@@ -110,8 +111,41 @@ class AmperLifecycleAndSafetyTest {
         Path written = dir.resolve("amper_test.csv");
         assertTrue(Files.isRegularFile(written));
         String csv = new String(Files.readAllBytes(written), StandardCharsets.UTF_8);
-        assertTrue(csv.contains("# amper_csv_schema=1"));
-        assertTrue(csv.contains("MATCH_SUMMARY"));
+        assertTrue(csv.startsWith("Timestamp,"), csv);
+        assertTrue(csv.contains("/AMPER/System/BusVoltageVolts"));
+        Path sidecar = dir.resolve("amper_test.schema.json");
+        assertTrue(Files.isRegularFile(sidecar));
+        String schema = new String(Files.readAllBytes(sidecar), StandardCharsets.UTF_8);
+        assertTrue(schema.contains("\"timestampUnit\": \"seconds\""));
+    }
+
+    @Test
+    void sinkFailureDoesNotChangeObservation() {
+        SessionLogSink failing = new SessionLogSink() {
+            @Override
+            public void export(String filename, String csvContents) throws java.io.IOException {
+                throw new java.io.IOException("disk full");
+            }
+        };
+        PowerPolicy policy = PowerPolicy.builder()
+                .featureFlags(AmperFeatureFlags.passiveTelemetry())
+                .sampling(SamplingPolicy.everyLoop())
+                .build();
+        AmperSession session = new AmperSession(
+                policy,
+                () -> 42L,
+                java.util.Collections.singletonList(RevHubTelemetrySource.voltageOnly("hub", () -> 12.4)),
+                0,
+                Collections.emptyList(),
+                SessionMetadata.anonymous("test"),
+                failing,
+                "amper-session.csv");
+        ElectricalObservation observation = session.observe();
+        assertEquals(12.4, observation.rawVoltage().volts(), 1e-9);
+        session.stop();
+        assertTrue(session.sinkFailureCount() >= 1);
+        assertEquals(12.4, session.monitor().lastObservation().rawVoltage().volts(), 1e-9);
+        assertEquals(12.4, observation.rawVoltage().volts(), 1e-9);
     }
 
     @Test

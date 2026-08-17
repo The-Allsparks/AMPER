@@ -207,6 +207,20 @@ AMPER’s honest role is **awareness**, **avoidable demand shaping**, and **educ
 
 ---
 
+## 11. Native WPILOG on the current Control Hub (decision)
+
+**VF:** The WPILib Data Log format is specified independently of FRC hardware (`datalog.adoc` v1.0). AdvantageScope can open WPILOG and generic CSV.
+
+**VF:** FTC SDK 11.2.0 / FtcRobotController v11.2 (accessed 2026-08-17) does not include WPILib `DataLog` or a documented JNI DataLog on the REV Control Hub.
+
+**EI:** Shipping WPILib native libraries on the current Control Hub would add an uncharacterized Android NDK/JNI dependency (package size, CPU, flash wear). That experiment was **not** done for this release.
+
+**Decision:** Robot-side format is AdvantageScope CSV. WPILOG is produced by `amper-tools` on a desktop. When SystemCore publishes an authoritative logging API, add a **separate adapter** rather than changing AMPER’s canonical `/AMPER` event model.
+
+CTRE Hoot and REVLOG remain vendor formats. AMPER does not require them at runtime.
+
+---
+
 ## Footnotes
 
 [^rev-ch-trouble]: REV Robotics, “Control Hub Troubleshooting,” Duo Control docs. https://docs.revrobotics.com/duo-control/troubleshooting-the-control-system/control-hub-troubleshooting — brownout symptom list including ~9 V displayed and DS disconnects.

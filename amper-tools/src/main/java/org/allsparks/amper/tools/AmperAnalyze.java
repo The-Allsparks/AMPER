@@ -34,6 +34,13 @@ public final class AmperAnalyze {
     }
 
     public static String analyze(String csv) {
+        if (csv != null) {
+            int newline = csv.indexOf('\n');
+            String first = newline < 0 ? csv : csv.substring(0, newline);
+            if (first.startsWith("Timestamp,")) {
+                return analyzeAdvantageScope(csv);
+            }
+        }
         List<PowerEvent> events = CsvReplay.parse(csv);
         List<Sample> samples = new ArrayList<Sample>();
         List<PowerEvent> markers = new ArrayList<PowerEvent>();
@@ -125,6 +132,40 @@ public final class AmperAnalyze {
         }
         sb.append("\n## Loop overhead summary\n\n");
         sb.append("Use max/mean AMPER update ns above. Compare against your OpMode loop time on the Control Hub.\n");
+        return sb.toString();
+    }
+
+    static String analyzeAdvantageScope(String csv) {
+        org.allsparks.amper.log.AdvantageScopeCsv.ParsedTable table =
+                org.allsparks.amper.log.AdvantageScopeCsv.parseTable(csv);
+        StringBuilder sb = new StringBuilder();
+        sb.append("# AMPER desktop analysis (AdvantageScope CSV)\n\n");
+        sb.append("This report is **software analysis of a CSV**, not Control Hub validation.\n\n");
+        sb.append("- samples: ").append(table.rows.size()).append('\n');
+        sb.append("- fields: ").append(table.keys.size()).append('\n');
+        String bus = org.allsparks.amper.log.LogKeys.SYSTEM_BUS_VOLTAGE_VOLTS;
+        double minV = Double.POSITIVE_INFINITY;
+        double maxV = Double.NEGATIVE_INFINITY;
+        int voltageSamples = 0;
+        for (org.allsparks.amper.log.AdvantageScopeCsv.ParsedRow row : table.rows) {
+            String cell = row.cells.get(bus);
+            if (cell == null || cell.isEmpty()) {
+                continue;
+            }
+            try {
+                double value = Double.parseDouble(cell);
+                minV = Math.min(minV, value);
+                maxV = Math.max(maxV, value);
+                voltageSamples++;
+            } catch (NumberFormatException ignored) {
+                // skip
+            }
+        }
+        if (voltageSamples > 0) {
+            sb.append(String.format(Locale.US, "- bus voltage min: %.4f\n", minV));
+            sb.append(String.format(Locale.US, "- bus voltage max: %.4f\n", maxV));
+        }
+        sb.append("\nOpen this file in AdvantageScope (File > Open File) to graph traces.\n");
         return sb.toString();
     }
 

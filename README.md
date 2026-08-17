@@ -70,7 +70,7 @@ AmperSession amper = AmperFtc.builder(hardwareMap)
     .build();
 ```
 
-Call `amper.initialize()` from `init`, `amper.start()` when the match starts, `amper.observe()` **once** per loop, `amper.publishTelemetry(...)` for rate-limited DS lines, and `amper.stop()` from `stop` so the CSV is written.
+Call `amper.initialize()` from `init`, `amper.start()` when the match starts, `amper.observe()` **once** per loop, `amper.publishTelemetry(...)` for rate-limited DS lines, and `amper.stop()` from `stop` so the AdvantageScope CSV is written.
 
 Disable without changing motors: `AmperPolicies.disabled()` or `AmperPolicies.measurementOnly()`.
 
@@ -83,7 +83,7 @@ Disable without changing motors: `AmperPolicies.disabled()` or `AmperPolicies.me
 | [Install](docs/install.md) | FTC SDK dependency / includeBuild |
 | [Five-minute setup](docs/quickstart.md) | First telemetry |
 | [Issue matrix](docs/status/issue-matrix.md) | Issues #1–#16 vs code |
-| [Logging and export](docs/logging.md) | CSV schema, `/sdcard/FIRST/amper/`, analysis |
+| [Logging and export](docs/logging.md) | AdvantageScope CSV, `/AMPER` keys, WPILOG converter |
 | [Compatibility](docs/compatibility.md) | FTC SDK / Java matrix |
 | [Release](docs/release.md) | SemVer, checklist, artifacts |
 | [Hardware validation](docs/validation/STATUS.md) | Not yet run |

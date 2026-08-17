@@ -2,6 +2,8 @@
 
 Desktop-only tools. Do **not** add these to a TeamCode/on-robot dependency.
 
+The primary visualization path is **AdvantageScope**. Open the robot-exported table CSV as described in [docs/logging/advantagescope.md](../../docs/logging/advantagescope.md). `amper-analyze` is a text summary for the internal diagnostic event CSV or an AdvantageScope table CSV.
+
 ## Java
 
 From the repository root:

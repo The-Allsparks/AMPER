@@ -30,7 +30,8 @@ OpMode / scheduler
                     ├─► PowerMonitor  ──► ElectricalObservation (labeled hubs, currents, commands)
                     ├─► BatteryEstimator
                     ├─► MechanismActivityTracker / StallSuspicionTracker / DriverFeedback
-                    ├─► PowerEventLogger  (bounded; flush on stop)
+                    ├─► CanonicalLog  (bounded; AdvantageScope CSV + sidecar on stop)
+                    ├─► PowerEventLogger  (internal diagnostic event CSV)
                     │
                     ├─► (Phase 2 opt-in, subsystem-owned) LocalProtection → ConstrainedCommand
                     ├─► (Phase 4+) subsystem intent ──► PowerRequest
@@ -54,6 +55,10 @@ Reads and filters:
 - validity / freshness.
 
 **Must not command hardware.**
+
+## `CanonicalLog`
+
+Hardware-independent field model consumed by sinks. Robot flush writes AdvantageScope table CSV. Desktop `amper-tools` converts to WPILOG. Sinks must not affect `ElectricalObservation` or policy.
 
 ## `PowerEventLogger`
 

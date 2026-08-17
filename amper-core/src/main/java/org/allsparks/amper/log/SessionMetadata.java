@@ -55,4 +55,16 @@ public final class SessionMetadata {
     public Map<String, String> extra() {
         return extra;
     }
+
+    /**
+     * Hardware family for {@code /AMPER/Metadata/HardwarePlatform}.
+     * Defaults to {@code FTC_REV_HUB}. Never claims SystemCore unless callers set it.
+     */
+    public String hardwarePlatform() {
+        String value = extra.get("hardwarePlatform");
+        if (value == null || value.trim().isEmpty()) {
+            return "FTC_REV_HUB";
+        }
+        return value.trim();
+    }
 }

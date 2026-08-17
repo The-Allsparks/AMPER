@@ -41,6 +41,6 @@ AMPER teaches and eventually coordinates robot electrical demand on FIRST Tech C
 | [conventions.md](conventions.md) | Org convention assessment |
 | [Examples](../../examples/README.md) | Compile-checked OpModes |
 | [../install.md](../install.md) | FTC SDK install |
-| [../logging.md](../logging.md) | CSV export |
+| [../logging.md](../logging.md) | AdvantageScope CSV and WPILOG |
 | [../status/issue-matrix.md](../status/issue-matrix.md) | Issues vs implementation |
 | [../validation/STATUS.md](../validation/STATUS.md) | Hardware status (not yet run) |
