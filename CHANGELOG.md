@@ -7,6 +7,10 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
+### Fixed
+
+- `publishTelemetry` now rate-limits Driver Station lines when Phase 1 is off or AMPER is disabled, so `measurementOnly()` still shows `AMPER.V` and `disabled()` shows `AMPER_DISABLED` (#34).
+
 ### Added
 
 - Canonical `/AMPER` log model with AdvantageScope table/list CSV, schema sidecar, and desktop WPILOG conversion (WPILib DataLog format 1.0). Robot-side format is AdvantageScope CSV; native WPILOG is not used on the current Control Hub.

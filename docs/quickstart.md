@@ -57,7 +57,7 @@ If `init` fails with "Expected exactly one voltage sensor containing 'Control Hu
 .policy(AmperPolicies.disabled())
 ```
 
-or leave Phase 1 off with `AmperPolicies.measurementOnly()`. Motor `setPower` / `setVelocity` calls stay in *your* code. AMPER never issues them in Phase 0/1.
+or leave Phase 1 off with `AmperPolicies.measurementOnly()`. Motor `setPower` / `setVelocity` calls stay in *your* code. AMPER never issues them in Phase 0/1. Keep calling `amper.publishTelemetry(...)` in `loop()` — measurement-only mode still shows `AMPER` and `AMPER.V` on the Driver Station.
 
 ## Next
 

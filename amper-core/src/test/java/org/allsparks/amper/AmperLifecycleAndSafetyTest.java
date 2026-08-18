@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.allsparks.amper.adapters.rev.RevHubTelemetrySource;
 import org.allsparks.amper.log.FileSessionLogSink;
@@ -19,6 +21,7 @@ import org.allsparks.amper.measure.MeasurementValidity;
 import org.allsparks.amper.policy.AmperPolicies;
 import org.allsparks.amper.policy.PowerPolicy;
 import org.allsparks.amper.policy.SamplingPolicy;
+import org.allsparks.amper.telemetry.TelemetrySink;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -163,5 +166,79 @@ class AmperLifecycleAndSafetyTest {
         }
         assertTrue(bounded.logger().snapshot().size() <= 3);
         assertTrue(bounded.logger().droppedCount() > 0);
+    }
+
+    @Test
+    void measurementOnlyPublishTelemetryShowsVoltage() {
+        AtomicLong time = new AtomicLong(0L);
+        PowerPolicy policy = PowerPolicy.builder()
+                .featureFlags(AmperFeatureFlags.defaults())
+                .telemetryMinPeriodNanos(50_000_000L)
+                .build();
+        AmperSession session = new AmperSession(
+                policy,
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 12.3),
+                Collections.emptyList());
+        RecordingSink sink = new RecordingSink();
+        session.observe();
+        session.publishTelemetry(sink);
+        assertEquals("PHASE1_DISABLED", sink.last.get("AMPER"));
+        assertEquals(12.3, sink.last.get("AMPER.V"));
+        assertEquals(1, sink.updates);
+
+        session.publishTelemetry(sink);
+        assertEquals(1, sink.updates);
+
+        time.addAndGet(60_000_000L);
+        session.observe();
+        session.publishTelemetry(sink);
+        assertEquals(2, sink.updates);
+        assertEquals(12.3, sink.last.get("AMPER.V"));
+    }
+
+    @Test
+    void disabledPublishTelemetryShowsStateWithoutVoltage() {
+        AtomicLong time = new AtomicLong(0L);
+        PowerPolicy policy = PowerPolicy.builder()
+                .featureFlags(AmperFeatureFlags.builder().phase0Measurement(false).build())
+                .telemetryMinPeriodNanos(50_000_000L)
+                .build();
+        AmperSession session = new AmperSession(
+                policy,
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
+                Collections.emptyList());
+        RecordingSink sink = new RecordingSink();
+        session.observe();
+        session.publishTelemetry(sink);
+        assertEquals("AMPER_DISABLED", sink.last.get("AMPER"));
+        assertFalse(sink.last.containsKey("AMPER.V"));
+        assertEquals(1, sink.updates);
+
+        session.publishTelemetry(sink);
+        assertEquals(1, sink.updates);
+
+        time.addAndGet(60_000_000L);
+        session.observe();
+        session.publishTelemetry(sink);
+        assertEquals(2, sink.updates);
+        assertEquals("AMPER_DISABLED", sink.last.get("AMPER"));
+        assertFalse(sink.last.containsKey("AMPER.V"));
+    }
+
+    private static final class RecordingSink implements TelemetrySink {
+        private final Map<String, Object> last = new LinkedHashMap<String, Object>();
+        private int updates;
+
+        @Override
+        public void addData(String key, Object value) {
+            last.put(key, value);
+        }
+
+        @Override
+        public void update() {
+            updates++;
+        }
     }
 }
