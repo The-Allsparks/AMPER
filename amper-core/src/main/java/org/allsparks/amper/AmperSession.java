@@ -68,6 +68,7 @@ public final class AmperSession {
     private int duplicateObserves;
     private int sinkFailures;
     private ElectricalObservation lastObservation;
+    private long lastTelemetryPublishNanos = Long.MIN_VALUE / 4;
 
     public AmperSession(
             PowerPolicy policy,
@@ -192,22 +193,33 @@ public final class AmperSession {
 
     /**
      * Publish rate-limited Driver Station lines. Call after {@link #observe()}.
-     * Does nothing when AMPER or Phase 1 is disabled except a one-line state.
+     *
+     * <p>Always publishes at least {@code AMPER=<state>} on the policy telemetry period,
+     * even when Phase 1 warnings are off or AMPER measurement is disabled. When Phase 0
+     * produced a non-disabled observation, also publishes {@code AMPER.V}, {@code AMPER.valid},
+     * and {@code AMPER.loopUs}. Phase 1 state changes may publish immediately in addition
+     * to the periodic cadence.
      */
     public void publishTelemetry(TelemetrySink telemetry) {
         if (telemetry == null) {
             return;
         }
         DriverTelemetry driver = lastDriver;
-        if (driver.publishedThisCycle() || lastObservation == null) {
-            telemetry.addData("AMPER", driver.message());
-            if (lastObservation != null && !lastObservation.disabled()) {
-                telemetry.addData("AMPER.V", lastObservation.filteredVoltage().volts());
-                telemetry.addData("AMPER.valid", lastObservation.sensingValid());
-                telemetry.addData("AMPER.loopUs", lastObservation.loopDurationNanos() / 1000L);
-            }
-            telemetry.update();
+        long now = clock.nanoTime();
+        boolean due = lastObservation == null
+                || driver.publishedThisCycle()
+                || now - lastTelemetryPublishNanos >= policy.telemetryMinPeriodNanos();
+        if (!due) {
+            return;
         }
+        lastTelemetryPublishNanos = now;
+        telemetry.addData("AMPER", driver.message());
+        if (lastObservation != null && !lastObservation.disabled()) {
+            telemetry.addData("AMPER.V", lastObservation.filteredVoltage().volts());
+            telemetry.addData("AMPER.valid", lastObservation.sensingValid());
+            telemetry.addData("AMPER.loopUs", lastObservation.loopDurationNanos() / 1000L);
+        }
+        telemetry.update();
     }
 
     public DriverTelemetry driverTelemetry() {
@@ -350,6 +362,7 @@ public final class AmperSession {
         lastBattery = null;
         lastObservation = null;
         sinkFailures = 0;
+        lastTelemetryPublishNanos = Long.MIN_VALUE / 4;
     }
 
     private void publishCanonical(ElectricalObservation observation) {

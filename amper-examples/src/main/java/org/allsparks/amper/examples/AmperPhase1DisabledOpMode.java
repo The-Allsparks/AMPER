@@ -40,8 +40,7 @@ public class AmperPhase1DisabledOpMode extends OpMode {
     @Override
     public void loop() {
         amper.observe();
-        telemetry.addData("AMPER", amper.driverTelemetry().message());
-        telemetry.update();
+        amper.publishTelemetry(AmperFtc.telemetrySink(telemetry));
     }
 
     @Override
