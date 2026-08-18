@@ -121,7 +121,7 @@ On Linux/macOS:
 ./gradlew check
 ```
 
-Modules: `amper-core` (pure Java), `amper-ftc` (FTC SDK types), `amper-examples` (compile-checked OpModes), `amper-tools` (CSV analysis). `amper-ftc-stubs` is CI-only and is **not** a robot dependency.
+Modules: `amper-core` (pure Java), `amper-ftc` (FTC SDK types), `amper-examples` (compile-checked OpModes), `amper-tools` (CSV analysis). `amper-ftc-stubs` is the default desktop compile classpath and is **not** a robot dependency. CI also compiles adapters against official RobotCore 11.2.0.
 
 ---
 

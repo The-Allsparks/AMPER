@@ -50,3 +50,5 @@ tasks.register('javadocAll') {
 tasks.register('assembleReleaseArtifacts') {
     dependsOn ':amper-core:assemble', ':amper-ftc:assemble', ':amper-tools:assemble'
 }
+
+apply from: 'gradle/ftc-sdk-compile.gradle'

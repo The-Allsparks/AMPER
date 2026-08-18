@@ -16,7 +16,7 @@ Write and review this architecture **before** enabling active motor control.
 | `amper-ftc` | `amper-core` + FTC SDK at compile time on the robot | `AmperFtc`, `HardwareMap` / `DcMotorEx` / `VoltageSensor` adapters, FTC log sink |
 | `amper-examples` | `amper-ftc` | Compile-checked OpModes |
 | `amper-tools` | `amper-core` | Desktop CSV analysis |
-| `amper-ftc-stubs` | none | CI-only API stand-ins; **not published**, **not for TeamCode** |
+| `amper-ftc-stubs` | none | Default desktop compile + JVM tests; **not published**, **not for TeamCode**. CI also compiles adapters against official RobotCore 11.2.0. |
 
 ## Module map
 

@@ -5,6 +5,8 @@ plugins {
 
 dependencies {
     api project(':amper-core')
+    // Default desktop compile/tests use stubs. CI also runs
+    // `:amper-ftc:compileAgainstFtcSdk` against official RobotCore.
     compileOnly project(':amper-ftc-stubs')
 
     testImplementation project(':amper-ftc-stubs')

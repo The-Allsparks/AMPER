@@ -15,6 +15,7 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ### Added
 
+- CI compiles `amper-ftc` and `amper-examples` against official `org.firstinspires.ftc:RobotCore:11.2.0` (`./gradlew compileAgainstFtcSdk`). Default `check` still uses `amper-ftc-stubs` for JVM unit tests (#36).
 - Canonical `/AMPER` log model with AdvantageScope table/list CSV, schema sidecar, and desktop WPILOG conversion (WPILib DataLog format 1.0). Robot-side format is AdvantageScope CSV; native WPILOG is not used on the current Control Hub.
 - Initial deep audit, 0.1.x roadmap, and priority ledger (`docs/audits/`, `docs/status/`).
 
