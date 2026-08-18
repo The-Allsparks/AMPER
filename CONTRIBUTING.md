@@ -26,6 +26,7 @@ Install into TeamCode: [docs/install.md](docs/install.md).
 - Include motivation, phase impact, test evidence, and safety notes.
 - Update docs when behavior or maturity labels change.
 - Run `.\gradlew.bat check` (or `./gradlew check`) before requesting review.
+- Adapter PRs that touch FTC types should also run `.\gradlew.bat compileAgainstFtcSdk` (CI job `sdk-compile`).
 
 ## Line endings
 

@@ -62,6 +62,8 @@ dependencies {
 
 Until a tag is published, use Method A. JitPack coordinates are documented here so teams do not copy unexplained source trees as the primary install path.
 
+AMPER's repository CI also compiles `amper-ftc` against `org.firstinspires.ftc:RobotCore:11.2.0` from Maven Central. TeamCode does not need that job; your FTC project already has RobotCore on the classpath. Local `./gradlew check` in this repo still uses `amper-ftc-stubs` and does not need the Android Gradle Plugin.
+
 ## Method C — GitHub Packages (optional maintainer publish)
 
 See [release.md](release.md). Not required for the first student install.

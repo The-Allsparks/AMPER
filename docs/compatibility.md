@@ -22,6 +22,17 @@ FRC PowerDistribution (PDP/PDH) terminology is used only as vocabulary. AMPER do
 
 SystemCore: adapter boundary only. See issue #16. No invented APIs.
 
+## CI compile
+
+| Path | What it compiles against | Command |
+|------|--------------------------|---------|
+| Default / unit tests | `amper-ftc-stubs` (JVM, no Android plugin) | `./gradlew check` |
+| SDK drift check | Official `org.firstinspires.ftc:RobotCore:11.2.0` AAR from Maven Central | `./gradlew compileAgainstFtcSdk` |
+
+The GitHub Actions `sdk-compile` job runs the SDK path and **fails** if `AmperFtc` / `FtcMotorTelemetry` / example OpModes do not compile against RobotCore 11.2.0. Stubs stay on the default classpath so tests can construct `HardwareMap` without Android. Stubs are **not** published.
+
+No extra Maven repository or credential is required (same coordinates as [FtcRobotController v11.2 `build.dependencies.gradle`](https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/v11.2/build.dependencies.gradle)). Emergency skip: `-Pamper.skipFtcSdkCompile=true` (do not use this in CI).
+
 ## Upgrade
 
 - `0.1.0-SNAPSHOT` scaffold → `0.1.0-rc.1`: new modules `amper-core` / `amper-ftc`. Prefer `AmperFtc.builder(hardwareMap)` instead of manual suppliers. `AmperSession.observe()` remains. Robot export is AdvantageScope CSV under `/AMPER/...`; `exportCsv()` still returns the internal diagnostic event log.

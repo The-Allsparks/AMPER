@@ -7,8 +7,9 @@ dependencies {
     compileOnly project(':amper-ftc-stubs')
 }
 
-// Examples are compile-checked against FTC API stubs. They are not an
-// Android application and are not a substitute for Control Hub validation.
+// Default desktop compile uses FTC API stubs. CI also compiles examples
+// against official RobotCore (see root `compileAgainstFtcSdk`). Examples
+// are not an Android application and are not Control Hub validation.
 tasks.named('jar', Jar) {
     manifest {
         attributes(

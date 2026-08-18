@@ -36,6 +36,20 @@ jobs:
       - name: Release artifact smoke
         run: ./gradlew :amper-core:jar :amper-ftc:jar :amper-core:sourcesJar :amper-core:javadocJar --no-daemon
 
+  sdk-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - name: Grant Gradle permissions
+        run: chmod +x gradlew
+      - name: Compile adapters against FTC SDK 11.2.0
+        run: ./gradlew compileAgainstFtcSdk --no-daemon
+
   docs-structure:
     runs-on: ubuntu-latest
     steps:

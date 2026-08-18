@@ -15,6 +15,7 @@ Do not cut `0.1.0` final until [docs/validation/STATUS.md](validation/STATUS.md)
 ## Checklist before tagging
 
 - [ ] `./gradlew check javadocAll assembleReleaseArtifacts`
+- [ ] `./gradlew compileAgainstFtcSdk` (official RobotCore 11.2.0, not stubs)
 - [ ] Example OpModes compile (`:amper-examples:compileJava`)
 - [ ] Intervention flags default false (unit tests)
 - [ ] Phase 0/1 tests prove no `setPower` / `setVelocity`
@@ -40,4 +41,4 @@ git push origin v0.1.0-rc.1
 | `amper-core` | Pure Java. No Android / FTC SDK |
 | `amper-ftc` | FTC adapters. Compile against official SDK on the robot |
 | sources / javadoc jars | Gradle `withSourcesJar()` / `withJavadocJar()` |
-| `amper-ftc-stubs` | **Not published.** CI compile stand-ins only |
+| `amper-ftc-stubs` | **Not published.** Default desktop compile stand-ins; CI also compiles against official RobotCore |
