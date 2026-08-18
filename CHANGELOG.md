@@ -11,6 +11,7 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 - `publishTelemetry` now rate-limits Driver Station lines when Phase 1 is off or AMPER is disabled, so `measurementOnly()` still shows `AMPER.V` and `disabled()` shows `AMPER_DISABLED` (#34).
 - Stall suspicion dwell continues across round-robin `SKIPPED` current samples when command, velocity, and carried amps still look jammed (#33). Missing current still does not invent a stall.
+- Weak-battery hints use a 2 s voltage window instead of match-long max/min, so one sag can clear after recovery (#35).
 
 ### Added
 

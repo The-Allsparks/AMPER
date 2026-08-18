@@ -15,7 +15,7 @@
 |-----------|---------|-------|
 | `mechanismStartEffort` / `mechanismStopEffort` | 0.10 / 0.05 | Start/stop hysteresis on \|command\| |
 | `stallCurrentAmps` / `stallVelocityTicksPerSecond` / `stallDwellNanos` | 8 A / 50 ticks/s / 150 ms | Placeholders — tune per motor |
-| `weakBatterySagVolts` | 1.5 V | Suspected weak pack hint |
+| `weakBatterySagVolts` | 1.5 V | Suspected weak pack when recent-window rest−load ≥ this **and** loaded ≤ watch. Window is 2 s, not match-long extrema. |
 | `telemetryMinPeriodNanos` | 100 ms | Driver-state publish rate limit |
 | `loggerCapacity` | 4000 | Drop-oldest ring |
 
