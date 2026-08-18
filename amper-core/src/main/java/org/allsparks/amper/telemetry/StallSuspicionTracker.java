@@ -9,6 +9,7 @@ import org.allsparks.amper.log.PowerEvent;
 import org.allsparks.amper.log.PowerEventLogger;
 import org.allsparks.amper.log.PowerEventType;
 import org.allsparks.amper.measure.ElectricalObservation;
+import org.allsparks.amper.measure.MeasurementValidity;
 import org.allsparks.amper.measure.MotorSnapshot;
 import org.allsparks.amper.policy.PowerPolicy;
 
@@ -80,9 +81,22 @@ public final class StallSuspicionTracker {
         if (Math.abs(vel) > policy.stallVelocityTicksPerSecond()) {
             return false;
         }
-        if (!motor.current().isUsable()) {
+        return currentLooksStalled(motor, policy);
+    }
+
+    /**
+     * Fresh VALID current can start or continue a stall. SKIPPED current may
+     * carry the last amps from round-robin sampling and must not clear dwell.
+     * MISSING, UNSUPPORTED, and STALE current do not invent a stall.
+     */
+    private static boolean currentLooksStalled(MotorSnapshot motor, PowerPolicy policy) {
+        double amps = motor.current().amps();
+        if (Double.isNaN(amps) || amps < policy.stallCurrentAmps()) {
             return false;
         }
-        return motor.current().amps() >= policy.stallCurrentAmps();
+        if (motor.current().isUsable()) {
+            return true;
+        }
+        return motor.current().validity() == MeasurementValidity.SKIPPED;
     }
 }

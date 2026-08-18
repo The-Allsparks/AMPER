@@ -40,7 +40,7 @@ Filtering, minima, command/current logging, start/stop events, driver warnings, 
 
 **What it controls:** nothing. Driver Station lines are advisory.
 
-**What it cannot solve:** bad batteries, loose XT30, stalls caused by mechanical binding (it can only *flag* suspected stalls).
+**What it cannot solve:** bad batteries, loose XT30, stalls caused by mechanical binding (it can only *flag* suspected stalls). A `SKIPPED` current sample from round-robin polling is not an all-clear: stall dwell continues if command, velocity, and carried amps still look jammed. Missing or stale current does not invent a stall.
 
 **Graph:** filtered voltage vs time, overlaid with `mechanism_start` / `mechanism_stop` and `sumAbsCmd`.
 
