@@ -8,25 +8,39 @@ Write and review this architecture **before** enabling active motor control.
 - Phased enablement for rookies: measure → understand → optionally intervene.
 - Hardware-independent policy with REV adapters today and a documented SystemCore boundary later.
 
+## Gradle modules
+
+| Module | Dependency | Role |
+|--------|------------|------|
+| `amper-core` | Pure Java 8 | Models, filters, policy, logging, simulation. **No** `com.qualcomm` / Android |
+| `amper-ftc` | `amper-core` + FTC SDK at compile time on the robot | `AmperFtc`, `HardwareMap` / `DcMotorEx` / `VoltageSensor` adapters, FTC log sink |
+| `amper-examples` | `amper-ftc` | Compile-checked OpModes |
+| `amper-tools` | `amper-core` | Desktop CSV analysis |
+| `amper-ftc-stubs` | none | CI-only API stand-ins; **not published**, **not for TeamCode** |
+
 ## Module map
 
 ```text
 OpMode / scheduler
     │
-    └─► AmperSession.observe()   (never writes motors)
+    └─► AmperFtc.builder(hardwareMap).build()  → AmperSession
             │
-            ├─► PowerMonitor  ──► ElectricalObservation (voltage, currents, commands)
-            ├─► BatteryEstimator
-            ├─► MechanismActivityTracker / StallSuspicionTracker / DriverFeedback
-            ├─► PowerEventLogger  (exportable CSV)
-            │
-            ├─► (Phase 4+) subsystem intent ──► PowerRequest
-            │         ▼
-            │      PowerCoordinator ◄── PowerPolicy / AmperFeatureFlags
-            │         ▼
-            │      PowerGrant (advisory until intervention phases enabled)
-            │
-            └─► subsystem applies motor outputs (subsystems own PID/FF/safety)
+            └─► AmperSession.observe()   (never writes motors)
+                    │
+                    ├─► PowerMonitor  ──► ElectricalObservation (labeled hubs, currents, commands)
+                    ├─► BatteryEstimator
+                    ├─► MechanismActivityTracker / StallSuspicionTracker / DriverFeedback
+                    ├─► CanonicalLog  (bounded; AdvantageScope CSV + sidecar on stop)
+                    ├─► PowerEventLogger  (internal diagnostic event CSV)
+                    │
+                    ├─► (Phase 2 opt-in, subsystem-owned) LocalProtection → ConstrainedCommand
+                    ├─► (Phase 4+) subsystem intent ──► PowerRequest
+                    │         ▼
+                    │      PowerCoordinator ◄── PowerPolicy / AmperFeatureFlags
+                    │         ▼
+                    │      PowerGrant (advisory until intervention phases enabled)
+                    │
+                    └─► subsystem applies motor outputs (subsystems own PID/FF/safety)
 ```
 
 ## `PowerMonitor`
@@ -41,6 +55,10 @@ Reads and filters:
 - validity / freshness.
 
 **Must not command hardware.**
+
+## `CanonicalLog`
+
+Hardware-independent field model consumed by sinks. Robot flush writes AdvantageScope table CSV. Desktop `amper-tools` converts to WPILOG. Sinks must not affect `ElectricalObservation` or policy.
 
 ## `PowerEventLogger`
 
@@ -73,9 +91,10 @@ Rate-limited states: normal, elevated demand, intervention active, severe voltag
 | Interface | Role |
 |-----------|------|
 | `PowerTelemetrySource` | Hub/bus electrical reads |
-| `MotorElectricalTelemetry` | Per-motor electrical + command reads |
+| `MotorElectricalTelemetry` | Per-motor electrical + command reads (no write methods) |
 | `AmperClock` | Testable time |
-| REV adapters | Supplier-wired to SDK on-robot |
+| `AmperFtc` / `FtcVoltageSource` / `FtcMotorTelemetry` | Real FTC SDK types in `amper-ftc` |
+| `RevHubTelemetrySource` | Supplier adapter for tests/desktop |
 | `SystemCoreAdapterBoundary` | Future only — unimplemented |
 
 ## Control and safety analysis

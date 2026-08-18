@@ -7,8 +7,10 @@ AMPER is maintained by [The Allsparks](https://github.com/The-Allsparks) (FTC Te
 ```powershell
 git clone https://github.com/The-Allsparks/AMPER.git
 cd AMPER
-.\gradlew.bat test
+.\gradlew.bat check
 ```
+
+Install into TeamCode: [docs/install.md](docs/install.md).
 
 ## Rules of engagement
 
@@ -23,7 +25,7 @@ cd AMPER
 - Prefer small, reviewable PRs.
 - Include motivation, phase impact, test evidence, and safety notes.
 - Update docs when behavior or maturity labels change.
-- Run `.\gradlew.bat test` (or `./gradlew test`) before requesting review.
+- Run `.\gradlew.bat check` (or `./gradlew check`) before requesting review.
 
 ## Line endings
 

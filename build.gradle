@@ -1,36 +1,52 @@
-plugins {
-    id 'java-library'
+ext {
+    amperGroup = 'org.allsparks'
+    amperVersion = '0.1.0-rc.1'
+    junitBomVersion = '5.10.2'
+    // FTC SDK 11.2.0 (DECODE 2025-2026). Source/target 1.8 matches
+    // FtcRobotController v11.2 build.common.gradle compileOptions.
+    // Accessed 2026-08-17 from
+    // https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/v11.2/build.common.gradle
+    ftcSdkVersion = '11.2.0'
 }
 
-group = 'org.allsparks'
-version = '0.1.0-SNAPSHOT'
+subprojects { sub ->
+    sub.group = rootProject.ext.amperGroup
+    sub.version = rootProject.ext.amperVersion
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-    withSourcesJar()
-    withJavadocJar()
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.2')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-tasks.named('test', Test) {
-    useJUnitPlatform()
-}
-
-tasks.named('jar', Jar) {
-    manifest {
-        attributes(
-                'Implementation-Title': 'AMPER',
-                'Implementation-Version': archiveVersion,
-                'Automatic-Module-Name': 'org.allsparks.amper'
-        )
+    sub.pluginManager.withPlugin('java-library') {
+        sub.java {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+            withSourcesJar()
+            withJavadocJar()
+        }
+        sub.repositories {
+            mavenCentral()
+        }
+        sub.tasks.named('javadoc', Javadoc) { javadoc ->
+            javadoc.options.encoding = 'UTF-8'
+            javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+            javadoc.failOnError = false
+        }
+        sub.tasks.withType(JavaCompile).configureEach { compile ->
+            compile.options.encoding = 'UTF-8'
+            compile.options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+        }
     }
+}
+
+tasks.register('test') {
+    dependsOn ':amper-core:test', ':amper-ftc:test', ':amper-tools:test'
+}
+
+tasks.register('check') {
+    dependsOn ':amper-core:check', ':amper-ftc:check', ':amper-examples:compileJava', ':amper-tools:check'
+}
+
+tasks.register('javadocAll') {
+    dependsOn ':amper-core:javadoc', ':amper-ftc:javadoc', ':amper-tools:javadoc'
+}
+
+tasks.register('assembleReleaseArtifacts') {
+    dependsOn ':amper-core:assemble', ':amper-ftc:assemble', ':amper-tools:assemble'
 }

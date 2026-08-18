@@ -2,28 +2,18 @@
 
 **Adaptive Motor Power and Energy Regulation for FTC**
 
-AMPER is a phased, robot-wide electrical-awareness and power-coordination
-system for FIRST Tech Challenge robots.
+AMPER is the electrical-awareness companion to [ViDAR](https://github.com/The-Allsparks/ViDAR):
 
-It begins as passive instrumentation: measuring voltage, motor current,
-commands, and voltage sag without changing robot behavior. Teams can then
-progressively enable local mechanism protection, reactive voltage limiting,
-priority-based load coordination, and—after collecting sufficient real-world
-data—predictive voltage-sag management.
+* **ViDAR** gives the robot situational awareness of the field.
+* **AMPER** gives the robot situational awareness of its electrical system.
 
-AMPER is designed to help students understand not only what the robot is
-doing, but why its electrical system behaves that way.
+It is a phased system for FIRST Tech Challenge robots. The first usable release is **passive**: measure voltage (and optional motor current), warn, log, and export. It does **not** change motor output.
 
 ---
 
 ## Built by The Allsparks
 
 AMPER is created and maintained by **[The Allsparks](https://github.com/The-Allsparks)** (FTC Team **#36117**).
-
-It complements the team’s [ViDAR](https://github.com/The-Allsparks/ViDAR) project:
-
-* **ViDAR** gives the robot situational awareness of the field.
-* **AMPER** gives the robot situational awareness of its electrical system.
 
 Repository: **[The-Allsparks/AMPER](https://github.com/The-Allsparks/AMPER)**
 
@@ -35,38 +25,54 @@ Repository: **[The-Allsparks/AMPER](https://github.com/The-Allsparks/AMPER)**
 
 | Item | Status |
 |------|--------|
-| **Version** | `0.1.0-SNAPSHOT` |
-| **Implemented phase** | **Phase 0** (measurement) and **Phase 1** (passive telemetry, flag default off) |
-| **Phase 1** | Implemented in library; enable `AmperFeatureFlags.passiveTelemetry()` after desktop tests. Not hardware-validated yet. |
-| **Phases 2–7** | Designed / experimental / disabled by default |
-| **Active motor intervention** | **Disabled.** Do not enable without review and acceptance tests. |
-| **Predictive power management** | **Not production-ready.** Shadow/research only after real-robot data exists. |
+| **Version** | `0.1.0-rc.1` (prerelease) |
+| **Implemented phase** | **Phase 0** (measurement) and **Phase 1** (passive telemetry, flag default off; enable with `AmperPolicies.passiveDefaults()`) |
+| **Phase 2** | Experimental foundations, **disabled by default**, not robot-characterized |
+| **Phases 3–7** | Designed / experimental / **disabled**. Not production-ready |
+| **Active motor intervention** | **Disabled.** Phase 0/1 never call `setPower` or `setVelocity` |
+| **Hardware validation** | **Not yet run.** See [docs/validation/STATUS.md](docs/validation/STATUS.md) |
+| **SystemCore** | Adapter boundary only. Blocked on authoritative docs (issue #16) |
 
-**No phase should be enabled in competition without testing on your robot.**
+**No phase should be enabled in competition without testing on your robot.** Desktop tests are not Control Hub validation.
 
-Supported targets for this scaffold:
-
-* **FTC SDK:** current public [FtcRobotController](https://github.com/FIRST-Tech-Challenge/FtcRobotController) season releases (Java TeamCode integration).
-* **Hardware:** REV Control Hub and Expansion Hub electrical telemetry exposed through the FTC SDK (`VoltageSensor`, `DcMotorEx` current where available).
-* **Library build:** Java 11 source/target; CI uses Temurin 17 to compile and test.
+Roadmap vs code: [docs/status/issue-matrix.md](docs/status/issue-matrix.md).
 
 ### Current limitations
 
 * Phase 0–1 provide measurement, logging, driver warnings, and match summaries. They do **not** change motor output.
-* Hub/motor current sampling cost, latency, and reliability must be measured on your robot before trusting warnings.
+* Hub/motor current sampling cost must be measured on **your** robot ([hardware test card](docs/validation/hardware-test-card.md)).
 * AMPER does **not** implement FRC-style roboRIO staged brownout firmware, TalonFX supply current limits, or unverified SystemCore features.
-* Multi-hub timing, servo-rail current, and regenerative edge cases are only partially characterized in documentation.
+* Total battery current is **not** claimed. Per-motor current, hub voltage, and inferred demand are distinct.
+* Placeholder voltage thresholds are **conservative placeholders**, not universal FTC truth.
 
 ### Software vs hardware brownout protection
 
-Hardware and firmware protections (Hub resets, Driver Station disconnect symptoms, motor-controller behavior) react when voltage is already unsafe. AMPER’s later phases aim to **reduce avoidable demand** before that point. Software cannot replace:
+Hardware and firmware protections (Hub resets, Driver Station disconnect symptoms, motor-controller behavior) react when voltage is already unsafe. AMPER’s later phases aim to **reduce avoidable demand** before that point. Software cannot replace healthy batteries, tight XT30 / power connectors, correct wire gauge, or mechanical freedom.
 
-* healthy batteries;
-* tight XT30 / power connectors;
-* correct wire gauge and short high-current paths;
-* mechanical freedom (no stalls from binding).
+**AMPER cannot repair bad batteries, loose connectors, damaged wiring, or undersized electrical paths.**
 
-**AMPER cannot repair bad batteries, loose connectors, damaged wiring, or undersized electrical paths.** Software protection **complements** good electrical construction; it does not replace it.
+---
+
+## Install and five-minute setup
+
+1. [Install into an FTC SDK project](docs/install.md) (Gradle composite build preferred).
+2. [Five-minute passive setup](docs/quickstart.md).
+3. Copy an example from [`amper-examples`](amper-examples) (remove `@Disabled`).
+
+```java
+AmperSession amper = AmperFtc.builder(hardwareMap)
+    .controlHubVoltage()
+    .expansionHubVoltage("Expansion Hub 1") // optional, explicit name
+    .observeMotor("frontLeft", frontLeft)
+    .observeMotor("frontRight", frontRight)
+    .observeMotor("lift", lift)
+    .policy(AmperPolicies.passiveDefaults())
+    .build();
+```
+
+Call `amper.initialize()` from `init`, `amper.start()` when the match starts, `amper.observe()` **once** per loop, `amper.publishTelemetry(...)` for rate-limited DS lines, and `amper.stop()` from `stop` so the AdvantageScope CSV is written.
+
+Disable without changing motors: `AmperPolicies.disabled()` or `AmperPolicies.measurementOnly()`.
 
 ---
 
@@ -74,6 +80,16 @@ Hardware and firmware protections (Hub resets, Driver Station disconnect symptom
 
 | Doc | Purpose |
 |-----|---------|
+| [Install](docs/install.md) | FTC SDK dependency / includeBuild |
+| [Five-minute setup](docs/quickstart.md) | First telemetry |
+| [Issue matrix](docs/status/issue-matrix.md) | Issues #1–#16 vs code |
+| [Roadmap](docs/status/roadmap.md) | 0.1.x phases and readiness gates |
+| [Priority ledger](docs/status/priority-ledger.md) | Ready vs blocked work |
+| [Initial deep audit](docs/audits/initial-deep-audit.md) | 2026-08-17 architecture/safety audit |
+| [Logging and export](docs/logging.md) | AdvantageScope CSV, `/AMPER` keys, WPILOG converter |
+| [Compatibility](docs/compatibility.md) | FTC SDK / Java matrix |
+| [Release](docs/release.md) | SemVer, checklist, artifacts |
+| [Hardware validation](docs/validation/STATUS.md) | Not yet run |
 | [Power management overview](docs/power-management/README.md) | Student entry point |
 | [Research](docs/power-management/research.md) | Source-backed findings |
 | [Architecture](docs/power-management/architecture.md) | Module boundaries |
@@ -84,26 +100,28 @@ Hardware and firmware protections (Hub resets, Driver Station disconnect symptom
 | [Troubleshooting](docs/power-management/troubleshooting.md) | Failure modes |
 | [Glossary](docs/power-management/glossary.md) | Vocabulary |
 | [References](docs/power-management/references.md) | Citation table |
-| [Examples](examples/README.md) | Integration sketches |
-| [Phase 0 file plan](docs/power-management/phase-0-plan.md) | Exact implementation plan |
-| [Assessment](docs/power-management/assessment.md) | Benefit vs complexity judgment |
+| [Examples](examples/README.md) | Compile-checked OpModes |
+| [Phase 0 file plan](docs/power-management/phase-0-plan.md) | Historical scaffold plan |
+| [Assessment](docs/power-management/assessment.md) | Benefit vs complexity |
 | [Risks](docs/power-management/risks.md) | Open questions |
 
 ---
 
-## Quick start (desktop)
+## Desktop build
 
 ```powershell
 git clone https://github.com/The-Allsparks/AMPER.git
 cd AMPER
-.\gradlew.bat test
+.\gradlew.bat check
 ```
 
 On Linux/macOS:
 
 ```bash
-./gradlew test
+./gradlew check
 ```
+
+Modules: `amper-core` (pure Java), `amper-ftc` (FTC SDK types), `amper-examples` (compile-checked OpModes), `amper-tools` (CSV analysis). `amper-ftc-stubs` is CI-only and is **not** a robot dependency.
 
 ---
 
@@ -112,7 +130,7 @@ On Linux/macOS:
 1. **Passive first.** Measure and teach before intervening.
 2. **Feature-flagged phases.** Each phase is independently testable and reversible.
 3. **Fail safe.** Missing sensors disable intervention; they do not invent trust.
-4. **Subsystem ownership.** AMPER constrains allowable effort; it does not replace PID, feedforward, or mechanism safety.
+4. **Subsystem ownership.** AMPER constrains allowable effort only when a later phase is explicitly enabled; it does not replace PID, feedforward, or mechanism safety.
 5. **Honest maturity.** Predictive features stay experimental until quantified on hardware.
 
 ---

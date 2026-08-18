@@ -30,6 +30,8 @@ These thresholds are **not** validated on Allsparks hardware yet.
 
 ## Feature flags
 
-Defaults: Phase 0 on; Phase 1 off until you call `AmperFeatureFlags.passiveTelemetry()`; intervention off; Phase 5 shadow-only if estimate code exists.
+Defaults: Phase 0 on; Phase 1 off until you call `AmperPolicies.passiveDefaults()` or `AmperFeatureFlags.passiveTelemetry()`; all intervention flags off; Phase 5 shadow-only.
+
+Voltage watch/limiting/critical numbers are `ThresholdProvenance.CONSERVATIVE_PLACEHOLDER` until your team marks `TEAM_TUNED` or `HARDWARE_VALIDATED`.
 
 Never ship competition code with intervention flags enabled “just to try.”

@@ -6,32 +6,51 @@ labels: ""
 assignees: ""
 ---
 
-## Motivation
+## Problem
+
+## Evidence
+
+## Why this matters
+
+## Student learning objective
 
 ## Scope
 
-## Exclusions
-
-## Dependencies
-
-## Proposed approach
-
-## Educational objective
-
-## Safety concerns
+## Out of scope
 
 ## Acceptance criteria
 
 - [ ]
 
-## Required documentation
+## Relevant components
 
-- [ ]
+## Dependencies
+
+## Blocked by
+
+## Blocks
+
+## Proposed implementation approach
+
+## Validation plan
+
+## Documentation required
+
+## Hardware validation required
+
+- [ ] None
+- [ ] Control Hub / named procedure
+
+## Safety considerations
+
+## Compatibility considerations
+
+## Risks
+
+## Rollback or disable strategy
+
+## Parent epic or roadmap
 
 ## Required tests
 
 - [ ]
-
-## Relevant citations
-
--

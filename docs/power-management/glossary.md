@@ -2,7 +2,7 @@
 
 | Term | Meaning |
 |------|---------|
-| **Voltage** | Electrical potential difference; Hub battery/bus voltage is what AMPER samples first. |
+| **SelectedMotorsCurrentAmps** | Sum of VALID currents for motors AMPER is observing — not FRC PDH total current. |
 | **Current** | Charge flow (amperes); correlates with motor torque and wiring loss. |
 | **Power** | \(P \approx V \cdot I\); rate of energy use. |
 | **Resistance** | Opposition to current; wiring and connectors add resistance. |

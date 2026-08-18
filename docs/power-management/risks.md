@@ -20,6 +20,6 @@
 | License | MIT | Match ViDAR |
 | Visibility | Public | Match ViDAR / ftc-dev-tools OSS |
 | Default branch | `main` | Org convention |
-| Java | 11 source/target; CI 17 | Match ViDAR java-pure |
+| Java | 8 source/target; CI Temurin 17 | Match FTC SDK 11.2 `build.common.gradle`, not ViDAR Java 11 |
 | Package | `org.allsparks.amper` | Reusable library naming (vs `teamcode.vidar` copy style) |
 | Intervention | Disabled by default | Safety |

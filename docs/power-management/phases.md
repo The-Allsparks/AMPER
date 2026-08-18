@@ -2,16 +2,16 @@
 
 Every phase must be independently feature-flagged, testable, observable, reversible, fail-safe on missing measurements, and **disabled by default** until acceptance tests pass.
 
-| Phase | Name | Motor intervention | Status in `0.1.0-SNAPSHOT` |
-|-------|------|--------------------|----------------------------|
-| 0 | Measurement validation | No | **Implemented** |
-| 1 | Passive instrumentation | No | **Implemented** (disabled by default; enable the Phase 1 flag) |
-| 2 | Independent subsystem protection | Optional local | Designed / disabled |
-| 3 | Reactive voltage protection | Yes | Designed / disabled |
+| Phase | Name | Motor intervention | Status in `0.1.0-rc.1` |
+|-------|------|--------------------|-------------------------|
+| 0 | Measurement validation | No | **Software implemented and unit-tested. Not Control Hub validated.** |
+| 1 | Passive instrumentation | No | **Software implemented** (enable `AmperPolicies.passiveDefaults()`). Not hardware-validated |
+| 2 | Independent subsystem protection | Optional local, opt-in | Experimental foundations; **disabled by default** |
+| 3 | Reactive voltage protection | Yes if enabled | State-machine foundation only; intervention off |
 | 4 | Priority-based coordination | Yes | API stub only |
-| 5 | Predictive sag estimation | Shadow only first | Research |
-| 6 | Predictive load shaping | Yes | Research |
-| 7 | Adaptive modeling | Experimental | Research |
+| 5 | Predictive sag estimation | Shadow only first | Shadow recorder only; no ML |
+| 6 | Predictive load shaping | Yes | Not implemented |
+| 7 | Adaptive modeling | Experimental | Not implemented |
 
 ---
 
@@ -34,7 +34,7 @@ Implement: hardware-independent interfaces; REV adapters; voltage/current sampli
 
 Filtering, minima, command/current logging, start/stop events, driver warnings, match summaries, exportable logs — **warnings must not modify outputs**.
 
-**Enable:** `AmperFeatureFlags.passiveTelemetry()` on `PowerPolicy`. Defaults remain Phase 1 off.
+**Enable:** `AmperPolicies.passiveDefaults()` or `AmperFeatureFlags.passiveTelemetry()` on `PowerPolicy`. Defaults remain Phase 1 off.
 
 **What it observes:** bus voltage, optional currents, commanded effort, loop duration.
 
@@ -61,7 +61,13 @@ Filtering, minima, command/current logging, start/stop events, driver warnings, 
 
 Optional slew limits, accel ramps, stall/jam detection, intake recovery, output caps, timeouts, careful voltage-normalized commands.
 
+**Enable:** subsystem constructs `LocalProtection.builder().enabled(true)...` and applies `ConstrainedCommand` itself. Never auto-wrap every FTC motor. Gravity-critical mechanisms must `GravityHoldPolicy.declare`. Automatic recovery defaults off.
+
+**Disable:** omit LocalProtection or `LocalProtection.disabled()` — requested command is unchanged.
+
 Explain PWM (Hub) vs ramp limiting vs higher-level time slicing — do not market PWM as a novel AMPER invention.
+
+**Evidence required to advance:** Control Hub characterization of slew/stall on the actual mechanism. Software tests are not that evidence.
 
 ## Phase 3 — Reactive voltage protection
 

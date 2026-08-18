@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1",
+  "libraryVersion": "0.1.0-rc.1",
+  "format": "advantagescope-csv-table",
+  "timestampUnit": "seconds",
+  "internalTimestampUnit": "nanoseconds",
+  "keyPrefix": "/AMPER",
+  "sessionId": "fixture-session",
+  "hardwarePlatform": "FTC_REV_HUB",
+  "csvLayout": "table",
+  "hardwareNameMapping": {
+    "Control Hub": "Control_Hub",
+    "frontLeft": "frontLeft"
+  },
+  "fields": {
+    "/AMPER/Metadata/SchemaVersion": {"type":"string","unit":"none","source":"AMPER session metadata","measured":false,"estimated":false,"cadence":"session","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/Metadata/LibraryVersion": {"type":"string","unit":"none","source":"AMPER session metadata","measured":false,"estimated":false,"cadence":"session","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/Metadata/SessionId": {"type":"string","unit":"none","source":"AMPER session metadata","measured":false,"estimated":false,"cadence":"session","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/Metadata/HardwarePlatform": {"type":"string","unit":"none","source":"AMPER session metadata","measured":false,"estimated":false,"cadence":"session","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/System/BusVoltageVolts": {"type":"double","unit":"volts","source":"FTC VoltageSensor.getVoltage","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"policy-voltage-source","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/System/FilteredVoltageVolts": {"type":"double","unit":"volts","source":"AMPER low-pass of measured bus voltage","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"policy-voltage-source","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/System/MinimumVoltageVolts": {"type":"double","unit":"volts","source":"AMPER match minimum of valid measured bus voltage","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"policy-voltage-source","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/System/MeasurementValidity": {"type":"string","unit":"none","source":"AMPER validity classifier","measured":false,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/System/PowerState": {"type":"string","unit":"none","source":"AMPER driver-facing PowerState","measured":false,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/System/SelectedMotorsCurrentAmps": {"type":"double","unit":"amperes","source":"Sum of VALID currents for motors AMPER is observing. Not robot total current.","measured":true,"estimated":false,"cadence":"when-valid-currents-exist","schemaVersion":"1","hardwareSource":"selected-DcMotorEx","validity":"Empty when no observed motor has VALID current this sample. Not TotalCurrentAmps."},
+    "/AMPER/Performance/UpdateDurationSeconds": {"type":"double","unit":"seconds","source":"AMPER observe() duration","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"AMPER","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Performance/LoopDurationSeconds": {"type":"double","unit":"seconds","source":"Elapsed time between observe() calls","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"AMPER","validity":"Empty on the first sample of a session."},
+    "/AMPER/Performance/DroppedRecords": {"type":"int64","unit":"none","source":"Count of bounded-log overwrites","measured":false,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/Events/Type": {"type":"string","unit":"none","source":"AMPER PowerEventType","measured":false,"estimated":false,"cadence":"on-event","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/Events/Message": {"type":"string","unit":"none","source":"AMPER event message","measured":false,"estimated":false,"cadence":"on-event","schemaVersion":"1","hardwareSource":"AMPER","validity":""},
+    "/AMPER/Hubs/Control_Hub/VoltageVolts": {"type":"double","unit":"volts","source":"FTC VoltageSensor.getVoltage","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"Control_Hub","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Hubs/Control_Hub/SampleAgeSeconds": {"type":"double","unit":"seconds","source":"now minus voltage capture time","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"Control_Hub","validity":"Always seconds. Empty if capture time is unknown."},
+    "/AMPER/Motors/frontLeft/Command": {"type":"double","unit":"command_effort","source":"DcMotorEx.getPower observed, never written by AMPER","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Motors/frontLeft/AppliedCommand": {"type":"double","unit":"command_effort","source":"Phase 0/1 identity: equals Command because AMPER does not modify output","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Motors/frontLeft/CurrentAmps": {"type":"double","unit":"amperes","source":"DcMotorEx.getCurrent(CurrentUnit.AMPS) when the SDK exposes it","measured":true,"estimated":false,"cadence":"round-robin-or-every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Motors/frontLeft/VelocityTicksPerSecond": {"type":"double","unit":"ticks_per_second","source":"DcMotorEx.getVelocity encoder ticks; not converted to rotations","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Motors/frontLeft/CurrentSampleAgeSeconds": {"type":"double","unit":"seconds","source":"now minus current capture time","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Seconds. Empty if no current capture exists."},
+    "/AMPER/Motors/frontLeft/StallSuspected": {"type":"boolean","unit":"none","source":"AMPER stall-suspicion tracker","measured":false,"estimated":true,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"true/false. Warning only; not a hardware stall bit."},
+    "/AMPER/Mechanisms/frontLeft/RequestedEffort": {"type":"double","unit":"command_effort","source":"Observed commanded effort for this mechanism name","measured":true,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Mechanisms/frontLeft/GrantedEffort": {"type":"double","unit":"command_effort","source":"Phase 0/1 identity grant (no allocator)","measured":false,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN."},
+    "/AMPER/Mechanisms/frontLeft/Constrained": {"type":"boolean","unit":"none","source":"True only when an enabled coordinator reduced the grant","measured":false,"estimated":false,"cadence":"every-loop","schemaVersion":"1","hardwareSource":"frontLeft","validity":"true/false. Phase 0/1 is always false."}
+  },
+  "terminology": {
+    "selectedMotorsCurrentAmps": "Sum of VALID currents for motors AMPER observes. Not FRC PDH/PDP total current.",
+    "notClaimed": [
+      "PDH/PDP branch-current monitoring",
+      "true robot total-current measurement",
+      "roboRIO brownout state",
+      "TalonFX supply-current limiting",
+      "SystemCore telemetry not documented by FIRST or REV"
+    ]
+  }
+}
