@@ -10,6 +10,8 @@
 
 This audit inspects the **0.1.0-rc.1 product** on open PR [#18](https://github.com/The-Allsparks/AMPER/pull/18), not only `main`. `main` does not yet contain the installable FTC library.
 
+A **2026-08-18 follow-up** at the end of this file records that PR #18 (and #33–#36) later merged; do not treat the 2026-08-17 `main` SHA in the table above as current.
+
 ---
 
 ## Executive summary
@@ -293,3 +295,52 @@ No circular dependencies found.
 - CI workflow: `.github/workflows/ci.yml` (`./gradlew check javadocAll assembleReleaseArtifacts`)
 
 Finding IDs in this document map to GitHub issues **#24–#36**. Existing issues #1–#16 are **not** duplicated.
+
+---
+
+## Follow-up — 2026-08-18
+
+| Field | Value |
+|-------|-------|
+| **Date** | 2026-08-18 |
+| **Synced commit** | `98003745dfa3a86525b036f0d9568772dc0f3568` (`main`) |
+| **Auditor identity** | `TA-C-GHill` |
+| **Hardware validation** | Still **none**. `docs/validation/STATUS.md` remains not yet run. |
+
+This section does **not** rewrite the 2026-08-17 findings. It records what landed afterward so the [priority ledger](../status/priority-ledger.md) and [roadmap](../status/roadmap.md) are not contradicted by the snapshot above.
+
+### Landed on `main`
+
+| Item | Evidence |
+|------|----------|
+| 0.1.0-rc.1 software | PR [#18](https://github.com/The-Allsparks/AMPER/pull/18) merged 2026-08-17. `main` **is** the installable FTC library. R2 is resolved. No git tag `v0.1.0-rc.1` yet. |
+| U6 / #34 | PR [#37](https://github.com/The-Allsparks/AMPER/pull/37) |
+| C7 / #33 | PR [#38](https://github.com/The-Allsparks/AMPER/pull/38) |
+| C8 / #35 | PR [#39](https://github.com/The-Allsparks/AMPER/pull/39) |
+| Dep4 / #36 | PR [#40](https://github.com/The-Allsparks/AMPER/pull/40): `./gradlew compileAgainstFtcSdk` and CI job `sdk-compile` against RobotCore 11.2.0. Default `check` still uses stubs. This is **not** Hub validation. |
+| Actions setup-java | PR [#22](https://github.com/The-Allsparks/AMPER/pull/22) merged (`actions/setup-java@v5`). |
+
+### Partial / still open
+
+| ID | Status |
+|----|--------|
+| R1 / #25 | Classic branch protection **exists** on `main`. Required checks: `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`. `sdk-compile` is **not** required. `required_approving_review_count` is **0**. Policy is not yet recorded in CONTRIBUTING.md / docs/release.md. Do not close #25. |
+| Dep1 / #29 | JUnit 6 PR #20 closed unmerged. Gradle 9.7 PR [#21](https://github.com/The-Allsparks/AMPER/pull/21) still open and **failed CI**. Do not merge. |
+| Dep2 / #30 | Checkout 4→7 PR [#23](https://github.com/The-Allsparks/AMPER/pull/23) is green and unreviewed. Prefer SHA pins. |
+| A3 / #26, C6 / #27 | Unchanged. Phase 2 seams. Do not enable actuation. |
+| C1 / #28 | Unchanged. Lifecycle; now also a child of #41. |
+| P1 / #6 | Unchanged. Hardware unavailable here. |
+
+### New P0 (does not invalidate the 2026-08-17 safety verdict)
+
+Org-wide first implementation priority is FTC integration epic [#41](https://github.com/The-Allsparks/AMPER/issues/41) (sibling epics on MIMIC, TRACE, BEACON, HELM, ViDAR, ECHO; combined gate [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4)). Listing that epic first is [#42](https://github.com/The-Allsparks/AMPER/issues/42). Packaging follow-up: [#43](https://github.com/The-Allsparks/AMPER/issues/43) (`assembleReleaseArtifacts` currently also builds `amper-tools`; stubs remain unpublished). Sibling contracts: [#44](https://github.com/The-Allsparks/AMPER/issues/44).
+
+There is still **no BLOCKER** for continued **passive** software work. There is still **no** evidence of a Phase 0/1 path that writes `setPower` / `setVelocity`. AMPER is **not** FTC-ready from desktop tests.
+
+### Recommended work order (2026-08-18)
+
+1. [#42](https://github.com/The-Allsparks/AMPER/issues/42) — this docs slice.
+2. [#41](https://github.com/The-Allsparks/AMPER/issues/41) children: [#43](https://github.com/The-Allsparks/AMPER/issues/43), [#28](https://github.com/The-Allsparks/AMPER/issues/28), remaining [#25](https://github.com/The-Allsparks/AMPER/issues/25), [#44](https://github.com/The-Allsparks/AMPER/issues/44).
+3. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy (do not merge #21).
+4. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (hardware; blocked here).
+5. [#26](https://github.com/The-Allsparks/AMPER/issues/26) / [#27](https://github.com/The-Allsparks/AMPER/issues/27) Phase 2 seams **after** #41. Do not enable Phases 3–7.

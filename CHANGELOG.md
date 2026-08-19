@@ -7,6 +7,10 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
+### Changed
+
+- Priority ledger and 0.1.x roadmap list FTC integration epic #41 as the first readiness priority; tracking epic remains #24. Phase 2–7 stay gated. Desktop tests are not Control Hub validation (#42).
+
 ### Fixed
 
 - `publishTelemetry` now rate-limits Driver Station lines when Phase 1 is off or AMPER is disabled, so `measurementOnly()` still shows `AMPER.V` and `disabled()` shows `AMPER_DISABLED` (#34).
