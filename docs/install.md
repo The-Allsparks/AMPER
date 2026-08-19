@@ -41,6 +41,8 @@ dependencies {
 
 `amper-ftc` already depends on `amper-core`. Keep both coordinates so the FTC adapters are on the classpath.
 
+Do **not** add `org.allsparks:amper-tools` or `amper-ftc-stubs` to TeamCode. Tools are a laptop converter. Stubs exist only so this repository can compile without Android. Composite `includeBuild` can still resolve those modules; using them on the Control Hub is unsupported.
+
 4. Sync Android Studio, then continue with [quickstart.md](quickstart.md).
 
 This compiles AMPER from source with your project. No Maven login is required.
@@ -70,7 +72,7 @@ See [release.md](release.md). Not required for the first student install.
 
 ## Copying source is a fallback only
 
-Copying `amper-core` / `amper-ftc` Java into TeamCode is a **temporary fallback** if Gradle composite build is impossible. If you do that, copy both modules, keep the `org.allsparks.amper` packages, and do **not** copy `amper-ftc-stubs` (those exist only so this repository can compile without Android).
+Copying `amper-core` / `amper-ftc` Java into TeamCode is a **temporary fallback** if Gradle composite build is impossible. If you do that, copy both modules, keep the `org.allsparks.amper` packages, and do **not** copy `amper-ftc-stubs` or `amper-tools` (stubs exist only so this repository can compile without Android; tools stay on a laptop).
 
 ## After install
 

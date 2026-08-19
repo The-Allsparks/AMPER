@@ -44,7 +44,7 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 
 - `AmperFtc.builder(hardwareMap)` examples.
 - Composite `includeBuild` install path.
-- **#41** packaging, lifecycle, and install hardening (in progress; first child #42).
+- **#41** packaging, lifecycle, and install hardening (in progress; #42 done; current child #43).
 
 ## Advanced integration
 
@@ -77,20 +77,19 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 
 ## Child issues (dependency order)
 
-Closed software slices (do not re-open as next work): [#18](https://github.com/The-Allsparks/AMPER/pull/18), [#34](https://github.com/The-Allsparks/AMPER/issues/34), [#33](https://github.com/The-Allsparks/AMPER/issues/33), [#35](https://github.com/The-Allsparks/AMPER/issues/35), [#36](https://github.com/The-Allsparks/AMPER/issues/36).
+Closed software slices (do not re-open as next work): [#18](https://github.com/The-Allsparks/AMPER/pull/18), [#34](https://github.com/The-Allsparks/AMPER/issues/34), [#33](https://github.com/The-Allsparks/AMPER/issues/33), [#35](https://github.com/The-Allsparks/AMPER/issues/35), [#36](https://github.com/The-Allsparks/AMPER/issues/36), [#42](https://github.com/The-Allsparks/AMPER/issues/42).
 
 1. [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration epic (**first readiness priority**)
-2. [#42](https://github.com/The-Allsparks/AMPER/issues/42) Record #41 first in this roadmap and the ledger (this slice)
-3. [#43](https://github.com/The-Allsparks/AMPER/issues/43) Keep stubs and desktop tools off robot-facing artifacts
-4. [#28](https://github.com/The-Allsparks/AMPER/issues/28) init vs match lifecycle
-5. [#25](https://github.com/The-Allsparks/AMPER/issues/25) remaining branch-protection policy (`sdk-compile` required check; review count; docs)
-6. [#44](https://github.com/The-Allsparks/AMPER/issues/44) sibling electrical contracts (docs; no sibling JARs)
-7. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy (do not merge [#21](https://github.com/The-Allsparks/AMPER/pull/21))
-8. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
-9. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
-10. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs
-11. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline
-12. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**after** #41; do not enable Phase 2)
-13. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6/#26)
-14. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
-15. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
+2. [#43](https://github.com/The-Allsparks/AMPER/issues/43) Keep stubs and desktop tools off robot-facing artifacts (this slice)
+3. [#28](https://github.com/The-Allsparks/AMPER/issues/28) init vs match lifecycle
+4. [#25](https://github.com/The-Allsparks/AMPER/issues/25) remaining branch-protection policy (`sdk-compile` required check; review count; docs)
+5. [#44](https://github.com/The-Allsparks/AMPER/issues/44) sibling electrical contracts (docs; no sibling JARs)
+6. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy (do not merge [#21](https://github.com/The-Allsparks/AMPER/pull/21))
+7. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
+8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
+9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs
+10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline
+11. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**after** #41; do not enable Phase 2)
+12. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6/#26)
+13. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
+14. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
