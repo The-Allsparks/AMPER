@@ -24,13 +24,16 @@ Effort fields use dimensionless \(\approx [-1, 1]\) unless your team documents o
 |------|------|
 | Construction | `AmperFtc.builder(hardwareMap)...build()` in `init` |
 | Initialization | `amper.initialize()` (optional probe; safe to repeat) |
-| Match start | `amper.start()` (resets match stats) |
-| Each control loop | **one** `amper.observe()` (alias `update()`) |
+| Match start | `amper.start()` (resets match stats; **required** before match CSV / summaries) |
+| Init / init_loop probe | Optional `amper.observe()` for live voltage on the Driver Station; does **not** start match accounting |
+| Each control loop (match) | **one** `amper.observe()` after `start()` (alias `update()`) |
 | Driver Station | `amper.publishTelemetry(AmperFtc.telemetrySink(telemetry))` (rate-limited) |
 | Match end | `amper.recordMatchSummary()` is included in `stop()` |
 | Stop | `amper.stop()` then `amper.close()` (flush CSV) |
 
-Before start, `observe()` still works and will move the session to `STARTED`. After `close()`, `observe()` throws. A second `observe()` inside the duplicate window (~1 ms) returns the previous sample and logs `DUPLICATE_OBSERVE`.
+Before `start()`, `observe()` works as an init/init_loop **probe**: live sensing and optional Driver Station hints, but no match rows in the AdvantageScope CSV and no match summary samples. `start()` clears any init probes and begins match accounting. After `close()`, `observe()` throws. A second `observe()` inside the duplicate window (~1 ms) returns the previous sample and logs `DUPLICATE_OBSERVE`.
+
+Sibling electrical contracts (MIMIC, BEACON, HELM, TRACE): [docs/integration/sibling-contracts.md](../integration/sibling-contracts.md).
 
 AMPER does not require a process-global singleton. One session per OpMode is the supported model.
 

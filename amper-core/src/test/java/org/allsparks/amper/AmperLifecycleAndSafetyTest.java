@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import org.allsparks.amper.adapters.rev.RevHubTelemetrySource;
 import org.allsparks.amper.log.FileSessionLogSink;
 import org.allsparks.amper.log.SessionLogSink;
@@ -88,6 +89,7 @@ class AmperLifecycleAndSafetyTest {
                 () -> 1L,
                 RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
                 Collections.emptyList());
+        session.start();
         session.observe();
         session.close();
         assertThrows(IllegalStateException.class, session::observe);
@@ -109,6 +111,7 @@ class AmperLifecycleAndSafetyTest {
                 SessionMetadata.anonymous("test"),
                 sink,
                 "amper test.csv");
+        session.start();
         session.observe();
         session.stop();
         Path written = dir.resolve("amper_test.csv");
@@ -143,6 +146,7 @@ class AmperLifecycleAndSafetyTest {
                 SessionMetadata.anonymous("test"),
                 failing,
                 "amper-session.csv");
+        session.start();
         ElectricalObservation observation = session.observe();
         assertEquals(12.4, observation.rawVoltage().volts(), 1e-9);
         session.stop();
@@ -162,6 +166,9 @@ class AmperLifecycleAndSafetyTest {
                 Collections.emptyList());
         for (int i = 0; i < 10; i++) {
             sim.set(i * 20_000_000L);
+            if (i == 0) {
+                bounded.start();
+            }
             bounded.observe();
         }
         assertTrue(bounded.logger().snapshot().size() <= 3);
@@ -181,6 +188,7 @@ class AmperLifecycleAndSafetyTest {
                 RevHubTelemetrySource.voltageOnly("hub", () -> 12.3),
                 Collections.emptyList());
         RecordingSink sink = new RecordingSink();
+        session.start();
         session.observe();
         session.publishTelemetry(sink);
         assertEquals("PHASE1_DISABLED", sink.last.get("AMPER"));
@@ -198,6 +206,71 @@ class AmperLifecycleAndSafetyTest {
     }
 
     @Test
+    void initObserveStaysInitializedAndSkipsMatchAccounting() {
+        AtomicLong time = new AtomicLong(1_000_000L);
+        AmperSession session = new AmperSession(
+                AmperPolicies.passiveDefaults(),
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 11.0),
+                Collections.emptyList());
+        session.initialize();
+        session.observe();
+        assertEquals(AmperLifecycle.INITIALIZED, session.lifecycle());
+        assertEquals(0L, session.matchSummary().sampleCount());
+        assertFalse(session.exportCsv().contains("LOOP_SAMPLE"));
+    }
+
+    @Test
+    void startClearsInitSamplesFromMatchSummary() {
+        AtomicLong time = new AtomicLong(0L);
+        AtomicReference<Double> volts = new AtomicReference<>(11.0);
+        AmperSession session = new AmperSession(
+                AmperPolicies.passiveDefaults(),
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", volts::get),
+                Collections.emptyList());
+        session.initialize();
+        session.observe();
+        volts.set(12.5);
+        time.addAndGet(20_000_000L);
+        session.start();
+        session.observe();
+        assertEquals(AmperLifecycle.STARTED, session.lifecycle());
+        assertEquals(1L, session.matchSummary().sampleCount());
+        assertTrue(session.exportAdvantageScopeTableCsv().contains("/AMPER/System/BusVoltageVolts"));
+    }
+
+    @Test
+    void omittedStartLeavesMatchSummaryEmpty() {
+        AmperSession session = new AmperSession(
+                AmperPolicies.passiveDefaults(),
+                () -> 1L,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 11.8),
+                Collections.emptyList());
+        session.initialize();
+        session.observe();
+        session.stop();
+        assertEquals(0L, session.matchSummary().sampleCount());
+        assertTrue(Double.isNaN(session.matchSummary().minVoltage()));
+    }
+
+    @Test
+    void stoppedSessionRequiresInitializeBeforeObserve() {
+        AmperSession session = new AmperSession(
+                AmperPolicies.measurementOnly(),
+                () -> 1L,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
+                Collections.emptyList());
+        session.start();
+        session.observe();
+        session.stop();
+        assertThrows(IllegalStateException.class, session::observe);
+        session.initialize();
+        session.observe();
+        assertEquals(AmperLifecycle.INITIALIZED, session.lifecycle());
+    }
+
+    @Test
     void disabledPublishTelemetryShowsStateWithoutVoltage() {
         AtomicLong time = new AtomicLong(0L);
         PowerPolicy policy = PowerPolicy.builder()
@@ -210,6 +283,7 @@ class AmperLifecycleAndSafetyTest {
                 RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
                 Collections.emptyList());
         RecordingSink sink = new RecordingSink();
+        session.start();
         session.observe();
         session.publishTelemetry(sink);
         assertEquals("AMPER_DISABLED", sink.last.get("AMPER"));

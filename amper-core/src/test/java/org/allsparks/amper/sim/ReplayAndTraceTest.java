@@ -63,6 +63,7 @@ class ReplayAndTraceTest {
                 .build();
         org.allsparks.amper.AmperSession session = new org.allsparks.amper.AmperSession(
                 policy, clock, hub, java.util.Collections.<org.allsparks.amper.measure.MotorElectricalTelemetry>emptyList());
+        session.start();
         session.observe();
         return session;
     }
