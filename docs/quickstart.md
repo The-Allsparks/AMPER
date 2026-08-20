@@ -43,7 +43,9 @@ public void stop() {
 
 ## 2. Run the OpMode
 
-AMPER telemetry is published from `loop()` (or your LinearOpMode loop), not from `init()` in the snippet above. After you press Play you should see `AMPER` and `AMPER.V` on the Driver Station.
+Call `amper.start()` when the match begins (iterative `start()` or LinearOpMode after `waitForStart()`). AMPER telemetry is published from `loop()` (or your LinearOpMode loop), not from `init()` in the snippet above. After you press Play you should see `AMPER` and `AMPER.V` on the Driver Station.
+
+Optional: call `amper.observe()` during `init_loop` to preview voltage before Play. Those probes are not written to the match CSV.
 
 If `init` fails with "Expected exactly one voltage sensor containing 'Control Hub'", list configured names and pass an explicit name:
 

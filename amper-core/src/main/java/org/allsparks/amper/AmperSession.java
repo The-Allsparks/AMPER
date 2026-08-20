@@ -147,11 +147,11 @@ public final class AmperSession {
         if (lifecycle == AmperLifecycle.CLOSED) {
             throw new IllegalStateException("AMPER session is closed");
         }
+        if (lifecycle == AmperLifecycle.STOPPED) {
+            throw new IllegalStateException("AMPER session is stopped; call initialize() before observe()");
+        }
         if (lifecycle == AmperLifecycle.CONSTRUCTED) {
             initialize();
-        }
-        if (lifecycle == AmperLifecycle.INITIALIZED || lifecycle == AmperLifecycle.STOPPED) {
-            lifecycle = AmperLifecycle.STARTED;
         }
         if (!policy.featureFlags().isPhase0Measurement()) {
             lastObservation = ElectricalObservation.disabled(clock.nanoTime());
@@ -169,6 +169,11 @@ public final class AmperSession {
         }
 
         ElectricalObservation observation = monitor.update();
+        lastObservation = observation;
+        if (lifecycle != AmperLifecycle.STARTED) {
+            return observeBeforeMatchStart(observation);
+        }
+
         samples++;
         loopStats.offer(observation.loopDurationNanos());
         logger.recordObservation(observation);
@@ -182,7 +187,20 @@ public final class AmperSession {
             lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "PHASE1_DISABLED");
         }
         publishCanonical(observation);
-        lastObservation = observation;
+        return observation;
+    }
+
+    /**
+     * Init / init_loop probe: live sensing and optional Driver Station hints only.
+     * Does not advance match accounting, event logs, or AdvantageScope rows.
+     */
+    private ElectricalObservation observeBeforeMatchStart(ElectricalObservation observation) {
+        lastBattery = batteryEstimator.update(observation);
+        if (policy.featureFlags().isPhase1PassiveTelemetry()) {
+            lastDriver = driverFeedback.update(observation, lastBattery, false, policy, null);
+        } else {
+            lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "PHASE1_DISABLED");
+        }
         return observation;
     }
 
@@ -231,6 +249,16 @@ public final class AmperSession {
     }
 
     public MatchSummary matchSummary() {
+        if (samples == 0L) {
+            return new MatchSummary(
+                    0L,
+                    Double.NaN,
+                    Double.NaN,
+                    loopStats,
+                    activityTracker,
+                    driverFeedback,
+                    logger.droppedCount());
+        }
         ElectricalObservation last = monitor.lastObservation();
         if (last == null) {
             last = lastObservation;

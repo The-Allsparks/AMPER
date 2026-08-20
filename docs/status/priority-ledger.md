@@ -1,6 +1,6 @@
 # Priority ledger
 
-Updated: 2026-08-18. Synced to `main` `21e534b38edb60f9331347537b9a24685abd0b09`. Orchestrator identity `TA-C-GHill`. `AUTOMATIC_MERGE=false`.
+Updated: 2026-08-19. Synced to `main` after #43 merge. Orchestrator identity `TA-C-GHill`. `AUTOMATIC_MERGE=false`.
 
 Priority model: safety blockers → correctness blockers → CI/build → unblocking issues → architectural seams → tests for upcoming work → small user-facing slices → measured performance → docs → optional advanced → cosmetic.
 
@@ -14,7 +14,8 @@ Desktop `./gradlew check` and `sdk-compile` are **not** Control Hub validation. 
 
 | Issue | Priority | Readiness | Dependencies | Status | Subagent | Branch | Pull request | CI | Merge | Blocker | Next action |
 |-------|----------|-----------|--------------|--------|----------|--------|--------------|----|-------|---------|-------------|
-| [#43](https://github.com/The-Allsparks/AMPER/issues/43) Stubs/tools off robot artifacts | HIGH | Ready | none | This PR | orchestrator | `fix/43-robot-facing-artifacts` | this PR | pending | not authorized | Human merge after required checks |
+| [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | This PR | none | In flight | orchestrator | `fix/28-44-forge-readiness-gaps` | this PR | pending | not authorized | Human merge after checks |
+| [#44](https://github.com/The-Allsparks/AMPER/issues/44) Sibling electrical contracts | MEDIUM | This PR (docs) | none | In flight | orchestrator | `fix/28-44-forge-readiness-gaps` | this PR | pending | not authorized | Human merge after checks |
 
 No other implementation PR is open. Dependabot [#21](https://github.com/The-Allsparks/AMPER/pull/21) (Gradle 9.7) failed — do not merge. [#23](https://github.com/The-Allsparks/AMPER/pull/23) (checkout 4→7) is green and unreviewed; SHA pinning remains [#30](https://github.com/The-Allsparks/AMPER/issues/30).
 
@@ -22,12 +23,12 @@ No other implementation PR is open. Dependabot [#21](https://github.com/The-Alls
 
 | Issue | Priority | Readiness | Dependencies | Status | Blocker | Next action |
 |-------|----------|-----------|--------------|--------|---------|-------------|
-| [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration reference | HIGH | Epic; current child is #43 | Hub evidence for cost items; FORGE#4 for combined stack | Open | Hardware for disabled/passive cost; combined stack is external | After #43: [#28](https://github.com/The-Allsparks/AMPER/issues/28) |
+| [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration reference | HIGH | Epic; #43 done; #28/#44 this PR | Hub evidence for cost items; FORGE#4 for combined stack | Open | Hardware for disabled/passive cost; combined stack is external | After this PR: tag `v0.1.0-rc.1`; then #6 Hub session |
 | [#42](https://github.com/The-Allsparks/AMPER/issues/42) Ledger/roadmap list #41 first | HIGH | **Done** | none | Closed via [#45](https://github.com/The-Allsparks/AMPER/pull/45) | none | — |
-| [#43](https://github.com/The-Allsparks/AMPER/issues/43) Stubs/tools off robot artifacts | HIGH | This PR | none | In flight | none | Merge this packaging PR |
-| [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | Ready | none | Open | none | After #43 |
+| [#43](https://github.com/The-Allsparks/AMPER/issues/43) Stubs/tools off robot artifacts | HIGH | **Done** | none | Closed via [#46](https://github.com/The-Allsparks/AMPER/pull/46) | none | — |
+| [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | This PR | none | In flight | none | Merge lifecycle PR |
 | [#25](https://github.com/The-Allsparks/AMPER/issues/25) Protect `main` | HIGH | Partial | Human review-count decision | Open | Policy | Protection **exists**; remaining: document policy, decide review count, require `sdk-compile` |
-| [#44](https://github.com/The-Allsparks/AMPER/issues/44) Sibling electrical contracts | MEDIUM | Ready | #42 preferred | Open | none | Docs contract; no sibling JARs |
+| [#44](https://github.com/The-Allsparks/AMPER/issues/44) Sibling electrical contracts | MEDIUM | This PR (docs) | none | In flight | none | Merge lifecycle PR |
 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub characterization | HIGH | **Blocked** | Control Hub | Open | Hardware unavailable | Human robot session; #41 consumes these numbers |
 
 ## Existing phase issues

@@ -41,6 +41,7 @@ class AmperSessionTest {
         AtomicLong time = new AtomicLong(0L);
 
         AmperSession session = session(effort, volts, time, 0.0, true);
+        session.start();
         session.observe();
         effort.set(0.8);
         time.addAndGet(20_000_000L);
@@ -90,6 +91,7 @@ class AmperSessionTest {
                 time::get,
                 RevHubTelemetrySource.voltageOnly("hub", volts::get),
                 Collections.emptyList());
+        session.start();
         ElectricalObservation obs = session.observe();
         assertTrue(obs.sensingValid());
         assertEquals(DriverPowerState.SEVERE_VOLTAGE_RISK, session.driverTelemetry().state());
@@ -109,6 +111,7 @@ class AmperSessionTest {
                 time::get,
                 RevHubTelemetrySource.voltageOnly("hub", volts::get),
                 Collections.emptyList());
+        session.start();
         assertTrue(session.observe() != null);
         assertTrue(session.driverTelemetry().publishedThisCycle());
         time.addAndGet(10_000_000L);
@@ -131,6 +134,7 @@ class AmperSessionTest {
                 advancing,
                 RevHubTelemetrySource.voltageOnly("hub", () -> 12.2),
                 Collections.emptyList());
+        session.start();
         session.observe();
         session.recordMatchSummary();
         assertEquals(1L, session.matchSummary().sampleCount());

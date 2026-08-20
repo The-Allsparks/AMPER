@@ -44,12 +44,12 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 
 - `AmperFtc.builder(hardwareMap)` examples.
 - Composite `includeBuild` install path.
-- **#41** packaging, lifecycle, and install hardening (in progress; #42 done; current child #43).
+- **#41** packaging, lifecycle, and install hardening ([#43](https://github.com/The-Allsparks/AMPER/issues/43) merged; [#28](https://github.com/The-Allsparks/AMPER/issues/28) lifecycle slice in progress).
 
 ## Advanced integration
 
 - Not started in code. No ViDAR/Pedro/MIMIC/BEACON/TRACE/HELM compile-time coupling.
-- Written contracts: [#44](https://github.com/The-Allsparks/AMPER/issues/44). Combined proof: FORGE#4.
+- Written contracts: [docs/integration/sibling-contracts.md](../integration/sibling-contracts.md) ([#44](https://github.com/The-Allsparks/AMPER/issues/44)). Combined proof: FORGE#4.
 
 ## Active behavior
 
