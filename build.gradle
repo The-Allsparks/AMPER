@@ -48,7 +48,10 @@ tasks.register('javadocAll') {
 }
 
 tasks.register('assembleReleaseArtifacts') {
-    dependsOn ':amper-core:assemble', ':amper-ftc:assemble', ':amper-tools:assemble'
+    group = 'build'
+    description = 'Assemble robot-facing jars: amper-core and amper-ftc only. Desktop tools are separate.'
+    dependsOn ':amper-core:assemble', ':amper-ftc:assemble'
 }
 
 apply from: 'gradle/ftc-sdk-compile.gradle'
+apply from: 'gradle/robot-artifacts.gradle'

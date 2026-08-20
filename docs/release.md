@@ -36,9 +36,12 @@ git push origin v0.1.0-rc.1
 
 ## Artifacts
 
+`./gradlew assembleReleaseArtifacts` builds the **TeamCode** set only: `amper-core` and `amper-ftc`. `./gradlew assertRobotFacingArtifacts` (part of `check`) fails if stubs or `amper-tools` appear on `amper-ftc` api/implementation/runtime or in the generated POM.
+
 | Artifact | Contents |
 |----------|----------|
-| `amper-core` | Pure Java. No Android / FTC SDK |
-| `amper-ftc` | FTC adapters. Compile against official SDK on the robot |
+| `amper-core` | Pure Java. No Android / FTC SDK. **Robot-facing.** |
+| `amper-ftc` | FTC adapters. Compile against official SDK on the robot. **Robot-facing.** |
 | sources / javadoc jars | Gradle `withSourcesJar()` / `withJavadocJar()` |
-| `amper-ftc-stubs` | **Not published.** Default desktop compile stand-ins; CI also compiles against official RobotCore |
+| `amper-ftc-stubs` | **Not published.** Default desktop compile stand-ins; CI also compiles against official RobotCore. Do not copy into TeamCode. |
+| `amper-tools` | **Desktop only.** CSV analysis and WPILOG conversion. Not a TeamCode coordinate. Build with `:amper-tools:check` / `:amper-tools:run`; do not treat it as a robot release artifact. |

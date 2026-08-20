@@ -1,0 +1,88 @@
+// Assert the robot-facing artifact set is amper-core + amper-ftc.
+// Stubs remain compileOnly/testImplementation for desktop JVM tests.
+// amper-tools remains a desktop converter (check, javadoc, WPILOG fixture).
+//
+//   ./gradlew assertRobotFacingArtifacts
+//
+// Do not treat compileOnly stubs appearing on :amper-ftc:compileJava as a
+// release-artifact failure. Those tasks must exist so default `check` works
+// without Android.
+
+def forbiddenRobotModules = [':amper-ftc-stubs', ':amper-tools'] as Set
+def forbiddenArtifactNames = ['amper-ftc-stubs', 'amper-tools'] as Set
+
+gradle.projectsEvaluated {
+    def ftcProject = project(':amper-ftc')
+    ftcProject.tasks.register('assertRobotFacingClasspath') {
+        group = 'verification'
+        description = 'Fail if stubs or amper-tools appear on amper-ftc api/implementation/runtime.'
+        dependsOn ftcProject.tasks.named('generatePomFileForMavenJavaPublication')
+        doLast {
+            def violations = []
+            ['api', 'implementation', 'runtimeOnly', 'runtimeClasspath'].each { name ->
+                def configuration = ftcProject.configurations.findByName(name)
+                if (configuration == null) {
+                    return
+                }
+                configuration.dependencies.withType(ProjectDependency).each { dependency ->
+                    def path = dependency.dependencyProject.path
+                    if (forbiddenRobotModules.contains(path)) {
+                        violations << "${name} project ${path}"
+                    }
+                }
+                if (configuration.canBeResolved) {
+                    configuration.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+                        def artifactName = artifact.moduleVersion.id.name
+                        if (forbiddenArtifactNames.contains(artifactName)) {
+                            violations << "${name} resolved ${artifact.moduleVersion.id}"
+                        }
+                    }
+                }
+            }
+            def pomFile = ftcProject.layout.buildDirectory.file('publications/mavenJava/pom-default.xml').get().asFile
+            if (!pomFile.isFile()) {
+                throw new GradleException("Missing generated amper-ftc POM at ${pomFile}")
+            }
+            def pomText = pomFile.getText('UTF-8')
+            forbiddenArtifactNames.each { name ->
+                if (pomText.contains("<artifactId>${name}</artifactId>")) {
+                    violations << "amper-ftc POM depends on ${name}"
+                }
+            }
+            if (!violations.isEmpty()) {
+                throw new GradleException(
+                        "amper-ftc robot classpath includes stubs or desktop tools:\n  "
+                                + violations.join('\n  '))
+            }
+        }
+    }
+
+    ftcProject.tasks.named('check') {
+        dependsOn 'assertRobotFacingClasspath'
+    }
+}
+
+tasks.register('assertRobotFacingArtifacts') {
+    group = 'verification'
+    description = 'Robot-facing assembleReleaseArtifacts is amper-core and amper-ftc only.'
+    dependsOn ':amper-ftc:assertRobotFacingClasspath'
+    doLast {
+        def release = tasks.named('assembleReleaseArtifacts').get()
+        def actual = release.taskDependencies.getDependencies(release).collect { it.path } as Set
+        def expected = [':amper-core:assemble', ':amper-ftc:assemble'] as Set
+        if (actual != expected) {
+            throw new GradleException(
+                    "assembleReleaseArtifacts depends on ${actual}, expected ${expected}. "
+                            + 'Stubs and amper-tools are not robot-facing artifacts.')
+        }
+        forbiddenRobotModules.each { path ->
+            if (project(path).pluginManager.hasPlugin('maven-publish')) {
+                throw new GradleException("${path} must not apply maven-publish")
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn 'assertRobotFacingArtifacts'
+}
