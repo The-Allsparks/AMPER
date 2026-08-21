@@ -17,7 +17,7 @@ These rules are enforced by tests where practical. Documentation alone is not ar
 | `docs-structure` CI job | Missing required docs |
 | `DocLinkCheckerTest` | Broken relative markdown links |
 
-GitHub Actions also runs `check` on Ubuntu and Windows, `sdk-compile`, and `docs-structure`. CodeQL is optional and **not** a required merge check until it has a stable `main` history.
+GitHub Actions also runs `check` on Ubuntu and Windows, `sdk-compile`, `docs-structure`, and CodeQL `Analyze Java`.
 
 ## Java and Android compatibility
 

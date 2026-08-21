@@ -51,7 +51,7 @@ There is no formatter task. Match neighboring Java 8 style. Do not add Spotless 
 | Rule | Current policy |
 |------|----------------|
 | Force push / delete | Disallowed |
-| Required status checks | `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`, `sdk-compile` (strict: branch must be up to date) |
+| Required status checks | `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`, `sdk-compile`, `Analyze Java` (strict: branch must be up to date) |
 | Pull request reviews | Required approving review count is **0** (solo-maintainer workflow). Stale reviews dismiss on new pushes. Conversation resolution required before merge. |
 | Admin bypass | Not enabled (`enforce_admins`) |
 

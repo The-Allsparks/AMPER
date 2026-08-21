@@ -1,9 +1,8 @@
 name: CodeQL
 
-# Optional static analysis. Not a required merge check (no stable main
-# history yet; do not add it to branch protection until it is green on main).
-# Prevents a class of Java security and correctness defects that unit tests
-# will not see. Does not replace architecture tests or Hub validation.
+# Optional static analysis. Required merge check is the job name
+# `Analyze Java` (see docs/release.md). Does not replace architecture
+# tests or Hub validation.
 
 on:
   push:
