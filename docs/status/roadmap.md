@@ -63,8 +63,8 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 ## Release readiness
 
 - [x] Merge PR #18 to `main`.
-- [ ] Tag `v0.1.0-rc.1` as **software** rc (no git tag yet).
-- [ ] Finish [#25](https://github.com/The-Allsparks/AMPER/issues/25): protection exists; still need policy docs, review-count decision, and required `sdk-compile`.
+- [x] Tag `v0.1.0-rc.1` as **software** rc (cut after Phase 2 dual-opt-in #26 / #48).
+- [x] Finish [#25](https://github.com/The-Allsparks/AMPER/issues/25): protection documented; `sdk-compile` required; review count remains 0 by solo-maintainer policy (raise when a second reviewer exists).
 - [ ] `0.1.0` final only when `docs/validation/STATUS.md` is no longer “not yet run”.
 
 ## Completion definition for 0.1.0-rc.1
@@ -72,7 +72,7 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 - [x] Passive library builds and tests on desktop CI
 - [x] Examples compile
 - [x] PR #18 merged to `main`
-- [ ] Tag `v0.1.0-rc.1` (human)
+- [x] Tag `v0.1.0-rc.1` (human)
 - [ ] Hardware characterization (#6) — **not** required for rc.1 software tag; **required** for `0.1.0`
 
 ## Child issues (dependency order)
