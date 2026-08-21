@@ -23,7 +23,7 @@ jobs:
       - name: Build publishable jars
         run: ./gradlew :amper-core:build :amper-ftc:build --no-daemon
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: amper-jars
           path: |
