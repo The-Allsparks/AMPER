@@ -11,6 +11,9 @@ name: CI
 # They are enforced by the existing required checks
 # `test (ubuntu-latest)` and `test (windows-latest)`. Do not add a fake
 # hardware job. CodeQL job `Analyze Java` is a separate required workflow.
+#
+# Third-party actions are pinned to full commit SHAs (issue #30). Version
+# comments keep Dependabot able to propose pin updates.
 
 on:
   push:
@@ -26,8 +29,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: "17"
@@ -41,7 +44,7 @@ jobs:
         run: ./gradlew :amper-tools:generateWpiLogFixture --no-daemon
       - name: Upload WPILOG fixture
         if: success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: amper-wpilog-fixture-${{ matrix.os }}
           path: amper-tools/build/wpilog-fixture/amper-fixture.wpilog
@@ -51,8 +54,8 @@ jobs:
   sdk-compile:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: "17"
@@ -65,7 +68,7 @@ jobs:
   docs-structure:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Required documentation present
         run: |
           set -e

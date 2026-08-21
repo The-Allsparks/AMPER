@@ -58,6 +58,10 @@ There is no formatter task. Match neighboring Java 8 style. Do not add Spotless 
 
 Do not require hardware jobs that do not exist. Raising the review count above 0 is an org decision when a second reviewer is available. Details: [docs/release.md](docs/release.md).
 
+## GitHub Actions pins
+
+Workflows pin third-party actions to full commit SHAs with a version comment (for example `actions/checkout@<sha> # v7.0.1`). Do not switch back to floating major tags. Dependabot can still open PRs that move those pins.
+
 ## Line endings
 
 The repository stores LF line endings (see [.gitattributes](.gitattributes)).
