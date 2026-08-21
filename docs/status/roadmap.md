@@ -6,7 +6,7 @@ Parent tracking issue: [#24](https://github.com/The-Allsparks/AMPER/issues/24). 
 
 **First implementation/readiness priority:** [#41](https://github.com/The-Allsparks/AMPER/issues/41) — establish AMPER as the validated FTC integration reference. Combined-stack acceptance is [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4). Desktop tests are not Control Hub validation.
 
-Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
+Audit-derived issues include **#25–#36** (several closed), **#41–#44**, and the 2026-08-20 quality/performance epic **[#50](https://github.com/The-Allsparks/AMPER/issues/50)** (children **#51–#59**).
 
 ## Foundation
 
@@ -59,6 +59,7 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 ## Performance optimization
 
 - Only after measured Hub data or a desktop microbench. Do not tune from folklore.
+- Desktop observe budget: `ObservePerformanceBudgetTest` (generous ceilings; not Hub SLAs). Implementation children: [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#55](https://github.com/The-Allsparks/AMPER/issues/55). Hub remains [#6](https://github.com/The-Allsparks/AMPER/issues/6).
 
 ## Release readiness
 
@@ -88,8 +89,9 @@ Closed software slices (do not re-open as next work): [#18](https://github.com/T
 7. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
 8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
 9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs
-10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline
-11. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
-12. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
-13. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
-14. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
+10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline (budget test added; follow-ups [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#53](https://github.com/The-Allsparks/AMPER/issues/53))
+11. [#50](https://github.com/The-Allsparks/AMPER/issues/50) quality/CI epic (does not outrank #41/#6)
+12. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
+13. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
+14. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
+15. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates

@@ -1,5 +1,14 @@
 # Testing
 
+## Desktop commands
+
+```powershell
+.\gradlew.bat check
+.\gradlew.bat compileAgainstFtcSdk
+```
+
+`check` includes architecture tests and `ObservePerformanceBudgetTest`. The budget test prints desktop ns/observe and uses a 30 s ceiling plus an 80× relative slowdown limit. **Those numbers are not Control Hub loop times.**
+
 ## Unit tests
 
 Covered in the initial scaffold:

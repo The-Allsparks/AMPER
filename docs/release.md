@@ -34,7 +34,7 @@ Recorded for #25. Classic branch protection with `enforce_admins`:
 - Required approving review count: **0** until a second maintainer is available (org decision to raise).
 - Require conversation resolution before merge.
 
-Do not add required checks that do not exist (no hardware CI). See also [CONTRIBUTING.md](../CONTRIBUTING.md).
+Do not add required checks that do not exist (no hardware CI). CodeQL (`Analyze Java`) is optional and must not be required until it has a green history on `main`. See also [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Tagging
 

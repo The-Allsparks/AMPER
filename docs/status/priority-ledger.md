@@ -6,6 +6,23 @@ Priority model: safety blockers → correctness blockers → CI/build → unbloc
 
 An issue is **ready** only when requirements are clear, dependencies are resolved, hardware is available or unnecessary, and no overlapping implementation PR is open.
 
+## 2026-08-20 quality / performance audit
+
+Scores and CI notes: [quality-performance-audit-2026-08-20.md](../audits/quality-performance-audit-2026-08-20.md). Epic [#50](https://github.com/The-Allsparks/AMPER/issues/50). Does **not** outrank [#41](https://github.com/The-Allsparks/AMPER/issues/41) or hardware [#6](https://github.com/The-Allsparks/AMPER/issues/6).
+
+| Issue | Priority | Readiness | Dependencies | Status | Next action |
+|-------|----------|-----------|--------------|--------|-------------|
+| [#50](https://github.com/The-Allsparks/AMPER/issues/50) | HIGH | Epic; CI/docs landing in the audit PR | none | Open | Merge architecture tests + AGENTS.md |
+| [#51](https://github.com/The-Allsparks/AMPER/issues/51) | HIGH | Ready (characterization tests exist) | #31 | Open | First child: reuse buffers on `observe()` |
+| [#31](https://github.com/The-Allsparks/AMPER/issues/31) | MEDIUM | Desktop budget test added | none | Open | Keep for remaining overflow/scan benches; children #51–#53 |
+| [#53](https://github.com/The-Allsparks/AMPER/issues/53) | MEDIUM | Ready | none | Open | O(1) last-event pointer |
+| [#55](https://github.com/The-Allsparks/AMPER/issues/55) | MEDIUM | Ready | test audit | Open | Flip `PowerPolicy` default sampling |
+| [#52](https://github.com/The-Allsparks/AMPER/issues/52) | MEDIUM | Ready after #31 budget | #31 | Open | Ring buffer |
+| [#54](https://github.com/The-Allsparks/AMPER/issues/54) | MEDIUM | Ready | none | Open | Publish p95 on DS |
+| [#56](https://github.com/The-Allsparks/AMPER/issues/56) [#57](https://github.com/The-Allsparks/AMPER/issues/57) [#58](https://github.com/The-Allsparks/AMPER/issues/58) [#59](https://github.com/The-Allsparks/AMPER/issues/59) | LOW | Ready | none | Open | After P1/P2 children |
+
+Dependabot Gradle updates are now grouped to minor/patch (helps [#29](https://github.com/The-Allsparks/AMPER/issues/29); do not merge [#21](https://github.com/The-Allsparks/AMPER/pull/21)).
+
 **First implementation/readiness priority:** [#41](https://github.com/The-Allsparks/AMPER/issues/41) (FTC integration reference). Combined-stack acceptance is [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4). Tracking epic for 0.1.x phases remains [#24](https://github.com/The-Allsparks/AMPER/issues/24).
 
 Desktop `./gradlew check` and `sdk-compile` are **not** Control Hub validation. Do not claim FTC-ready from desktop tests, architecture docs, or TeamCode sketches.
