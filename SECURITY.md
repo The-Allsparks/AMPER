@@ -10,10 +10,9 @@
 
 Please do **not** open a public issue for security problems that could put robots, students, or machines at risk.
 
-Prefer:
+**Private channel (preferred):** use [GitHub Private Vulnerability Reporting](https://github.com/The-Allsparks/AMPER/security/advisories/new) for this repository. Maintainers receive the report privately and can coordinate a fix before any public disclosure.
 
-1. GitHub Security Advisories for this repository (when available), or
-2. A private email contact published by the maintainers
+Do not file a public issue for exploitable robot-safety bugs (for example unexpected motor motion or bypass of gravity-hold protections).
 
 Include:
 
