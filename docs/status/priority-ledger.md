@@ -87,9 +87,9 @@ No other implementation PR is open. Dependabot [#21](https://github.com/The-Alls
 | C1 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) `observe()` match reset | MEDIUM | Ready | none | Open | Child of #41 lifecycle |
 | P1 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub overhead | HIGH | **Blocked** | Hardware | Open | Hardware |
 | P2 / P3 | [#31](https://github.com/The-Allsparks/AMPER/issues/31) Logger/allocation baseline | MEDIUM | Ready | none | Open | Desktop bench, then decide |
-| Dep2 | [#30](https://github.com/The-Allsparks/AMPER/issues/30) Pin Actions SHAs | MEDIUM | Ready | none | Open; [#22](https://github.com/The-Allsparks/AMPER/pull/22) merged (setup-java v5); [#23](https://github.com/The-Allsparks/AMPER/pull/23) unreviewed | Prefer SHA pins over floating majors |
+| Dep2 | [#30](https://github.com/The-Allsparks/AMPER/issues/30) Pin Actions SHAs | MEDIUM | **Done** ([#73](https://github.com/The-Allsparks/AMPER/pull/73)) | none | Closed | SHA pins with version comments |
 | U2 / D1 / D3 | Doc contradictions | MEDIUM | **Done** in PR #18 | none | Merged | — |
-| D5 | [#32](https://github.com/The-Allsparks/AMPER/issues/32) SECURITY contact | LOW | Ready | Maintainer email | Open | Human |
+| D5 | [#32](https://github.com/The-Allsparks/AMPER/issues/32) SECURITY contact | LOW | **Done** (Private Vulnerability Reporting enabled) | none | Closed when PR merges | Prefer advisories over public issues |
 
 ## Stop conditions currently true
 

@@ -88,10 +88,10 @@ Closed software slices (do not re-open as next work): [#18](https://github.com/T
 6. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy (do not merge [#21](https://github.com/The-Allsparks/AMPER/pull/21))
 7. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
 8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
-9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs
+9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs (**done**, [#73](https://github.com/The-Allsparks/AMPER/pull/73))
 10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline (budget test added; follow-ups [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#53](https://github.com/The-Allsparks/AMPER/issues/53))
 11. [#50](https://github.com/The-Allsparks/AMPER/issues/50) quality/CI epic (does not outrank #41/#6)
 12. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
 13. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
-14. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
+14. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (**Private Vulnerability Reporting enabled**)
 15. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
