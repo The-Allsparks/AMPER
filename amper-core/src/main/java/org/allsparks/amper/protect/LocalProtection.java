@@ -7,6 +7,10 @@ import org.allsparks.amper.policy.PowerPolicy;
 /**
  * Opt-in Phase 2 local protection. AMPER never wraps every FTC motor.
  *
+ * <p><strong>Not student API.</strong> Experimental, default-off, and not
+ * competition-ready until Control Hub evidence exists (issue #6). Do not
+ * enable actuation in Phase 0/1.
+ *
  * <p>Constraints apply only when <em>both</em> are true:
  * <ul>
  *   <li>this instance is {@link #enabled()}, and</li>

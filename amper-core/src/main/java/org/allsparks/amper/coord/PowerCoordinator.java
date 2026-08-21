@@ -12,7 +12,8 @@ import org.allsparks.amper.policy.PowerPolicy;
  * Receives subsystem power requests and returns constraints or grants.
  * Does not own robot hardware.
  *
- * <p>Phase 0–1: always returns unrestricted grants. Active allocation belongs
+ * <p><strong>Not student API.</strong> Experimental and not competition-ready.
+ * Phase 0–1: always returns unrestricted grants. Active allocation belongs
  * to Phase 4+ and remains disabled by default.
  */
 public final class PowerCoordinator {
