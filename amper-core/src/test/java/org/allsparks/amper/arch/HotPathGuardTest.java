@@ -104,6 +104,30 @@ class HotPathGuardTest {
     }
 
     @Test
+    void logsDoNotShiftOnOverflow() throws IOException {
+        List<String> hits = new ArrayList<String>();
+        Path main = SourceScan.coreMain();
+        String[] watched = {
+            "org/allsparks/amper/log/CanonicalLog.java",
+            "org/allsparks/amper/log/PowerEventLogger.java"
+        };
+        for (int w = 0; w < watched.length; w++) {
+            Path path = main.resolve(watched[w]);
+            String[] lines = SourceScan.read(path).split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                String trimmed = lines[i].trim();
+                if (isComment(trimmed)) {
+                    continue;
+                }
+                if (trimmed.contains(".remove(0)")) {
+                    hits.add(watched[w] + ":" + (i + 1));
+                }
+            }
+        }
+        failIf(hits, "bounded logs used ArrayList.remove(0) on overflow");
+    }
+
+    @Test
     void sessionObserveDoesNotSleepOrWriteFilesInline() throws IOException {
         List<String> hits = new ArrayList<String>();
         Path path = SourceScan.coreMain().resolve("org/allsparks/amper/AmperSession.java");
