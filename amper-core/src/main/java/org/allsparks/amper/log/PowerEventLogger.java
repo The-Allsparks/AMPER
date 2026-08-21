@@ -20,6 +20,7 @@ public final class PowerEventLogger {
     private final int capacity;
     private final List<PowerEvent> events;
     private final SessionMetadata metadata;
+    private PowerEvent lastAnnotatingEvent;
     private long dropped;
     private boolean exported;
 
@@ -43,6 +44,9 @@ public final class PowerEventLogger {
             dropped++;
         }
         events.add(event);
+        if (annotatesCanonical(event.type())) {
+            lastAnnotatingEvent = event;
+        }
     }
 
     public void recordObservation(ElectricalObservation observation) {
@@ -105,6 +109,14 @@ public final class PowerEventLogger {
         return Collections.unmodifiableList(new ArrayList<PowerEvent>(events));
     }
 
+    /**
+     * Most recent event that may annotate a canonical row. Ignores
+     * {@link PowerEventType#LOOP_SAMPLE} and {@link PowerEventType#SENSOR_INVALID}.
+     */
+    public PowerEvent lastAnnotatingEvent() {
+        return lastAnnotatingEvent;
+    }
+
     public long droppedCount() {
         return dropped;
     }
@@ -127,8 +139,13 @@ public final class PowerEventLogger {
 
     public void clear() {
         events.clear();
+        lastAnnotatingEvent = null;
         dropped = 0;
         exported = false;
+    }
+
+    private static boolean annotatesCanonical(PowerEventType type) {
+        return type != PowerEventType.LOOP_SAMPLE && type != PowerEventType.SENSOR_INVALID;
     }
 
     public String exportCsv() {
