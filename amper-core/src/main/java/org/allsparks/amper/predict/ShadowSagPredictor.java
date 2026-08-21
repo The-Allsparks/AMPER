@@ -5,6 +5,9 @@ import org.allsparks.amper.measure.ElectricalObservation;
 /**
  * Phase 5 shadow recorder. Logs requested demand vs subsequent voltage for
  * offline study. Never used for actuation. Not a machine-learned model.
+ *
+ * <p><strong>Not student API.</strong> Experimental, unused on the observe
+ * path, and not competition-ready.
  */
 public final class ShadowSagPredictor {
     private double lastDemand;

@@ -45,6 +45,19 @@ Roadmap vs code: [docs/status/issue-matrix.md](docs/status/issue-matrix.md).
 * Total battery current is **not** claimed. Per-motor current, hub voltage, and inferred demand are distinct.
 * Placeholder voltage thresholds are **conservative placeholders**, not universal FTC truth.
 
+### Student path vs experimental types
+
+Use `AmperFtc`, `AmperSession`, `AmperPolicies`, and canonical `/AMPER` logs in TeamCode. These types are **not** the student path — they stay default-off and are not competition-ready:
+
+| Type | Package | Why it is experimental |
+|------|---------|------------------------|
+| `LocalProtection` | `protect` | Phase 2 slew; dual opt-in; still no auto-wrap of motors |
+| `VoltageStateMachine` | `protect` | Phase 3 state only; does not command motors |
+| `PowerCoordinator` | `coord` | Phase 4+ allocation; Phase 0/1 returns unrestricted grants |
+| `ShadowSagPredictor` | `predict` | Phase 5 shadow log; unused on the observe path |
+
+The `@Disabled` example `AmperLocalProtectionOpMode` does not enable intervention by default.
+
 ### Software vs hardware brownout protection
 
 Hardware and firmware protections (Hub resets, Driver Station disconnect symptoms, motor-controller behavior) react when voltage is already unsafe. AMPER’s later phases aim to **reduce avoidable demand** before that point. Software cannot replace healthy batteries, tight XT30 / power connectors, correct wire gauge, or mechanical freedom.

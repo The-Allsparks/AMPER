@@ -5,8 +5,11 @@ import org.allsparks.amper.policy.PowerPolicy;
 
 /**
  * Hysteresis + dwell voltage state machine. Pure software foundation for
- * Phase 3. Does not command motors. Intervention remains off unless the
- * Phase 3 feature flag is set, and even then this class only reports state.
+ * Phase 3. Does not command motors.
+ *
+ * <p><strong>Not student API.</strong> Experimental, default-off, and not
+ * competition-ready. Intervention remains off unless the Phase 3 feature
+ * flag is set, and even then this class only reports state.
  */
 public final class VoltageStateMachine {
     private VoltageProtectionState state = VoltageProtectionState.NORMAL;
