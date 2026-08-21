@@ -30,11 +30,11 @@ Do not cut `0.1.0` final until [docs/validation/STATUS.md](validation/STATUS.md)
 Recorded for #25. Classic branch protection with `enforce_admins`:
 
 - Disallow force-push and branch deletion.
-- Required checks (strict): `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`, `sdk-compile`.
+- Required checks (strict): `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`, `sdk-compile`, `Analyze Java`.
 - Required approving review count: **0** until a second maintainer is available (org decision to raise).
 - Require conversation resolution before merge.
 
-Do not add required checks that do not exist (no hardware CI). CodeQL (`Analyze Java`) is optional and must not be required until it has a green history on `main`. See also [CONTRIBUTING.md](../CONTRIBUTING.md).
+Do not add required checks that do not exist (no hardware CI). See also [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Tagging
 

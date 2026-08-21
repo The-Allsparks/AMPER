@@ -10,7 +10,7 @@ name: CI
 # Architecture and performance-budget tests run inside `./gradlew check`.
 # They are enforced by the existing required checks
 # `test (ubuntu-latest)` and `test (windows-latest)`. Do not add a fake
-# hardware job. CodeQL is a separate non-required workflow.
+# hardware job. CodeQL job `Analyze Java` is a separate required workflow.
 
 on:
   push:
