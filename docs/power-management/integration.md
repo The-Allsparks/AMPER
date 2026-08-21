@@ -27,7 +27,7 @@ Effort fields use dimensionless \(\approx [-1, 1]\) unless your team documents o
 | Match start | `amper.start()` (resets match stats; **required** before match CSV / summaries) |
 | Init / init_loop probe | Optional `amper.observe()` for live voltage on the Driver Station; does **not** start match accounting |
 | Each control loop (match) | **one** `amper.observe()` after `start()` (alias `update()`) |
-| Driver Station | `amper.publishTelemetry(AmperFtc.telemetrySink(telemetry))` (rate-limited) |
+| Driver Station | `amper.publishTelemetry(AmperFtc.telemetrySink(telemetry))` (rate-limited). `AMPER.loopUs` / `AMPER.p95Us` / `AMPER.maxUs` are AMPER `observe()` duration, not full OpMode loop time |
 | Match end | `amper.recordMatchSummary()` is included in `stop()` |
 | Stop | `amper.stop()` then `amper.close()` (flush CSV) |
 

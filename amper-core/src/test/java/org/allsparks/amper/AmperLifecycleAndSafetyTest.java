@@ -193,6 +193,9 @@ class AmperLifecycleAndSafetyTest {
         session.publishTelemetry(sink);
         assertEquals("PHASE1_DISABLED", sink.last.get("AMPER"));
         assertEquals(12.3, sink.last.get("AMPER.V"));
+        assertTrue(sink.last.containsKey("AMPER.loopUs"));
+        assertTrue(sink.last.containsKey("AMPER.p95Us"));
+        assertTrue(sink.last.containsKey("AMPER.maxUs"));
         assertEquals(1, sink.updates);
 
         session.publishTelemetry(sink);

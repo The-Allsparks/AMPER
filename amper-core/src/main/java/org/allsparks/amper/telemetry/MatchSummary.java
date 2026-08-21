@@ -14,6 +14,9 @@ public final class MatchSummary {
     private final double maxVoltage;
     private final long maxLoopNanos;
     private final double meanLoopNanos;
+    private final long p50LoopNanos;
+    private final long p95LoopNanos;
+    private final long p99LoopNanos;
     private final int mechanismStarts;
     private final int mechanismStops;
     private final int elevatedCount;
@@ -35,6 +38,9 @@ public final class MatchSummary {
         this.maxVoltage = maxVoltage;
         this.maxLoopNanos = loop == null ? 0L : loop.maxNanos();
         this.meanLoopNanos = loop == null ? Double.NaN : loop.meanNanos();
+        this.p50LoopNanos = loop == null ? 0L : loop.percentileNanos(0.50);
+        this.p95LoopNanos = loop == null ? 0L : loop.percentileNanos(0.95);
+        this.p99LoopNanos = loop == null ? 0L : loop.percentileNanos(0.99);
         this.mechanismStarts = activity == null ? 0 : activity.startCount();
         this.mechanismStops = activity == null ? 0 : activity.stopCount();
         this.elevatedCount = feedback == null ? 0 : feedback.elevatedCount();
@@ -64,6 +70,21 @@ public final class MatchSummary {
         return meanLoopNanos;
     }
 
+    /** Window p50 of AMPER {@code observe()} duration, not full OpMode loop time. */
+    public long p50LoopNanos() {
+        return p50LoopNanos;
+    }
+
+    /** Window p95 of AMPER {@code observe()} duration, not full OpMode loop time. */
+    public long p95LoopNanos() {
+        return p95LoopNanos;
+    }
+
+    /** Window p99 of AMPER {@code observe()} duration, not full OpMode loop time. */
+    public long p99LoopNanos() {
+        return p99LoopNanos;
+    }
+
     public int mechanismStarts() {
         return mechanismStarts;
     }
@@ -79,6 +100,9 @@ public final class MatchSummary {
         fields.put("maxV", format(maxVoltage));
         fields.put("maxLoopNs", Long.toString(maxLoopNanos));
         fields.put("meanLoopNs", format(meanLoopNanos));
+        fields.put("p50LoopNs", Long.toString(p50LoopNanos));
+        fields.put("p95LoopNs", Long.toString(p95LoopNanos));
+        fields.put("p99LoopNs", Long.toString(p99LoopNanos));
         fields.put("starts", Integer.toString(mechanismStarts));
         fields.put("stops", Integer.toString(mechanismStops));
         fields.put("elevated", Integer.toString(elevatedCount));
@@ -94,6 +118,7 @@ public final class MatchSummary {
                 + " minV=" + format(minVoltage)
                 + " maxV=" + format(maxVoltage)
                 + " maxLoopUs=" + (maxLoopNanos / 1000L)
+                + " p95LoopUs=" + (p95LoopNanos / 1000L)
                 + " starts=" + mechanismStarts
                 + " severeWarn=" + severeCount;
     }

@@ -222,7 +222,9 @@ public final class AmperSession {
      * <p>Always publishes at least {@code AMPER=<state>} on the policy telemetry period,
      * even when Phase 1 warnings are off or AMPER measurement is disabled. When Phase 0
      * produced a non-disabled observation, also publishes {@code AMPER.V}, {@code AMPER.valid},
-     * and {@code AMPER.loopUs}. Phase 1 state changes may publish immediately in addition
+     * {@code AMPER.loopUs} (last sample), {@code AMPER.p95Us}, and {@code AMPER.maxUs}.
+     * Loop figures are AMPER {@code observe()} duration, not full OpMode period, and are
+     * not Control Hub validated. Phase 1 state changes may publish immediately in addition
      * to the periodic cadence.
      */
     public void publishTelemetry(TelemetrySink telemetry) {
@@ -243,6 +245,8 @@ public final class AmperSession {
             telemetry.addData("AMPER.V", lastObservation.filteredVoltage().volts());
             telemetry.addData("AMPER.valid", lastObservation.sensingValid());
             telemetry.addData("AMPER.loopUs", lastObservation.loopDurationNanos() / 1000L);
+            telemetry.addData("AMPER.p95Us", loopStats.percentileNanos(0.95) / 1000L);
+            telemetry.addData("AMPER.maxUs", loopStats.maxNanos() / 1000L);
         }
         telemetry.update();
     }

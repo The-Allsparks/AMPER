@@ -163,7 +163,10 @@ class AmperSessionTest {
         session.recordMatchSummary();
         assertEquals(1L, session.matchSummary().sampleCount());
         assertTrue(session.matchSummary().maxLoopNanos() > 0L);
+        assertTrue(session.matchSummary().p95LoopNanos() > 0L);
+        assertTrue(session.matchSummary().p95LoopNanos() <= session.matchSummary().maxLoopNanos());
         assertTrue(session.exportCsv().contains("MATCH_SUMMARY"));
+        assertTrue(session.exportCsv().contains("p95LoopNs="));
     }
 
     private static AmperSession session(
