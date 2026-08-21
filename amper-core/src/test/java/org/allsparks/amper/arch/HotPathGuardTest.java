@@ -87,6 +87,23 @@ class HotPathGuardTest {
     }
 
     @Test
+    void observeHotPathDoesNotAllocateScratchCollections() throws IOException {
+        List<String> hits = new ArrayList<String>();
+        Path main = SourceScan.coreMain();
+        rejectAfterMethod(
+                hits,
+                main.resolve("org/allsparks/amper/measure/PowerMonitor.java"),
+                "public ElectricalObservation update()",
+                new String[] {"new ArrayList", "new LinkedHashMap", "new boolean[", "new DoubleRead"});
+        rejectAfterMethod(
+                hits,
+                main.resolve("org/allsparks/amper/log/PowerEventLogger.java"),
+                "public void recordObservation(",
+                new String[] {"new LinkedHashMap", "String.format"});
+        failIf(hits, "observe hot path allocated a fresh list/map/format buffer");
+    }
+
+    @Test
     void sessionObserveDoesNotSleepOrWriteFilesInline() throws IOException {
         List<String> hits = new ArrayList<String>();
         Path path = SourceScan.coreMain().resolve("org/allsparks/amper/AmperSession.java");
@@ -103,6 +120,52 @@ class HotPathGuardTest {
             }
         }
         failIf(hits, "AmperSession used sleep or inline file writes");
+    }
+
+    private static void rejectAfterMethod(
+            List<String> hits, Path path, String methodSig, String[] snippets) {
+        String[] lines = SourceScan.read(path).split("\n");
+        boolean inMethod = false;
+        int depth = 0;
+        String name = path.getFileName().toString();
+        for (int i = 0; i < lines.length; i++) {
+            String trimmed = lines[i].trim();
+            if (!inMethod) {
+                if (trimmed.contains(methodSig)) {
+                    inMethod = true;
+                    depth = braceDelta(lines[i]);
+                }
+                continue;
+            }
+            depth += braceDelta(lines[i]);
+            if (isComment(trimmed)) {
+                if (depth <= 0) {
+                    break;
+                }
+                continue;
+            }
+            for (int s = 0; s < snippets.length; s++) {
+                if (trimmed.contains(snippets[s])) {
+                    hits.add(name + ":" + (i + 1) + " " + snippets[s]);
+                }
+            }
+            if (depth <= 0) {
+                break;
+            }
+        }
+    }
+
+    private static int braceDelta(String line) {
+        int delta = 0;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == '{') {
+                delta++;
+            } else if (c == '}') {
+                delta--;
+            }
+        }
+        return delta;
     }
 
     private static boolean isComment(String trimmed) {

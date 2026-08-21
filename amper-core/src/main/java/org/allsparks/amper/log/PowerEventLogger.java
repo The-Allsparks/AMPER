@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import org.allsparks.amper.AmperVersion;
@@ -20,9 +19,22 @@ public final class PowerEventLogger {
     private final int capacity;
     private final List<PowerEvent> events;
     private final SessionMetadata metadata;
+    private final Map<String, String> fieldScratch = new LinkedHashMap<String, String>();
+    private final StringBuilder numberBuf = new StringBuilder(24);
     private PowerEvent lastAnnotatingEvent;
     private long dropped;
     private boolean exported;
+    private String[] hubIdKeys = new String[0];
+    private String[] hubVKeys = new String[0];
+    private String[] hubValidityKeys = new String[0];
+    private String[] motorIdKeys = new String[0];
+    private String[] motorAmpsKeys = new String[0];
+    private String[] motorValidityKeys = new String[0];
+    private String[] motorAgeKeys = new String[0];
+    private String[] motorCmdKeys = new String[0];
+    private String[] motorVelKeys = new String[0];
+    private String[] motorActiveKeys = new String[0];
+    private String[] motorCurrentReadKeys = new String[0];
 
     public PowerEventLogger(int capacity) {
         this(capacity, SessionMetadata.anonymous("unspecified"));
@@ -51,7 +63,8 @@ public final class PowerEventLogger {
 
     public void recordObservation(ElectricalObservation observation) {
         Objects.requireNonNull(observation, "observation");
-        Map<String, String> fields = new LinkedHashMap<String, String>();
+        Map<String, String> fields = fieldScratch;
+        fields.clear();
         VoltageSample raw = observation.rawVoltage();
         VoltageSample filtered = observation.filteredVoltage();
         fields.put("schema", AmperVersion.CSV_SCHEMA_VERSION);
@@ -77,25 +90,27 @@ public final class PowerEventLogger {
         fields.put("currentReads", Integer.toString(observation.samplingStats().currentReadsThisLoop()));
         fields.put("hubCount", Integer.toString(observation.allVoltages().size()));
 
+        ensureHubKeys(observation.allVoltages().size());
         int hub = 0;
         for (VoltageSample extra : observation.allVoltages()) {
-            fields.put("hub" + hub + "Id", extra.sourceId());
-            fields.put("hub" + hub + "V", format(extra.volts()));
-            fields.put("hub" + hub + "Validity", extra.validity().name());
+            fields.put(hubIdKeys[hub], extra.sourceId());
+            fields.put(hubVKeys[hub], format(extra.volts()));
+            fields.put(hubValidityKeys[hub], extra.validity().name());
             hub++;
         }
 
+        ensureMotorKeys(observation.motors().size());
         int index = 0;
         for (MotorSnapshot motor : observation.motors()) {
-            fields.put("m" + index + "Id", motor.motorId());
-            fields.put("m" + index + "A", format(motor.current().amps()));
-            fields.put("m" + index + "Validity", motor.current().validity().name());
-            fields.put("m" + index + "AgeNs", Long.toString(
+            fields.put(motorIdKeys[index], motor.motorId());
+            fields.put(motorAmpsKeys[index], format(motor.current().amps()));
+            fields.put(motorValidityKeys[index], motor.current().validity().name());
+            fields.put(motorAgeKeys[index], Long.toString(
                     motor.current().ageNanos(observation.loopStartNanos())));
-            fields.put("m" + index + "Cmd", format(motor.commandedEffort()));
-            fields.put("m" + index + "Vel", format(motor.velocityTicksPerSecond()));
-            fields.put("m" + index + "Active", Boolean.toString(motor.active()));
-            fields.put("m" + index + "CurrentRead", Boolean.toString(motor.currentReadThisLoop()));
+            fields.put(motorCmdKeys[index], format(motor.commandedEffort()));
+            fields.put(motorVelKeys[index], format(motor.velocityTicksPerSecond()));
+            fields.put(motorActiveKeys[index], Boolean.toString(motor.active()));
+            fields.put(motorCurrentReadKeys[index], Boolean.toString(motor.currentReadThisLoop()));
             index++;
         }
 
@@ -148,6 +163,44 @@ public final class PowerEventLogger {
         return type != PowerEventType.LOOP_SAMPLE && type != PowerEventType.SENSOR_INVALID;
     }
 
+    private void ensureHubKeys(int count) {
+        if (hubIdKeys.length >= count) {
+            return;
+        }
+        hubIdKeys = new String[count];
+        hubVKeys = new String[count];
+        hubValidityKeys = new String[count];
+        for (int i = 0; i < count; i++) {
+            hubIdKeys[i] = "hub" + i + "Id";
+            hubVKeys[i] = "hub" + i + "V";
+            hubValidityKeys[i] = "hub" + i + "Validity";
+        }
+    }
+
+    private void ensureMotorKeys(int count) {
+        if (motorIdKeys.length >= count) {
+            return;
+        }
+        motorIdKeys = new String[count];
+        motorAmpsKeys = new String[count];
+        motorValidityKeys = new String[count];
+        motorAgeKeys = new String[count];
+        motorCmdKeys = new String[count];
+        motorVelKeys = new String[count];
+        motorActiveKeys = new String[count];
+        motorCurrentReadKeys = new String[count];
+        for (int i = 0; i < count; i++) {
+            motorIdKeys[i] = "m" + i + "Id";
+            motorAmpsKeys[i] = "m" + i + "A";
+            motorValidityKeys[i] = "m" + i + "Validity";
+            motorAgeKeys[i] = "m" + i + "AgeNs";
+            motorCmdKeys[i] = "m" + i + "Cmd";
+            motorVelKeys[i] = "m" + i + "Vel";
+            motorActiveKeys[i] = "m" + i + "Active";
+            motorCurrentReadKeys[i] = "m" + i + "CurrentRead";
+        }
+    }
+
     public String exportCsv() {
         StringBuilder sb = new StringBuilder();
         sb.append("# amper_csv_schema=").append(AmperVersion.CSV_SCHEMA_VERSION).append('\n');
@@ -164,10 +217,9 @@ public final class PowerEventLogger {
         return sb.toString();
     }
 
-    private static String format(double value) {
-        if (Double.isNaN(value)) {
-            return "NaN";
-        }
-        return String.format(Locale.US, "%.4f", value);
+    private String format(double value) {
+        numberBuf.setLength(0);
+        CsvFormat.appendFixed4(numberBuf, value);
+        return numberBuf.toString();
     }
 }

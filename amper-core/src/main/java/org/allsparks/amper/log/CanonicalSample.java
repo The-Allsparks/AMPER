@@ -33,11 +33,18 @@ public final class CanonicalSample {
     }
 
     public static final class Builder {
-        private final long timestampNanos;
+        private long timestampNanos;
         private final Map<String, LogValue> values = new LinkedHashMap<String, LogValue>();
 
         private Builder(long timestampNanos) {
             this.timestampNanos = timestampNanos;
+        }
+
+        /** Clear values and reuse this builder for another timestamp. */
+        public Builder reuse(long timestampNanos) {
+            this.timestampNanos = timestampNanos;
+            values.clear();
+            return this;
         }
 
         public Builder put(String key, LogValue value) {

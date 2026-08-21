@@ -46,5 +46,12 @@ class CanonicalLogTypeStabilityTest {
         assertEquals("\"a,b\"", CsvFormat.quoteString("a,b"));
         assertEquals("\"a\"\"b\"", CsvFormat.quoteString("a\"b"));
         assertEquals("amper_test.schema.json", CsvFormat.sidecarFilename("amper test.csv"));
+        double[] samples = {0.0, 0.2, 12.4, 12.5, -0.5, 1.23456, 9.0, 0.00004, 0.00006};
+        for (int i = 0; i < samples.length; i++) {
+            assertEquals(
+                    String.format(java.util.Locale.US, "%.4f", samples[i]),
+                    CsvFormat.fixed4(samples[i]));
+        }
+        assertEquals("NaN", CsvFormat.fixed4(Double.NaN));
     }
 }

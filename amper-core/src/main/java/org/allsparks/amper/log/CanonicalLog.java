@@ -15,6 +15,7 @@ public final class CanonicalLog {
     private final int capacity;
     private final List<CanonicalSample> samples;
     private final Map<String, LogFieldSpec> schema = new LinkedHashMap<String, LogFieldSpec>();
+    private final Map<String, LogValue> acceptedScratch = new LinkedHashMap<String, LogValue>();
     private final LogNameSanitizer names;
     private long dropped;
     private long typeMismatches;
@@ -60,7 +61,8 @@ public final class CanonicalLog {
         }
         lastTimestampNanos = timestamp;
 
-        Map<String, LogValue> accepted = new LinkedHashMap<String, LogValue>();
+        Map<String, LogValue> accepted = acceptedScratch;
+        accepted.clear();
         for (Map.Entry<String, LogValue> entry : sample.values().entrySet()) {
             LogValue value = entry.getValue();
             if (value == null) {
