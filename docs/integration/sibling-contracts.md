@@ -21,7 +21,7 @@ Schema authority: existing `/AMPER` keys in [field-selection.md](../logging/fiel
 | --------- | ----- | ------ |
 | MIMIC → AMPER | `PowerRequest` (effort, priority, safety/gravity flags, estimated amps) | Type exists; **pass-through only** — `PowerCoordinator.allocate` returns unrestricted grants |
 | AMPER → MIMIC | `PowerGrant` (`allowedEffort`, `delayed`, `PowerLimitReason`, `confidence`) | Type exists; Phase 0/1 **must not** use grants to change motor output |
-| Subsystem → AMPER | `ConstrainedCommand` after optional Phase 2 `LocalProtection` | Experimental, opt-in, **not wired into `AmperSession`**; blocked on hardware #6 and flag gate #26 |
+| Subsystem → AMPER | `ConstrainedCommand` after optional Phase 2 `LocalProtection` | Experimental dual opt-in (`localProtectionAllowed` + per-subsystem enable); session flag is a kill switch when using `fromPolicy` / `AmperSession.localProtection`; still not auto-wired into observe; Hub evidence (#6) still required before competition enable |
 
 Do not add compile-time edges between Allsparks libraries for these types. Adapter modules belong in TeamCode until Phase 2+ evidence exists.
 

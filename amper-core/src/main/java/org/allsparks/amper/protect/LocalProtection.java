@@ -1,19 +1,32 @@
 package org.allsparks.amper.protect;
 
+import org.allsparks.amper.AmperFeatureFlags;
 import org.allsparks.amper.api.PowerLimitReason;
 import org.allsparks.amper.policy.PowerPolicy;
 
 /**
  * Opt-in Phase 2 local protection. AMPER never wraps every FTC motor.
  *
- * <p>When {@code enabled} is false, {@link #apply(double, long)} returns the
- * requested command unchanged (subject only to ordinary floating-point
- * representation of the same {@code double}).
+ * <p>Constraints apply only when <em>both</em> are true:
+ * <ul>
+ *   <li>this instance is {@link #enabled()}, and</li>
+ *   <li>if session flags were supplied (via {@link #fromPolicy} or
+ *       {@link Builder#sessionFlags}), {@link AmperFeatureFlags#isPhase2LocalProtection()}
+ *       is true.</li>
+ * </ul>
+ *
+ * <p>When either gate is off, {@link #apply(double, long)} returns the requested
+ * command unchanged (subject only to ordinary floating-point representation of
+ * the same {@code double}). Raw {@link #builder()} without session flags stays
+ * an explicit local opt-in and is <strong>not</strong> session-gated — prefer
+ * {@link #fromPolicy} or {@link org.allsparks.amper.AmperSession#localProtection(boolean)}
+ * so the session flag remains a kill switch.
  *
  * <p>Experimental until robot characterization is complete. Defaults off.
  */
 public final class LocalProtection {
     private final boolean enabled;
+    private final AmperFeatureFlags sessionFlags;
     private final SlewRateLimiter slew;
     private final CommandCap cap;
     private final boolean capEnabled;
@@ -23,6 +36,7 @@ public final class LocalProtection {
 
     private LocalProtection(Builder builder) {
         this.enabled = builder.enabled;
+        this.sessionFlags = builder.sessionFlags;
         this.slew = builder.slew;
         this.cap = builder.cap;
         this.capEnabled = builder.capEnabled;
@@ -43,6 +57,11 @@ public final class LocalProtection {
         return enabled;
     }
 
+    /** True when session flags are present and Phase 2 is allowed. */
+    public boolean sessionGateOpen() {
+        return sessionFlags == null || sessionFlags.isPhase2LocalProtection();
+    }
+
     public boolean safetyCritical() {
         return safetyCritical;
     }
@@ -56,7 +75,7 @@ public final class LocalProtection {
     }
 
     public ConstrainedCommand apply(double requested, long nowNanos) {
-        if (!enabled) {
+        if (!enabled || !sessionGateOpen()) {
             return ConstrainedCommand.identity(requested);
         }
         double allowed = requested;
@@ -97,9 +116,14 @@ public final class LocalProtection {
         }
     }
 
+    /**
+     * Builds protection from policy slew/cap settings and attaches the policy
+     * feature flags as the session kill switch.
+     */
     public static LocalProtection fromPolicy(PowerPolicy policy, boolean enabled) {
         Builder builder = builder().enabled(enabled);
         if (policy != null) {
+            builder.sessionFlags(policy.featureFlags());
             builder.slew(new SlewRateLimiter(policy.slewMaxDeltaPerSecond()));
             if (policy.commandCapEnabled()) {
                 builder.commandCap(new CommandCap(policy.commandCap()));
@@ -110,6 +134,7 @@ public final class LocalProtection {
 
     public static final class Builder {
         private boolean enabled = false;
+        private AmperFeatureFlags sessionFlags;
         private SlewRateLimiter slew;
         private CommandCap cap;
         private boolean capEnabled;
@@ -119,6 +144,15 @@ public final class LocalProtection {
 
         public Builder enabled(boolean value) {
             this.enabled = value;
+            return this;
+        }
+
+        /**
+         * When set, {@link #apply} is identity unless
+         * {@link AmperFeatureFlags#isPhase2LocalProtection()} is true.
+         */
+        public Builder sessionFlags(AmperFeatureFlags flags) {
+            this.sessionFlags = flags;
             return this;
         }
 

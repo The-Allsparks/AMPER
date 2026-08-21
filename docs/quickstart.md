@@ -66,3 +66,4 @@ or leave Phase 1 off with `AmperPolicies.measurementOnly()`. Motor `setPower` / 
 - Add selected motors: [integration.md](power-management/integration.md)
 - Export logs: [logging.md](logging.md)
 - LinearOpMode: [`AmperLinearOpMode.java`](../amper-examples/src/main/java/org/allsparks/amper/examples/AmperLinearOpMode.java)
+- Experimental Phase 2 slew (dual opt-in, still no auto-wrap): [`AmperLocalProtectionOpMode.java`](../amper-examples/src/main/java/org/allsparks/amper/examples/AmperLocalProtectionOpMode.java)

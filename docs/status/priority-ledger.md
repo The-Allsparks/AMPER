@@ -65,7 +65,7 @@ No other implementation PR is open. Dependabot [#21](https://github.com/The-Alls
 | Dep4 | [#36](https://github.com/The-Allsparks/AMPER/issues/36) | HIGH | **Done** (desktop SDK compile) | none | Closed via [#40](https://github.com/The-Allsparks/AMPER/pull/40) | `sdk-compile` exists; **not** a required check; not Hub validation |
 | R1 | [#25](https://github.com/The-Allsparks/AMPER/issues/25) Protect `main` | HIGH | Partial | Human policy | Open | Protection exists; review count 0; `sdk-compile` not required; docs still missing |
 | Dep1 | [#29](https://github.com/The-Allsparks/AMPER/issues/29) Gradle/JUnit majors | HIGH | Ready | none | Open; [#20](https://github.com/The-Allsparks/AMPER/pull/20) closed unmerged; [#21](https://github.com/The-Allsparks/AMPER/pull/21) still open **failed** | Close #21 with a pointer here; group Dependabot |
-| A3 / S5 | [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate | HIGH | Ready as a seam; **after #41** | none for the seam itself | Open | Do not outrank FTC integration; do not enable Phase 2 |
+| A3 / S5 | [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate | HIGH | **Software done** (session gate + example) | none for the seam | Open until Hub enable decision | Keep default-off; do not claim competition-ready |
 | C6 / S6 | [#27](https://github.com/The-Allsparks/AMPER/issues/27) Gravity hold direction | HIGH | **Blocked** | #6, #26, #7 | Open | Do not implement actuation |
 | C1 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) `observe()` match reset | MEDIUM | Ready | none | Open | Child of #41 lifecycle |
 | P1 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub overhead | HIGH | **Blocked** | Hardware | Open | Hardware |

@@ -19,7 +19,7 @@ Audit-derived issues include **#25–#36** (several closed) and **#41–#44**.
 - Phase 0/1 never write motors (enforced in tests).
 - Missing/stale sensing stays invalid.
 - Phase 2+ stay disabled until #6 and explicit flags.
-- Remaining seams: LocalProtection flag gate (#26); gravity hold direction (#27). These stay **behind** #41.
+- Remaining seams: gravity hold direction (#27). LocalProtection session flag gate (#26) is implemented for `fromPolicy` / `AmperSession.localProtection`. These stay **behind** Hub evidence for competition enable.
 
 ## Architecture stabilization
 
@@ -89,7 +89,7 @@ Closed software slices (do not re-open as next work): [#18](https://github.com/T
 8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
 9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs
 10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline
-11. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**after** #41; do not enable Phase 2)
-12. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6/#26)
+11. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
+12. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
 13. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (human)
 14. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates

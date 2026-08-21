@@ -1,5 +1,6 @@
 package com.qualcomm.robotcore.eventloop.opmode;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -7,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public abstract class OpMode {
     public HardwareMap hardwareMap = new HardwareMap();
     public Telemetry telemetry = new NoopTelemetry();
+    public Gamepad gamepad1 = new Gamepad();
+    public Gamepad gamepad2 = new Gamepad();
 
     public abstract void init();
 
