@@ -8,9 +8,22 @@ AMPER is maintained by [The Allsparks](https://github.com/The-Allsparks) (FTC Te
 git clone https://github.com/The-Allsparks/AMPER.git
 cd AMPER
 .\gradlew.bat check
+.\gradlew.bat compileAgainstFtcSdk
 ```
 
 Install into TeamCode: [docs/install.md](docs/install.md).
+
+Coding agents: read [AGENTS.md](AGENTS.md) and [docs/architecture/quality-standards.md](docs/architecture/quality-standards.md) before changing module boundaries or the `observe()` path.
+
+## Commands
+
+| Command | What it prevents |
+|---------|------------------|
+| `.\gradlew.bat check` | Broken tests, architecture regressions, example compile failures, stubs/tools on robot artifacts |
+| `.\gradlew.bat compileAgainstFtcSdk` | Adapters drifting from FTC SDK 11.2.0 |
+| `.\gradlew.bat javadocAll assembleReleaseArtifacts` | Missing jars used by the release workflow |
+
+There is no formatter task. Match neighboring Java 8 style. Do not add Spotless in a behavior PR.
 
 ## Rules of engagement
 
@@ -27,6 +40,9 @@ Install into TeamCode: [docs/install.md](docs/install.md).
 - Update docs when behavior or maturity labels change.
 - Run `.\gradlew.bat check` (or `./gradlew check`) before requesting review.
 - Adapter PRs that touch FTC types should also run `.\gradlew.bat compileAgainstFtcSdk` (CI job `sdk-compile`).
+- Architecture tests (`PackageBoundaryTest`, `HotPathGuardTest`, `PassiveArchitectureTest`, `FtcArchitectureTest`) must stay green. If you need a new dependency direction, change the test in the same PR and explain why.
+- Do not add `Thread.sleep`, file I/O, networking, or extra threads to `observe()` / `PowerMonitor.update`.
+- Do not tighten CI to millisecond-level performance SLAs. Desktop budgets are generous by design.
 
 ## Branch protection (`main`)
 

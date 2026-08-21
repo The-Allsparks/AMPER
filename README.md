@@ -86,6 +86,9 @@ Disable without changing motors: `AmperPolicies.disabled()` or `AmperPolicies.me
 | [Roadmap](docs/status/roadmap.md) | 0.1.x phases and readiness gates |
 | [Priority ledger](docs/status/priority-ledger.md) | Ready vs blocked work |
 | [Initial deep audit](docs/audits/initial-deep-audit.md) | 2026-08-17 architecture/safety audit |
+| [Quality/performance audit](docs/audits/quality-performance-audit-2026-08-20.md) | 2026-08-20 structural + performance scores and CI |
+| [Quality standards](docs/architecture/quality-standards.md) | Module rules, hot-path constraints, what each CI check prevents |
+| [AGENTS.md](AGENTS.md) | Contract for human and AI contributors |
 | [Logging and export](docs/logging.md) | AdvantageScope CSV, `/AMPER` keys, WPILOG converter |
 | [Compatibility](docs/compatibility.md) | FTC SDK / Java matrix |
 | [Release](docs/release.md) | SemVer, checklist, artifacts |

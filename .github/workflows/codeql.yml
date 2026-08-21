@@ -1,0 +1,40 @@
+name: CodeQL
+
+# Optional static analysis. Not a required merge check (no stable main
+# history yet; do not add it to branch protection until it is green on main).
+# Prevents a class of Java security and correctness defects that unit tests
+# will not see. Does not replace architecture tests or Hub validation.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "17 7 * * 1"
+
+jobs:
+  analyze:
+    name: Analyze Java
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - name: Grant Gradle permissions
+        run: chmod +x gradlew
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: java
+          build-mode: manual
+      - name: Build JVM modules for CodeQL
+        run: ./gradlew :amper-core:classes :amper-ftc:classes :amper-tools:classes --no-daemon
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:java"

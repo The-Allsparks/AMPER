@@ -8,6 +8,28 @@ Write and review this architecture **before** enabling active motor control.
 - Phased enablement for rookies: measure → understand → optionally intervene.
 - Hardware-independent policy with REV adapters today and a documented SystemCore boundary later.
 
+## Package dependency direction
+
+Enforced by `PackageBoundaryTest` and `HotPathGuardTest`. See [quality standards](../architecture/quality-standards.md) and [AGENTS.md](../../AGENTS.md).
+
+```text
+clock, filter
+    ↑
+measure  ←  policy (sampling and numeric thresholds; not intervention)
+    ↑
+battery, log, telemetry, adapters.rev
+    ↑
+org.allsparks.amper.AmperSession   (composition root; OpMode façade)
+    ↑
+protect / coord / predict          (experimental; default-off)
+
+sim → production is allowed.
+production → sim is forbidden.
+amper-core → FTC / Android / amper-ftc / amper-tools is forbidden.
+```
+
+`PowerMonitor` currently takes a `PowerPolicy` for convenience. That is an accepted 0.1.x inversion (measure depending on policy config), not a license for measure to depend on `protect` or `coord`.
+
 ## Gradle modules
 
 | Module | Dependency | Role |
