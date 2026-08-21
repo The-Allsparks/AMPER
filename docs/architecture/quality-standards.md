@@ -28,7 +28,14 @@ GitHub Actions also runs `check` on Ubuntu and Windows, `sdk-compile`, and `docs
 
 ## Compiler warnings
 
-Compile uses `-Xlint:unchecked -Xlint:deprecation`. Javadoc uses `failOnError = false`. New warnings should be treated as defects in review. Do not enable `-Werror` until generated/SDK compile paths are proven clean (tracked as a follow-up issue).
+Compile uses `-Xlint:unchecked -Xlint:deprecation`.
+
+| Path | Policy |
+|------|--------|
+| `amper-core` | `-Werror`. Baseline **0** warnings (2026-08-20). New unchecked/deprecation warnings fail `check`. |
+| `amper-ftc` / `amper-examples` / `amper-tools` | Lint flags on; not `-Werror` (FTC stubs and desktop noise). |
+| `compileAgainstFtcSdk` | Lint flags on; **not** `-Werror` until RobotCore warnings are enumerated. |
+| Javadoc | `failOnError = false`, `Xdoclint:none`. Do not fail the tree on javadoc until a dedicated cleanup. |
 
 ## Performance CI policy
 
