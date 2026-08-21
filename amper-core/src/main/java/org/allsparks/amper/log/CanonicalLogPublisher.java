@@ -17,6 +17,7 @@ import org.allsparks.amper.telemetry.DriverTelemetry;
 public final class CanonicalLogPublisher {
     private final CanonicalLog log;
     private final SessionMetadata metadata;
+    private final CanonicalSample.Builder row = CanonicalSample.at(0L);
     private long previousLoopStartNanos = Long.MIN_VALUE;
     private boolean metadataRegistered;
 
@@ -46,7 +47,7 @@ public final class CanonicalLogPublisher {
                 ? Collections.<String>emptySet()
                 : stalledMotorIds;
         long now = observation.loopStartNanos();
-        CanonicalSample.Builder row = CanonicalSample.at(now);
+        CanonicalSample.Builder row = this.row.reuse(now);
         row.putString(LogKeys.METADATA_SCHEMA_VERSION, AmperVersion.LOG_SCHEMA_VERSION);
         row.putString(LogKeys.METADATA_LIBRARY_VERSION, AmperVersion.VERSION);
         row.putString(LogKeys.METADATA_SESSION_ID, metadata.sessionId());

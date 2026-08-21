@@ -1,10 +1,9 @@
 package org.allsparks.amper.measure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import org.allsparks.amper.clock.AmperClock;
 import org.allsparks.amper.filter.LowPassFilter;
@@ -29,15 +28,18 @@ public final class PowerMonitor {
     private final SamplingPolicy sampling;
     private final double mechanismStartEffort;
 
-    private final Map<String, CurrentSample> lastCurrents = new LinkedHashMap<String, CurrentSample>();
-    private final Map<String, VoltageSample> lastVoltages = new LinkedHashMap<String, VoltageSample>();
-    private final Map<String, Long> lastVoltageReadNanos = new LinkedHashMap<String, Long>();
-    private final Map<String, Long> lastCurrentReadNanos = new LinkedHashMap<String, Long>();
-    private final Map<String, Long> lastVelocityReadNanos = new LinkedHashMap<String, Long>();
-    private final Map<String, Long> lastCommandReadNanos = new LinkedHashMap<String, Long>();
-    private final Map<String, Double> lastVelocity = new LinkedHashMap<String, Double>();
-    private final Map<String, Double> lastCommand = new LinkedHashMap<String, Double>();
-    private final Map<String, Double> lastPosition = new LinkedHashMap<String, Double>();
+    private final CurrentSample[] lastCurrents;
+    private final VoltageSample[] lastVoltages;
+    private final long[] lastVoltageReadNanos;
+    private final long[] lastCurrentReadNanos;
+    private final long[] lastVelocityReadNanos;
+    private final long[] lastCommandReadNanos;
+    private final double[] lastVelocity;
+    private final double[] lastCommand;
+    private final double[] lastPosition;
+    private final boolean[] readCurrentScratch;
+    private final List<VoltageSample> voltageScratch;
+    private final List<MotorSnapshot> motorScratch;
 
     private int roundRobinIndex;
     private long failedTotal;
@@ -97,6 +99,20 @@ public final class PowerMonitor {
         this.maxValidVolts = maxValidVolts;
         this.sampling = sampling == null ? SamplingPolicy.everyLoop() : sampling;
         this.mechanismStartEffort = mechanismStartEffort;
+        int sourceCount = this.telemetrySources.size();
+        int motorCount = this.motors.size();
+        this.lastVoltages = new VoltageSample[sourceCount];
+        this.lastVoltageReadNanos = unreadTimes(sourceCount);
+        this.lastCurrents = new CurrentSample[motorCount];
+        this.lastCurrentReadNanos = unreadTimes(motorCount);
+        this.lastVelocityReadNanos = unreadTimes(motorCount);
+        this.lastCommandReadNanos = unreadTimes(motorCount);
+        this.lastVelocity = nanArray(motorCount);
+        this.lastCommand = nanArray(motorCount);
+        this.lastPosition = nanArray(motorCount);
+        this.readCurrentScratch = new boolean[motorCount];
+        this.voltageScratch = new ArrayList<VoltageSample>(sourceCount);
+        this.motorScratch = new ArrayList<MotorSnapshot>(motorCount);
     }
 
     public static PowerMonitor create(
@@ -134,27 +150,27 @@ public final class PowerMonitor {
         long unsupported = 0;
         long skipped = 0;
 
-        List<VoltageSample> voltages = new ArrayList<VoltageSample>(telemetrySources.size());
+        voltageScratch.clear();
         for (int i = 0; i < telemetrySources.size(); i++) {
             PowerTelemetrySource source = telemetrySources.get(i);
-            boolean due = due(lastVoltageReadNanos.get(source.sourceName()), loopStart, sampling.voltagePeriodNanos());
+            boolean due = due(lastVoltageReadNanos[i], loopStart, sampling.voltagePeriodNanos());
             VoltageSample sample;
             if (due) {
                 sample = classifyVoltage(source.readBusVoltage(loopStart), loopStart, source.sourceName());
-                lastVoltageReadNanos.put(source.sourceName(), loopStart);
-                lastVoltages.put(source.sourceName(), sample);
+                lastVoltageReadNanos[i] = loopStart;
+                lastVoltages[i] = sample;
             } else {
                 sample = VoltageSample.skippedCarry(
-                        lastVoltages.get(source.sourceName()), loopStart, source.sourceName(), staleAfterNanos);
+                        lastVoltages[i], loopStart, source.sourceName(), staleAfterNanos);
                 skipped++;
             }
-            voltages.add(sample);
+            voltageScratch.add(sample);
             failed += countFailed(sample.validity());
             stale += sample.validity() == MeasurementValidity.STALE ? 1 : 0;
             unsupported += sample.validity() == MeasurementValidity.UNSUPPORTED ? 1 : 0;
         }
 
-        VoltageSample raw = voltages.get(policySourceIndex);
+        VoltageSample raw = voltageScratch.get(policySourceIndex);
         VoltageSample filtered;
         if (raw.isUsable()) {
             double filteredVolts = voltageFilter.update(raw.volts());
@@ -173,26 +189,27 @@ public final class PowerMonitor {
 
         int currentBudget = sampling.maxCurrentReadsPerLoop();
         int currentReads = 0;
-        List<MotorSnapshot> snapshots = new ArrayList<MotorSnapshot>(motors.size());
+        motorScratch.clear();
         if (!motors.isEmpty() && currentBudget > 0) {
             // Round-robin starting point; wrap so every motor is visited.
             int start = roundRobinIndex % motors.size();
-            boolean[] readCurrent = new boolean[motors.size()];
+            for (int i = 0; i < readCurrentScratch.length; i++) {
+                readCurrentScratch[i] = false;
+            }
             for (int n = 0; n < motors.size() && currentReads < currentBudget; n++) {
                 int index = (start + n) % motors.size();
-                MotorElectricalTelemetry motor = motors.get(index);
                 boolean currentDue = due(
-                        lastCurrentReadNanos.get(motor.motorId()), loopStart, sampling.currentPeriodNanos());
+                        lastCurrentReadNanos[index], loopStart, sampling.currentPeriodNanos());
                 if (currentDue) {
-                    readCurrent[index] = true;
+                    readCurrentScratch[index] = true;
                     currentReads++;
-                    lastCurrentReadNanos.put(motor.motorId(), loopStart);
+                    lastCurrentReadNanos[index] = loopStart;
                 }
             }
             roundRobinIndex = (start + Math.max(1, currentReads)) % motors.size();
             for (int i = 0; i < motors.size(); i++) {
-                MotorSnapshot snap = readMotor(motors.get(i), loopStart, readCurrent[i]);
-                snapshots.add(snap);
+                MotorSnapshot snap = readMotor(i, loopStart, readCurrentScratch[i]);
+                motorScratch.add(snap);
                 MeasurementValidity cv = snap.current().validity();
                 failed += countFailed(cv);
                 stale += cv == MeasurementValidity.STALE ? 1 : 0;
@@ -200,9 +217,9 @@ public final class PowerMonitor {
                 skipped += cv == MeasurementValidity.SKIPPED ? 1 : 0;
             }
         } else {
-            for (MotorElectricalTelemetry motor : motors) {
-                MotorSnapshot snap = readMotor(motor, loopStart, false);
-                snapshots.add(snap);
+            for (int i = 0; i < motors.size(); i++) {
+                MotorSnapshot snap = readMotor(i, loopStart, false);
+                motorScratch.add(snap);
                 skipped++;
             }
         }
@@ -221,9 +238,9 @@ public final class PowerMonitor {
                 filtered,
                 voltageMinimum.minimumOrNaN(),
                 batteryCurrent,
-                snapshots,
+                motorScratch,
                 sensingValid,
-                voltages,
+                voltageScratch,
                 new SamplingStats(
                         failed,
                         stale,
@@ -247,15 +264,17 @@ public final class PowerMonitor {
         voltageMinimum.reset();
         voltageFilter.reset();
         lastObservation = null;
-        lastCurrents.clear();
-        lastVoltages.clear();
-        lastVoltageReadNanos.clear();
-        lastCurrentReadNanos.clear();
-        lastVelocityReadNanos.clear();
-        lastCommandReadNanos.clear();
-        lastVelocity.clear();
-        lastCommand.clear();
-        lastPosition.clear();
+        Arrays.fill(lastCurrents, null);
+        Arrays.fill(lastVoltages, null);
+        Arrays.fill(lastVoltageReadNanos, Long.MIN_VALUE);
+        Arrays.fill(lastCurrentReadNanos, Long.MIN_VALUE);
+        Arrays.fill(lastVelocityReadNanos, Long.MIN_VALUE);
+        Arrays.fill(lastCommandReadNanos, Long.MIN_VALUE);
+        Arrays.fill(lastVelocity, Double.NaN);
+        Arrays.fill(lastCommand, Double.NaN);
+        Arrays.fill(lastPosition, Double.NaN);
+        voltageScratch.clear();
+        motorScratch.clear();
         roundRobinIndex = 0;
         failedTotal = 0;
         staleTotal = 0;
@@ -291,7 +310,8 @@ public final class PowerMonitor {
         return sample;
     }
 
-    private MotorSnapshot readMotor(MotorElectricalTelemetry motor, long nowNanos, boolean readCurrent) {
+    private MotorSnapshot readMotor(int index, long nowNanos, boolean readCurrent) {
+        MotorElectricalTelemetry motor = motors.get(index);
         CurrentSample current;
         if (readCurrent) {
             try {
@@ -299,57 +319,37 @@ public final class PowerMonitor {
             } catch (RuntimeException ex) {
                 current = CurrentSample.missing(nowNanos, motor.motorId());
             }
-            lastCurrents.put(motor.motorId(), current);
+            lastCurrents[index] = current;
         } else {
-            current = CurrentSample.skippedCarry(
-                    lastCurrents.get(motor.motorId()), nowNanos, staleAfterNanos);
+            current = CurrentSample.skippedCarry(lastCurrents[index], nowNanos, staleAfterNanos);
             if (current.channelId() == null || current.channelId().isEmpty()) {
                 current = new CurrentSample(
                         current.amps(), current.capturedAtNanos(), current.validity(), motor.motorId());
             }
         }
 
-        boolean commandDue = due(lastCommandReadNanos.get(motor.motorId()), nowNanos, sampling.commandPeriodNanos());
+        boolean commandDue = due(lastCommandReadNanos[index], nowNanos, sampling.commandPeriodNanos());
         double command;
         if (commandDue) {
-            command = readDoubleQuietly(new DoubleRead() {
-                @Override
-                public double get() {
-                    return motor.commandedEffort();
-                }
-            });
-            lastCommand.put(motor.motorId(), command);
-            lastCommandReadNanos.put(motor.motorId(), nowNanos);
+            command = readCommandedEffort(motor);
+            lastCommand[index] = command;
+            lastCommandReadNanos[index] = nowNanos;
         } else {
-            Double last = lastCommand.get(motor.motorId());
-            command = last == null ? Double.NaN : last.doubleValue();
+            command = lastCommand[index];
         }
 
-        boolean velocityDue = due(
-                lastVelocityReadNanos.get(motor.motorId()), nowNanos, sampling.velocityPeriodNanos());
+        boolean velocityDue = due(lastVelocityReadNanos[index], nowNanos, sampling.velocityPeriodNanos());
         double velocity;
         double position;
         if (velocityDue) {
-            velocity = readDoubleQuietly(new DoubleRead() {
-                @Override
-                public double get() {
-                    return motor.velocityTicksPerSecond();
-                }
-            });
-            position = readDoubleQuietly(new DoubleRead() {
-                @Override
-                public double get() {
-                    return motor.positionTicks();
-                }
-            });
-            lastVelocity.put(motor.motorId(), velocity);
-            lastPosition.put(motor.motorId(), position);
-            lastVelocityReadNanos.put(motor.motorId(), nowNanos);
+            velocity = readVelocity(motor);
+            position = readPosition(motor);
+            lastVelocity[index] = velocity;
+            lastPosition[index] = position;
+            lastVelocityReadNanos[index] = nowNanos;
         } else {
-            Double lastV = lastVelocity.get(motor.motorId());
-            Double lastP = lastPosition.get(motor.motorId());
-            velocity = lastV == null ? Double.NaN : lastV.doubleValue();
-            position = lastP == null ? Double.NaN : lastP.doubleValue();
+            velocity = lastVelocity[index];
+            position = lastPosition[index];
         }
 
         boolean active = !Double.isNaN(command) && Math.abs(command) >= mechanismStartEffort;
@@ -357,11 +357,23 @@ public final class PowerMonitor {
                 motor.motorId(), current, command, velocity, position, readCurrent, active);
     }
 
-    private static boolean due(Long lastNanos, long nowNanos, long periodNanos) {
-        if (periodNanos <= 0L || lastNanos == null) {
+    private static boolean due(long lastNanos, long nowNanos, long periodNanos) {
+        if (periodNanos <= 0L || lastNanos == Long.MIN_VALUE) {
             return true;
         }
-        return nowNanos - lastNanos.longValue() >= periodNanos;
+        return nowNanos - lastNanos >= periodNanos;
+    }
+
+    private static long[] unreadTimes(int length) {
+        long[] times = new long[length];
+        Arrays.fill(times, Long.MIN_VALUE);
+        return times;
+    }
+
+    private static double[] nanArray(int length) {
+        double[] values = new double[length];
+        Arrays.fill(values, Double.NaN);
+        return values;
     }
 
     private static long countFailed(MeasurementValidity validity) {
@@ -371,15 +383,27 @@ public final class PowerMonitor {
         return 0L;
     }
 
-    private static double readDoubleQuietly(DoubleRead read) {
+    private static double readCommandedEffort(MotorElectricalTelemetry motor) {
         try {
-            return read.get();
+            return motor.commandedEffort();
         } catch (RuntimeException ex) {
             return Double.NaN;
         }
     }
 
-    private interface DoubleRead {
-        double get();
+    private static double readVelocity(MotorElectricalTelemetry motor) {
+        try {
+            return motor.velocityTicksPerSecond();
+        } catch (RuntimeException ex) {
+            return Double.NaN;
+        }
+    }
+
+    private static double readPosition(MotorElectricalTelemetry motor) {
+        try {
+            return motor.positionTicks();
+        } catch (RuntimeException ex) {
+            return Double.NaN;
+        }
     }
 }

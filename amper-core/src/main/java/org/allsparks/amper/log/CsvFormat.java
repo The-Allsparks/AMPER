@@ -20,6 +20,48 @@ public final class CsvFormat {
     }
 
     /**
+     * Four-decimal US format matching {@code String.format(Locale.US, "%.4f", value)}
+     * for finite magnitudes used on the observe path. Avoids allocating a Formatter.
+     */
+    public static String fixed4(double value) {
+        StringBuilder sb = new StringBuilder(16);
+        appendFixed4(sb, value);
+        return sb.toString();
+    }
+
+    public static void appendFixed4(StringBuilder sb, double value) {
+        if (Double.isNaN(value)) {
+            sb.append("NaN");
+            return;
+        }
+        if (Double.isInfinite(value)) {
+            sb.append(value > 0 ? "Infinity" : "-Infinity");
+            return;
+        }
+        if (value >= 1.0e12 || value <= -1.0e12) {
+            sb.append(String.format(Locale.US, "%.4f", value));
+            return;
+        }
+        boolean negative = value < 0.0;
+        double abs = negative ? -value : value;
+        long scaled = Math.round(abs * 10000.0);
+        if (negative && scaled != 0L) {
+            sb.append('-');
+        }
+        long whole = scaled / 10000L;
+        long frac = scaled % 10000L;
+        sb.append(whole).append('.');
+        if (frac < 10L) {
+            sb.append("000");
+        } else if (frac < 100L) {
+            sb.append("00");
+        } else if (frac < 1000L) {
+            sb.append("0");
+        }
+        sb.append(frac);
+    }
+
+    /**
      * Decimal seconds for AdvantageScope CSV. Locale.US only. Internal time stays
      * integer nanoseconds until this boundary.
      */
