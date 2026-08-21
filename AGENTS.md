@@ -79,9 +79,9 @@ The robot control loop calls `AmperSession.observe()` once per cycle.
 
 ## Dependencies
 
-- Library bytecode: Java 8. CI JDK: Temurin 17. Gradle wrapper: 8.7 until issue #29 is analyzed.
+- Library bytecode: Java 8. CI JDK: Temurin 17. Gradle wrapper: 9.7.0. Do not merge unanalyzed JUnit 6 majors.
 - `amper-core` JavaCompile uses `-Werror` for `-Xlint:unchecked` and `-Xlint:deprecation`. Do not add those warnings. `compileAgainstFtcSdk` stays without `-Werror`.
-- Do not merge unanalyzed Gradle 9 / JUnit 6 majors.
+- Do not merge unanalyzed JUnit 6 majors.
 - New Maven coordinates need a reason, Android/FTC compatibility note, and a test.
 - ArchUnit, Spotless, PMD, and SpotBugs were evaluated and **not** added: they are either redundant with source architecture tests, or would fail the whole tree without a dedicated formatting/baseline PR.
 

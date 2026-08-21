@@ -9,7 +9,7 @@ Verified against **FTC SDK 11.2.0** (DECODE 2025-2026) on **2026-08-17**:
 | Maven coordinates | `org.firstinspires.ftc:RobotCore:11.2.0` (and Hardware, FtcCommon, …) | [FtcRobotController v11.2 `build.dependencies.gradle`](https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/v11.2/build.dependencies.gradle) |
 | TeamCode Java language | `sourceCompatibility` / `targetCompatibility` **1.8** | [v11.2 `build.common.gradle`](https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/v11.2/build.common.gradle) |
 | AMPER bytecode | Java 8 | this repository |
-| Gradle used to *build AMPER itself* | 8.7 wrapper | `gradle/wrapper/gradle-wrapper.properties` |
+| Gradle used to *build AMPER itself* | 9.7.0 wrapper | `gradle/wrapper/gradle-wrapper.properties` |
 | Gradle used to *build TeamCode* | the SDK's wrapper (v11.2 uses Gradle 9.1 / AGP 8.13.2) | [FtcRobotController README v11.2](https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/v11.2/README.md) |
 
 Do not upgrade the FTC project's Gradle because AMPER asked you to. Keep the SDK wrapper.

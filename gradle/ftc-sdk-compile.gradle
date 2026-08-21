@@ -36,17 +36,32 @@ dependencies {
 
 def ftcSdkJarsDir = layout.buildDirectory.dir('ftc-sdk-jars')
 def robotCoreClassesJar = layout.buildDirectory.file("ftc-sdk-jars/RobotCore-${ftcSdkVersion}-classes.jar")
+def androidCompileJarFile = layout.buildDirectory.file('ftc-sdk-jars/android-compile.jar')
 
 def extractFtcSdkJars = tasks.register('extractFtcSdkJars') {
     group = 'verification'
     description = "Extract classes.jar from FTC SDK ${ftcSdkVersion} AARs."
     inputs.files(configurations.ftcSdkAar)
+    inputs.files(configurations.androidCompileJar)
     outputs.file(robotCoreClassesJar)
+    outputs.file(androidCompileJarFile)
     onlyIf { findProperty('amper.skipFtcSdkCompile') != 'true' }
     doLast {
         def destDir = ftcSdkJarsDir.get().asFile
         project.delete(destDir)
         destDir.mkdirs()
+
+        def androidSrc = configurations.androidCompileJar.singleFile
+        def androidDest = androidCompileJarFile.get().asFile
+        project.copy {
+            from androidSrc
+            into destDir
+            rename { 'android-compile.jar' }
+        }
+        if (!androidDest.isFile()) {
+            throw new GradleException("Failed to copy Android compile jar from ${androidSrc}.")
+        }
+
         def artifacts = configurations.ftcSdkAar.resolvedConfiguration.resolvedArtifacts
         if (artifacts.isEmpty()) {
             throw new GradleException("No FTC SDK artifacts resolved. Expected RobotCore ${ftcSdkVersion} from Maven Central.")
@@ -90,13 +105,10 @@ gradle.projectsEvaluated {
         classpath = files(
                 project(':amper-core').sourceSets.main.output,
                 robotCoreClassesJar,
-                configurations.androidCompileJar
+                androidCompileJarFile
         )
         doFirst {
             logger.lifecycle("Compiling ${ftcProject.path} against FTC SDK ${ftcSdkVersion}")
-            classpath.files.each { file ->
-                logger.lifecycle("  classpath: ${file}")
-            }
         }
     }
 
@@ -116,13 +128,10 @@ gradle.projectsEvaluated {
                 project(':amper-core').sourceSets.main.output,
                 project(':amper-ftc').sourceSets.main.output,
                 robotCoreClassesJar,
-                configurations.androidCompileJar
+                androidCompileJarFile
         )
         doFirst {
             logger.lifecycle("Compiling ${examplesProject.path} against FTC SDK ${ftcSdkVersion}")
-            classpath.files.each { file ->
-                logger.lifecycle("  classpath: ${file}")
-            }
         }
     }
 }
