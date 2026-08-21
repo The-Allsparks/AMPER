@@ -422,13 +422,10 @@ public final class AmperSession {
     private void publishCanonical(ElectricalObservation observation) {
         String eventType = null;
         String eventMessage = null;
-        for (PowerEvent event : logger.snapshot()) {
-            if (event.timestampNanos() == observation.loopStartNanos()
-                    && event.type() != PowerEventType.LOOP_SAMPLE
-                    && event.type() != PowerEventType.SENSOR_INVALID) {
-                eventType = event.type().name();
-                eventMessage = event.message();
-            }
+        PowerEvent last = logger.lastAnnotatingEvent();
+        if (last != null && last.timestampNanos() == observation.loopStartNanos()) {
+            eventType = last.type().name();
+            eventMessage = last.message();
         }
         canonicalPublisher.record(
                 observation,

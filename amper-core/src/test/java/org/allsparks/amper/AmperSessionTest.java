@@ -11,6 +11,8 @@ import org.allsparks.amper.adapters.rev.RevHubTelemetrySource;
 import org.allsparks.amper.adapters.rev.RevMotorTelemetry;
 import org.allsparks.amper.api.DriverPowerState;
 import org.allsparks.amper.clock.AmperClock;
+import org.allsparks.amper.log.LogKeys;
+import org.allsparks.amper.log.LogValue;
 import org.allsparks.amper.log.PowerEvent;
 import org.allsparks.amper.log.PowerEventType;
 import org.allsparks.amper.measure.ElectricalObservation;
@@ -96,6 +98,28 @@ class AmperSessionTest {
         assertTrue(obs.sensingValid());
         assertEquals(DriverPowerState.SEVERE_VOLTAGE_RISK, session.driverTelemetry().state());
         assertTrue(session.exportCsv().contains("SEVERE_VOLTAGE_RISK"));
+    }
+
+    @Test
+    void canonicalRowAnnotatesSameTimestampWarning() {
+        AtomicReference<Double> volts = new AtomicReference<>(9.0);
+        AtomicLong time = new AtomicLong(1_000_000L);
+        PowerPolicy policy = PowerPolicy.builder()
+                .featureFlags(AmperFeatureFlags.passiveTelemetry())
+                .build();
+        AmperSession session = new AmperSession(
+                policy,
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", volts::get),
+                Collections.emptyList());
+        session.start();
+        session.observe();
+        assertEquals("VOLTAGE_WARNING", session.logger().lastAnnotatingEvent().type().name());
+        LogValue annotated = session.canonicalLog().samples()
+                .get(session.canonicalLog().size() - 1)
+                .get(LogKeys.EVENTS_TYPE);
+        assertTrue(annotated != null && annotated.present());
+        assertEquals("VOLTAGE_WARNING", annotated.asString());
     }
 
     @Test
