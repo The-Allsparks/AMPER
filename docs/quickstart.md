@@ -43,7 +43,7 @@ public void stop() {
 
 ## 2. Run the OpMode
 
-Call `amper.start()` when the match begins (iterative `start()` or LinearOpMode after `waitForStart()`). AMPER telemetry is published from `loop()` (or your LinearOpMode loop), not from `init()` in the snippet above. After you press Play you should see `AMPER` and `AMPER.V` on the Driver Station.
+Call `amper.start()` when the match begins (iterative `start()` or LinearOpMode after `waitForStart()`). AMPER telemetry is published from `loop()` (or your LinearOpMode loop), not from `init()` in the snippet above. After you press Play you should see `AMPER` and `AMPER.V` on the Driver Station. `AMPER.loopUs` is the last AMPER `observe()` duration; `AMPER.p95Us` / `AMPER.maxUs` are rolling-window tail figures for that same AMPER update, **not** full OpMode loop time and **not** Control Hub validated.
 
 Optional: call `amper.observe()` during `init_loop` to preview voltage before Play. Those probes are not written to the match CSV.
 

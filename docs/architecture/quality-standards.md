@@ -12,7 +12,7 @@ These rules are enforced by tests where practical. Documentation alone is not ar
 | `HotPathGuardTest` | `Thread.sleep`, filesystem/network I/O, extra threads, or Stream/Collectors on the observe path |
 | `FtcArchitectureTest` | FTC adapters writing motors or depending on desktop tools |
 | `ObservePerformanceBudgetTest` | Unbounded logs; student presets polling every motor current; catastrophic desktop superlinear `observe()` cost |
-| `LoopOverheadStatsTest` | Broken percentile helpers used for future DS/match timing |
+| `LoopOverheadStatsTest` | Broken percentile helpers used for DS `AMPER.p95Us` and match-summary p50/p95/p99 |
 | `compileAgainstFtcSdk` | Stub drift from RobotCore 11.2.0 |
 | `docs-structure` CI job | Missing required docs |
 | `DocLinkCheckerTest` | Broken relative markdown links |
@@ -41,7 +41,7 @@ Allowed:
 - Generous wall-clock ceilings (tens of seconds)
 - Static forbidden APIs on hot paths
 
-Hub loop time, I2C cost, GC pauses, and vision/camera behavior cannot be reproduced here. Measure them on a Control Hub (issue #6) and publish `LoopOverheadStats` percentiles on the robot.
+Hub loop time, I2C cost, GC pauses, and vision/camera behavior cannot be reproduced here. Measure them on a Control Hub (issue #6). Desktop and DS `LoopOverheadStats` percentiles describe AMPER `observe()` duration only.
 
 ## Adding a dependency
 
