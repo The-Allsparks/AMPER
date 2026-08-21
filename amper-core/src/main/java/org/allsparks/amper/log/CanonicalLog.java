@@ -1,6 +1,5 @@
 package org.allsparks.amper.log;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,11 +12,10 @@ import java.util.Objects;
  */
 public final class CanonicalLog {
     private final int capacity;
-    private final List<CanonicalSample> samples;
+    private final BoundedRingBuffer<CanonicalSample> samples;
     private final Map<String, LogFieldSpec> schema = new LinkedHashMap<String, LogFieldSpec>();
     private final Map<String, LogValue> acceptedScratch = new LinkedHashMap<String, LogValue>();
     private final LogNameSanitizer names;
-    private long dropped;
     private long typeMismatches;
     private long backwardTimestamps;
     private long originNanos = Long.MIN_VALUE;
@@ -32,7 +30,7 @@ public final class CanonicalLog {
             throw new IllegalArgumentException("capacity must be >= 1");
         }
         this.capacity = capacity;
-        this.samples = new ArrayList<CanonicalSample>(capacity);
+        this.samples = new BoundedRingBuffer<CanonicalSample>(capacity);
         this.names = names == null ? new LogNameSanitizer() : names;
     }
 
@@ -77,15 +75,11 @@ public final class CanonicalLog {
                 accepted.put(entry.getKey(), value);
             }
         }
-        if (samples.size() >= capacity) {
-            samples.remove(0);
-            dropped++;
-        }
         samples.add(new CanonicalSample(timestamp, accepted));
     }
 
     public List<CanonicalSample> samples() {
-        return Collections.unmodifiableList(samples);
+        return samples.snapshot();
     }
 
     public Map<String, LogFieldSpec> schema() {
@@ -97,7 +91,7 @@ public final class CanonicalLog {
     }
 
     public long droppedCount() {
-        return dropped;
+        return samples.droppedCount();
     }
 
     public long typeMismatchCount() {
@@ -122,7 +116,6 @@ public final class CanonicalLog {
 
     public void clear() {
         samples.clear();
-        dropped = 0;
         typeMismatches = 0;
         backwardTimestamps = 0;
         originNanos = Long.MIN_VALUE;

@@ -1,7 +1,5 @@
 package org.allsparks.amper.log;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +15,11 @@ import org.allsparks.amper.measure.VoltageSample;
  */
 public final class PowerEventLogger {
     private final int capacity;
-    private final List<PowerEvent> events;
+    private final BoundedRingBuffer<PowerEvent> events;
     private final SessionMetadata metadata;
     private final Map<String, String> fieldScratch = new LinkedHashMap<String, String>();
     private final StringBuilder numberBuf = new StringBuilder(24);
     private PowerEvent lastAnnotatingEvent;
-    private long dropped;
     private boolean exported;
     private String[] hubIdKeys = new String[0];
     private String[] hubVKeys = new String[0];
@@ -45,16 +42,12 @@ public final class PowerEventLogger {
             throw new IllegalArgumentException("capacity must be >= 1");
         }
         this.capacity = capacity;
-        this.events = new ArrayList<PowerEvent>(capacity);
+        this.events = new BoundedRingBuffer<PowerEvent>(capacity);
         this.metadata = metadata == null ? SessionMetadata.anonymous("unspecified") : metadata;
     }
 
     public void record(PowerEvent event) {
         Objects.requireNonNull(event, "event");
-        if (events.size() >= capacity) {
-            events.remove(0);
-            dropped++;
-        }
         events.add(event);
         if (annotatesCanonical(event.type())) {
             lastAnnotatingEvent = event;
@@ -82,7 +75,7 @@ public final class PowerEventLogger {
         fields.put("sensingValid", Boolean.toString(observation.sensingValid()));
         fields.put("disabled", Boolean.toString(observation.disabled()));
         fields.put("sumAbsCmd", format(observation.totalAbsCommandedEffort()));
-        fields.put("dropped", Long.toString(dropped));
+        fields.put("dropped", Long.toString(events.droppedCount()));
         fields.put("failed", Long.toString(observation.samplingStats().failedThisLoop()));
         fields.put("stale", Long.toString(observation.samplingStats().staleThisLoop()));
         fields.put("unsupported", Long.toString(observation.samplingStats().unsupportedThisLoop()));
@@ -121,7 +114,7 @@ public final class PowerEventLogger {
     }
 
     public List<PowerEvent> snapshot() {
-        return Collections.unmodifiableList(new ArrayList<PowerEvent>(events));
+        return events.snapshot();
     }
 
     /**
@@ -133,7 +126,7 @@ public final class PowerEventLogger {
     }
 
     public long droppedCount() {
-        return dropped;
+        return events.droppedCount();
     }
 
     public int capacity() {
@@ -155,7 +148,6 @@ public final class PowerEventLogger {
     public void clear() {
         events.clear();
         lastAnnotatingEvent = null;
-        dropped = 0;
         exported = false;
     }
 
@@ -208,7 +200,7 @@ public final class PowerEventLogger {
         sb.append("# session_id=").append(CsvFormat.escape(metadata.sessionId())).append('\n');
         sb.append("# policy_note=").append(CsvFormat.escape(metadata.policyNote())).append('\n');
         sb.append("# robot_note=").append(CsvFormat.escape(metadata.robotNote())).append('\n');
-        sb.append("# dropped_count=").append(dropped).append('\n');
+        sb.append("# dropped_count=").append(events.droppedCount()).append('\n');
         sb.append("# pii_policy=no-personal-information\n");
         sb.append("timestampNanos,type,message,fields\n");
         for (PowerEvent event : events) {
