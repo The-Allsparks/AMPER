@@ -24,7 +24,7 @@ GitHub Actions also runs `check` on Ubuntu and Windows, `sdk-compile`, `docs-str
 - Ship Java 8 bytecode (`sourceCompatibility` / `targetCompatibility` 1.8).
 - CI compiles with Temurin 17, matching FTC SDK 11.2 TeamCode.
 - Do not add a JVM-only library to robot modules without an Android/FTC note.
-- ArchUnit, Spotless, PMD, and SpotBugs are **not** in this repository. ArchUnit is compatible with `amper-core` JVM tests but duplicates the source scanners above. Spotless would reformat the tree. PMD/SpotBugs would fail hundreds of existing findings without a baseline.
+- ArchUnit, PMD, and SpotBugs are **not** in this repository. Spotless (Palantir Java Format) is part of `check` except on `amper-ftc-stubs`. PMD/SpotBugs would fail hundreds of existing findings without a baseline.
 
 ## Compiler warnings
 

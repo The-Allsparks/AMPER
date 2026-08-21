@@ -98,8 +98,7 @@ public final class PowerEventLogger {
             fields.put(motorIdKeys[index], motor.motorId());
             fields.put(motorAmpsKeys[index], format(motor.current().amps()));
             fields.put(motorValidityKeys[index], motor.current().validity().name());
-            fields.put(motorAgeKeys[index], Long.toString(
-                    motor.current().ageNanos(observation.loopStartNanos())));
+            fields.put(motorAgeKeys[index], Long.toString(motor.current().ageNanos(observation.loopStartNanos())));
             fields.put(motorCmdKeys[index], format(motor.commandedEffort()));
             fields.put(motorVelKeys[index], format(motor.velocityTicksPerSecond()));
             fields.put(motorActiveKeys[index], Boolean.toString(motor.active()));
@@ -107,9 +106,7 @@ public final class PowerEventLogger {
             index++;
         }
 
-        PowerEventType type = observation.sensingValid()
-                ? PowerEventType.LOOP_SAMPLE
-                : PowerEventType.SENSOR_INVALID;
+        PowerEventType type = observation.sensingValid() ? PowerEventType.LOOP_SAMPLE : PowerEventType.SENSOR_INVALID;
         record(new PowerEvent(observation.loopStartNanos(), type, "observation", fields));
     }
 
@@ -196,10 +193,18 @@ public final class PowerEventLogger {
     public String exportCsv() {
         StringBuilder sb = new StringBuilder();
         sb.append("# amper_csv_schema=").append(AmperVersion.CSV_SCHEMA_VERSION).append('\n');
-        sb.append("# amper_version=").append(CsvFormat.escape(AmperVersion.VERSION)).append('\n');
-        sb.append("# session_id=").append(CsvFormat.escape(metadata.sessionId())).append('\n');
-        sb.append("# policy_note=").append(CsvFormat.escape(metadata.policyNote())).append('\n');
-        sb.append("# robot_note=").append(CsvFormat.escape(metadata.robotNote())).append('\n');
+        sb.append("# amper_version=")
+                .append(CsvFormat.escape(AmperVersion.VERSION))
+                .append('\n');
+        sb.append("# session_id=")
+                .append(CsvFormat.escape(metadata.sessionId()))
+                .append('\n');
+        sb.append("# policy_note=")
+                .append(CsvFormat.escape(metadata.policyNote()))
+                .append('\n');
+        sb.append("# robot_note=")
+                .append(CsvFormat.escape(metadata.robotNote()))
+                .append('\n');
         sb.append("# dropped_count=").append(events.droppedCount()).append('\n');
         sb.append("# pii_policy=no-personal-information\n");
         sb.append("timestampNanos,type,message,fields\n");

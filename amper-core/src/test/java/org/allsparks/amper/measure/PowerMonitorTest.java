@@ -20,16 +20,10 @@ class PowerMonitorTest {
         AmperClock clock = time::get;
 
         RevHubTelemetrySource hub = RevHubTelemetrySource.voltageOnly("Control Hub", () -> 12.4);
-        RevMotorTelemetry motor = new RevMotorTelemetry(
-                "fl",
-                () -> 2.5,
-                () -> 0.75,
-                () -> 100.0,
-                () -> 10.0,
-                true);
+        RevMotorTelemetry motor = new RevMotorTelemetry("fl", () -> 2.5, () -> 0.75, () -> 100.0, () -> 10.0, true);
 
-        PowerMonitor monitor = new PowerMonitor(
-                clock, hub, Collections.singletonList(motor), 0.5, 100_000_000L, 5.0, 16.0);
+        PowerMonitor monitor =
+                new PowerMonitor(clock, hub, Collections.singletonList(motor), 0.5, 100_000_000L, 5.0, 16.0);
 
         assertEquals(0.75, motor.commandedEffort(), 1e-9);
         ElectricalObservation obs = monitor.update();
@@ -87,10 +81,8 @@ class PowerMonitorTest {
     void unsupportedMotorCurrentIsAllowed() {
         AmperClock clock = () -> 7L;
         RevHubTelemetrySource hub = RevHubTelemetrySource.voltageOnly("hub", () -> 12.1);
-        RevMotorTelemetry motor = new RevMotorTelemetry(
-                "intake", null, () -> 1.0, null, null, false);
-        PowerMonitor monitor = new PowerMonitor(
-                clock, hub, Arrays.asList(motor), 1.0, 100_000_000L, 5.0, 16.0);
+        RevMotorTelemetry motor = new RevMotorTelemetry("intake", null, () -> 1.0, null, null, false);
+        PowerMonitor monitor = new PowerMonitor(clock, hub, Arrays.asList(motor), 1.0, 100_000_000L, 5.0, 16.0);
         ElectricalObservation obs = monitor.update();
         assertEquals(MeasurementValidity.UNSUPPORTED, obs.motorCurrents().get(0).validity());
         assertTrue(obs.sensingValid());

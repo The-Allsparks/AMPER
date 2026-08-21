@@ -15,8 +15,7 @@ import org.allsparks.amper.policy.SamplingPolicy;
  * hardware validation.
  */
 public final class TraceGenerator {
-    private TraceGenerator() {
-    }
+    private TraceGenerator() {}
 
     public static List<ElectricalObservation> healthyBattery() {
         SimulatedClock clock = new SimulatedClock();

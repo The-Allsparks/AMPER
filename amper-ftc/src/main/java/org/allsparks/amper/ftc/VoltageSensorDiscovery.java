@@ -12,8 +12,7 @@ import java.util.Map;
  * {@code iterator().next()}.
  */
 public final class VoltageSensorDiscovery {
-    private VoltageSensorDiscovery() {
-    }
+    private VoltageSensorDiscovery() {}
 
     public static List<String> names(HardwareMap hardwareMap) {
         List<String> names = new ArrayList<String>();
@@ -37,8 +36,7 @@ public final class VoltageSensorDiscovery {
             return hardwareMap.voltageSensor.get(deviceName);
         } catch (RuntimeException ex) {
             throw new IllegalArgumentException(
-                    "No voltage sensor named '" + deviceName + "'. Available: " + names(hardwareMap),
-                    ex);
+                    "No voltage sensor named '" + deviceName + "'. Available: " + names(hardwareMap), ex);
         }
     }
 
@@ -58,10 +56,9 @@ public final class VoltageSensorDiscovery {
             }
         }
         if (matches.size() != 1) {
-            throw new IllegalArgumentException(
-                    "Expected exactly one voltage sensor containing '" + needle + "', found "
-                            + matches.size() + ". Available: " + names(hardwareMap)
-                            + ". Pass an explicit device name instead of guessing.");
+            throw new IllegalArgumentException("Expected exactly one voltage sensor containing '" + needle + "', found "
+                    + matches.size() + ". Available: " + names(hardwareMap)
+                    + ". Pass an explicit device name instead of guessing.");
         }
         return matches.get(0);
     }

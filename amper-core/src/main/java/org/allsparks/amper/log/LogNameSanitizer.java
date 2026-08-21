@@ -22,8 +22,7 @@ public final class LogNameSanitizer {
             return existing;
         }
         String candidate = sanitizeSegment(original);
-        if (sanitizedToOriginal.containsKey(candidate)
-                && !original.equals(sanitizedToOriginal.get(candidate))) {
+        if (sanitizedToOriginal.containsKey(candidate) && !original.equals(sanitizedToOriginal.get(candidate))) {
             int suffix = 2;
             String unique = candidate + "_" + suffix;
             while (sanitizedToOriginal.containsKey(unique)) {
@@ -50,9 +49,7 @@ public final class LogNameSanitizer {
         String trimmed = raw.trim();
         for (int i = 0; i < trimmed.length(); i++) {
             char c = trimmed.charAt(i);
-            boolean ok = (c >= 'a' && c <= 'z')
-                    || (c >= 'A' && c <= 'Z')
-                    || (c >= '0' && c <= '9');
+            boolean ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
             if (ok) {
                 sb.append(c);
                 lastUnderscore = false;

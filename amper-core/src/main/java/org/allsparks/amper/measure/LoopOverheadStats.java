@@ -9,14 +9,7 @@ import java.util.Arrays;
 public final class LoopOverheadStats {
     private static final int WINDOW = 256;
     private static final long[] BUCKET_MAX_NS = {
-        50_000L,
-        100_000L,
-        200_000L,
-        500_000L,
-        1_000_000L,
-        2_000_000L,
-        5_000_000L,
-        Long.MAX_VALUE
+        50_000L, 100_000L, 200_000L, 500_000L, 1_000_000L, 2_000_000L, 5_000_000L, Long.MAX_VALUE
     };
 
     private long count;

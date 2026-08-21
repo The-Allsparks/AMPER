@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
  */
 class HotPathGuardTest {
 
-    private static final Set<String> HOT_PACKAGES = new HashSet<String>(Arrays.asList(
-            "measure", "filter", "battery", "telemetry", "clock", "protect", "coord", "predict"));
+    private static final Set<String> HOT_PACKAGES = new HashSet<String>(
+            Arrays.asList("measure", "filter", "battery", "telemetry", "clock", "protect", "coord", "predict"));
 
     private static final String[] FORBIDDEN_SNIPPETS = {
         "Thread.sleep",
@@ -107,9 +107,7 @@ class HotPathGuardTest {
     void logsDoNotShiftOnOverflow() throws IOException {
         List<String> hits = new ArrayList<String>();
         Path main = SourceScan.coreMain();
-        String[] watched = {
-            "org/allsparks/amper/log/CanonicalLog.java",
-            "org/allsparks/amper/log/PowerEventLogger.java"
+        String[] watched = {"org/allsparks/amper/log/CanonicalLog.java", "org/allsparks/amper/log/PowerEventLogger.java"
         };
         for (int w = 0; w < watched.length; w++) {
             Path path = main.resolve(watched[w]);
@@ -146,8 +144,7 @@ class HotPathGuardTest {
         failIf(hits, "AmperSession used sleep or inline file writes");
     }
 
-    private static void rejectAfterMethod(
-            List<String> hits, Path path, String methodSig, String[] snippets) {
+    private static void rejectAfterMethod(List<String> hits, Path path, String methodSig, String[] snippets) {
         String[] lines = SourceScan.read(path).split("\n");
         boolean inMethod = false;
         int depth = 0;
@@ -193,9 +190,7 @@ class HotPathGuardTest {
     }
 
     private static boolean isComment(String trimmed) {
-        return trimmed.startsWith("//")
-                || trimmed.startsWith("*")
-                || trimmed.startsWith("/*");
+        return trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*");
     }
 
     private static String rel(Path root, Path path) {

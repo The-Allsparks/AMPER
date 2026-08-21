@@ -6,8 +6,7 @@ import org.allsparks.amper.AmperVersion;
 
 /** Sidecar JSON describing AdvantageScope CSV fields, units, and name mapping. */
 public final class LogSchemaSidecar {
-    private LogSchemaSidecar() {
-    }
+    private LogSchemaSidecar() {}
 
     public static String toJson(CanonicalLog log, SessionMetadata metadata) {
         SessionMetadata meta = metadata == null ? SessionMetadata.anonymous("unspecified") : metadata;
@@ -44,16 +43,22 @@ public final class LogSchemaSidecar {
     }
 
     private static void field(StringBuilder sb, String key, String value) {
-        sb.append("  \"").append(Json.escape(key)).append("\": \"")
-                .append(Json.escape(value)).append("\",\n");
+        sb.append("  \"")
+                .append(Json.escape(key))
+                .append("\": \"")
+                .append(Json.escape(value))
+                .append("\",\n");
     }
 
     private static void appendMapping(StringBuilder sb, Map<String, String> mapping) {
         int remaining = mapping.size();
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
             remaining--;
-            sb.append("    \"").append(Json.escape(entry.getKey())).append("\": \"")
-                    .append(Json.escape(entry.getValue())).append('"');
+            sb.append("    \"")
+                    .append(Json.escape(entry.getKey()))
+                    .append("\": \"")
+                    .append(Json.escape(entry.getValue()))
+                    .append('"');
             if (remaining > 0) {
                 sb.append(',');
             }

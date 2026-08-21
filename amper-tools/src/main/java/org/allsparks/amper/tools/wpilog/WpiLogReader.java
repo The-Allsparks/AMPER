@@ -12,15 +12,13 @@ import java.util.Map;
  * Data Log File Format 1.0 (allwpilib v2026.2.1 {@code datalog.adoc}).
  */
 public final class WpiLogReader {
-    private WpiLogReader() {
-    }
+    private WpiLogReader() {}
 
     public static ParsedLog read(byte[] data) {
         if (data == null || data.length < 12) {
             throw new IllegalArgumentException("WPILOG too short");
         }
-        if (data[0] != 'W' || data[1] != 'P' || data[2] != 'I'
-                || data[3] != 'L' || data[4] != 'O' || data[5] != 'G') {
+        if (data[0] != 'W' || data[1] != 'P' || data[2] != 'I' || data[3] != 'L' || data[4] != 'O' || data[5] != 'G') {
             throw new IllegalArgumentException("missing WPILOG magic");
         }
         int version = (data[6] & 0xFF) | ((data[7] & 0xFF) << 8);

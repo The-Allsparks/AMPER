@@ -29,8 +29,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * }</pre>
  */
 public final class AmperFtc {
-    private AmperFtc() {
-    }
+    private AmperFtc() {}
 
     public static Builder builder(HardwareMap hardwareMap) {
         return new Builder(hardwareMap);
@@ -120,8 +119,8 @@ public final class AmperFtc {
         public AmperSession build() {
             if (voltages.isEmpty()) {
                 throw new IllegalStateException(
-                        "No voltage source registered. Call controlHubVoltage() or voltageSensor(...). "
-                                + "Available: " + VoltageSensorDiscovery.names(hardwareMap));
+                        "No voltage source registered. Call controlHubVoltage() or voltageSensor(...). " + "Available: "
+                                + VoltageSensorDiscovery.names(hardwareMap));
             }
             if (policySourceIndex < 0 || policySourceIndex >= voltages.size()) {
                 throw new IllegalArgumentException("policySourceIndex out of range");
@@ -130,20 +129,9 @@ public final class AmperFtc {
             extra.put("hubCount", Integer.toString(voltages.size()));
             extra.put("hardwarePlatform", "FTC_REV_HUB");
             SessionMetadata metadata = new SessionMetadata(
-                    sessionId,
-                    "",
-                    policy.voltageThresholdProvenance().name(),
-                    extra);
+                    sessionId, "", policy.voltageThresholdProvenance().name(), extra);
             FtcSessionLogSink sink = persistLogs ? new FtcSessionLogSink(hardwareMap.appContext) : null;
-            return new AmperSession(
-                    policy,
-                    null,
-                    voltages,
-                    policySourceIndex,
-                    motors,
-                    metadata,
-                    sink,
-                    exportFilename);
+            return new AmperSession(policy, null, voltages, policySourceIndex, motors, metadata, sink, exportFilename);
         }
     }
 }

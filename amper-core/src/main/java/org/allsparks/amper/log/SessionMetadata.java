@@ -14,18 +14,14 @@ public final class SessionMetadata {
     private final String policyNote;
     private final Map<String, String> extra;
 
-    public SessionMetadata(
-            String sessionId,
-            String robotNote,
-            String policyNote,
-            Map<String, String> extra) {
+    public SessionMetadata(String sessionId, String robotNote, String policyNote, Map<String, String> extra) {
         this.sessionId = sessionId == null || sessionId.trim().isEmpty() ? "unspecified" : sessionId.trim();
         this.schemaVersion = AmperVersion.CSV_SCHEMA_VERSION;
         this.amperVersion = AmperVersion.VERSION;
         this.robotNote = robotNote == null ? "" : robotNote;
         this.policyNote = policyNote == null ? "" : policyNote;
-        this.extra = Collections.unmodifiableMap(new LinkedHashMap<String, String>(
-                extra == null ? Collections.<String, String>emptyMap() : extra));
+        this.extra = Collections.unmodifiableMap(
+                new LinkedHashMap<String, String>(extra == null ? Collections.<String, String>emptyMap() : extra));
     }
 
     public static SessionMetadata anonymous(String policyNote) {

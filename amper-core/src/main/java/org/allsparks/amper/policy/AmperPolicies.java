@@ -7,8 +7,7 @@ import org.allsparks.amper.AmperFeatureFlags;
  * until a team records Control Hub characterization.
  */
 public final class AmperPolicies {
-    private AmperPolicies() {
-    }
+    private AmperPolicies() {}
 
     /** Phase 0 only: measure, log, no Phase 1 warnings, no intervention. */
     public static PowerPolicy measurementOnly() {
@@ -54,7 +53,8 @@ public final class AmperPolicies {
     /** Fully disabled: {@link AmperFeatureFlags#isPhase0Measurement()} is false. */
     public static PowerPolicy disabled() {
         return PowerPolicy.builder()
-                .featureFlags(AmperFeatureFlags.builder().phase0Measurement(false).build())
+                .featureFlags(
+                        AmperFeatureFlags.builder().phase0Measurement(false).build())
                 .sampling(SamplingPolicy.recommended())
                 .build();
     }

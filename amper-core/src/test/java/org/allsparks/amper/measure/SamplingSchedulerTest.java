@@ -54,7 +54,8 @@ class SamplingSchedulerTest {
         assertEquals(1, first.samplingStats().currentReadsThisLoop());
         assertTrue(first.motors().get(0).currentReadThisLoop());
         assertFalse(first.motors().get(1).currentReadThisLoop());
-        assertEquals(MeasurementValidity.SKIPPED, first.motors().get(1).current().validity());
+        assertEquals(
+                MeasurementValidity.SKIPPED, first.motors().get(1).current().validity());
         assertEquals(1, aReads.get());
         assertEquals(0, bReads.get());
 
@@ -62,7 +63,8 @@ class SamplingSchedulerTest {
         ElectricalObservation second = monitor.update();
         assertTrue(second.motors().get(1).currentReadThisLoop());
         assertFalse(second.motors().get(0).currentReadThisLoop());
-        assertEquals(MeasurementValidity.SKIPPED, second.motors().get(0).current().validity());
+        assertEquals(
+                MeasurementValidity.SKIPPED, second.motors().get(0).current().validity());
         assertEquals(1.0, second.motors().get(0).current().amps(), 1e-9);
         assertEquals(1, aReads.get());
         assertEquals(1, bReads.get());
@@ -71,8 +73,7 @@ class SamplingSchedulerTest {
     @Test
     void skippedCurrentIsNotLabeledValid() {
         AtomicLong time = new AtomicLong(0L);
-        RevMotorTelemetry motor = new RevMotorTelemetry(
-                "m", () -> 3.0, () -> 0.5, () -> 1.0, () -> 0.0, true);
+        RevMotorTelemetry motor = new RevMotorTelemetry("m", () -> 3.0, () -> 0.5, () -> 1.0, () -> 0.0, true);
         PowerMonitor monitor = new PowerMonitor(
                 time::get,
                 java.util.Collections.singletonList(RevHubTelemetrySource.voltageOnly("hub", () -> 12.0)),

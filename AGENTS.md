@@ -9,12 +9,13 @@ AMPER is production software for FTC robots. Features may work while still being
 ```powershell
 .\gradlew.bat check
 .\gradlew.bat compileAgainstFtcSdk
+.\gradlew.bat spotlessApply
 .\gradlew.bat javadocAll assembleReleaseArtifacts
 ```
 
-`check` compiles modules, runs unit tests (including architecture and desktop performance-budget tests), compiles examples, and asserts robot-facing artifacts. `compileAgainstFtcSdk` compiles adapters against official RobotCore 11.2.0.
+`check` compiles modules, runs unit tests (including architecture and desktop performance-budget tests), compiles examples, asserts robot-facing artifacts, and runs `spotlessCheck`. `compileAgainstFtcSdk` compiles adapters against official RobotCore 11.2.0.
 
-There is no formatter command yet. Do not add Spotless/google-java-format in a behavior PR. Match neighboring Java 8 style: explicit types are fine; do not require Java 9+ APIs in `amper-core` / `amper-ftc`.
+Format with `.\gradlew.bat spotlessApply` (Palantir Java Format, 4-space). Do not mix format-only noise into behavior PRs; `amper-ftc-stubs` is excluded so SDK-shaped stubs stay as-is. Explicit types are fine; do not require Java 9+ APIs in `amper-core` / `amper-ftc`.
 
 ## Module responsibilities
 

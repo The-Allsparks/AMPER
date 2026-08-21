@@ -8,10 +8,7 @@ public final class BatteryObservation {
     private final EstimateConfidence confidence;
 
     public BatteryObservation(
-            double latestVolts,
-            double restingHintVolts,
-            double loadedHintVolts,
-            EstimateConfidence confidence) {
+            double latestVolts, double restingHintVolts, double loadedHintVolts, EstimateConfidence confidence) {
         this.latestVolts = latestVolts;
         this.restingHintVolts = restingHintVolts;
         this.loadedHintVolts = loadedHintVolts;

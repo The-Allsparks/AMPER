@@ -16,8 +16,8 @@ public final class PowerEvent {
         this.timestampNanos = timestampNanos;
         this.type = Objects.requireNonNull(type, "type");
         this.message = message == null ? "" : message;
-        this.fields = Collections.unmodifiableMap(new LinkedHashMap<String, String>(
-                fields == null ? Collections.<String, String>emptyMap() : fields));
+        this.fields = Collections.unmodifiableMap(
+                new LinkedHashMap<String, String>(fields == null ? Collections.<String, String>emptyMap() : fields));
     }
 
     public long timestampNanos() {

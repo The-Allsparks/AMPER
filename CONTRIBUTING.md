@@ -19,7 +19,8 @@ Coding agents: read [AGENTS.md](AGENTS.md) and [docs/architecture/quality-standa
 
 | Command | What it prevents |
 |---------|------------------|
-| `.\gradlew.bat check` | Broken tests, architecture regressions, example compile failures, stubs/tools on robot artifacts |
+| `.\gradlew.bat check` | Broken tests, architecture regressions, example compile failures, stubs/tools on robot artifacts, format drift (`spotlessCheck`) |
+| `.\gradlew.bat spotlessApply` | Rewrite Java (except `amper-ftc-stubs`) to Palantir Java Format |
 | `.\gradlew.bat compileAgainstFtcSdk` | Adapters drifting from FTC SDK 11.2.0 |
 | `.\gradlew.bat javadocAll assembleReleaseArtifacts` | Missing jars used by the release workflow |
 

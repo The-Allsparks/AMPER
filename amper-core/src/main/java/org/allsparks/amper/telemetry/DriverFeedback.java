@@ -43,11 +43,8 @@ public final class DriverFeedback {
                 if (logger != null && state != DriverPowerState.NORMAL) {
                     Map<String, String> fields = new LinkedHashMap<>();
                     fields.put("state", state.name());
-                    logger.record(new PowerEvent(
-                            observation.loopStartNanos(),
-                            warningType(state),
-                            state.name(),
-                            fields));
+                    logger.record(
+                            new PowerEvent(observation.loopStartNanos(), warningType(state), state.name(), fields));
                 }
             }
             publishedState = state;
@@ -123,10 +120,7 @@ public final class DriverFeedback {
     }
 
     static DriverPowerState classify(
-            ElectricalObservation observation,
-            BatteryObservation battery,
-            boolean stallSuspected,
-            PowerPolicy policy) {
+            ElectricalObservation observation, BatteryObservation battery, boolean stallSuspected, PowerPolicy policy) {
         if (!observation.sensingValid()) {
             return DriverPowerState.INVALID_SENSING;
         }

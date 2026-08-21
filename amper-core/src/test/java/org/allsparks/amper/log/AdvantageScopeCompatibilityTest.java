@@ -74,11 +74,11 @@ class AdvantageScopeCompatibilityTest {
     void committedFixtureMatchesGenerator() throws Exception {
         Path dir = fixturesDir();
         String generated = CanonicalLogExamples.tableCsv();
-        String committed = new String(Files.readAllBytes(dir.resolve("amper-advantagescope-table.csv")),
-                StandardCharsets.UTF_8);
+        String committed =
+                new String(Files.readAllBytes(dir.resolve("amper-advantagescope-table.csv")), StandardCharsets.UTF_8);
         assertEquals(normalize(generated), normalize(committed));
-        String schema = new String(Files.readAllBytes(dir.resolve("amper-advantagescope-table.schema.json")),
-                StandardCharsets.UTF_8);
+        String schema = new String(
+                Files.readAllBytes(dir.resolve("amper-advantagescope-table.schema.json")), StandardCharsets.UTF_8);
         assertTrue(schema.contains("\"timestampUnit\": \"seconds\""));
         assertTrue(schema.contains("/AMPER/System/BusVoltageVolts"));
         assertTrue(schema.contains("hardwareNameMapping"));
@@ -87,8 +87,7 @@ class AdvantageScopeCompatibilityTest {
 
     @Test
     void listLayoutIsValidCsv() {
-        AdvantageScopeCsv.ParsedTable ignored = AdvantageScopeCsv.parseTable(
-                CanonicalLogExamples.tableCsv());
+        AdvantageScopeCsv.ParsedTable ignored = AdvantageScopeCsv.parseTable(CanonicalLogExamples.tableCsv());
         assertFalse(ignored.keys.isEmpty());
         String list = AdvantageScopeCsv.list(CanonicalLogExamples.representativeSession());
         List<String> lines = AdvantageScopeCsv.splitLines(list);

@@ -10,8 +10,7 @@ import java.util.List;
 
 /** Locates Gradle source trees from unit-test working directories. */
 final class SourceScan {
-    private SourceScan() {
-    }
+    private SourceScan() {}
 
     static Path repoRoot() {
         Path cwd = Paths.get("").toAbsolutePath().normalize();

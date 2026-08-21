@@ -25,7 +25,8 @@ public final class VoltageSample {
         return new VoltageSample(Double.NaN, capturedAtNanos, MeasurementValidity.UNSUPPORTED, sourceId);
     }
 
-    public static VoltageSample skippedCarry(VoltageSample previous, long nowNanos, String sourceId, long staleAfterNanos) {
+    public static VoltageSample skippedCarry(
+            VoltageSample previous, long nowNanos, String sourceId, long staleAfterNanos) {
         if (previous == null) {
             return new VoltageSample(Double.NaN, nowNanos, MeasurementValidity.SKIPPED, sourceId);
         }

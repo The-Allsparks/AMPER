@@ -22,8 +22,7 @@ public final class WpiLogWriter {
     private static final byte[] MAGIC = new byte[] {'W', 'P', 'I', 'L', 'O', 'G'};
     private static final int VERSION = 0x0100;
 
-    private WpiLogWriter() {
-    }
+    private WpiLogWriter() {}
 
     public static byte[] toBytes(CanonicalLog log) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -95,8 +94,7 @@ public final class WpiLogWriter {
         writeRecord(out, 0, timestampUs, payload.toByteArray());
     }
 
-    private static void writeData(OutputStream out, int entryId, long timestampUs, LogValue value)
-            throws IOException {
+    private static void writeData(OutputStream out, int entryId, long timestampUs, LogValue value) throws IOException {
         byte[] payload;
         switch (value.type()) {
             case BOOLEAN:

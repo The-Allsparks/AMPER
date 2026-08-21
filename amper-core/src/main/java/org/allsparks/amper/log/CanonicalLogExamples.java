@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.allsparks.amper.AmperVersion;
+import org.allsparks.amper.api.DriverPowerState;
 import org.allsparks.amper.measure.CurrentSample;
 import org.allsparks.amper.measure.ElectricalObservation;
 import org.allsparks.amper.measure.MeasurementValidity;
@@ -11,15 +12,13 @@ import org.allsparks.amper.measure.MotorSnapshot;
 import org.allsparks.amper.measure.SamplingStats;
 import org.allsparks.amper.measure.VoltageSample;
 import org.allsparks.amper.telemetry.DriverTelemetry;
-import org.allsparks.amper.api.DriverPowerState;
 
 /**
  * Deterministic canonical-log example used by fixtures, tests, and the desktop
  * WPILOG converter. Not a Control Hub capture.
  */
 public final class CanonicalLogExamples {
-    private CanonicalLogExamples() {
-    }
+    private CanonicalLogExamples() {}
 
     public static SessionMetadata fixtureMetadata() {
         Map<String, String> extra = new LinkedHashMap<String, String>();

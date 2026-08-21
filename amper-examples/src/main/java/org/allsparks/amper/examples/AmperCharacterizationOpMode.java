@@ -100,17 +100,16 @@ public class AmperCharacterizationOpMode extends OpMode {
                     .featureFlags(org.allsparks.amper.AmperFeatureFlags.defaults())
                     .sampling(SamplingPolicy.everyLoop())
                     .build();
-            return builder.policy(policy).exportFilename("amper-char-one-current.csv").build();
+            return builder.policy(policy)
+                    .exportFilename("amper-char-one-current.csv")
+                    .build();
         }
         DcMotorEx m1 = hardwareMap.get(DcMotorEx.class, "frontRight");
         DcMotorEx m2 = hardwareMap.get(DcMotorEx.class, "backLeft");
         DcMotorEx m3 = hardwareMap.get(DcMotorEx.class, "backRight");
-        builder.observeMotor("frontRight", m1)
-                .observeMotor("backLeft", m2)
-                .observeMotor("backRight", m3);
-        SamplingPolicy sampling = selected == Mode.VOLTAGE_PLUS_N_EVERY_LOOP
-                ? SamplingPolicy.everyLoop()
-                : SamplingPolicy.recommended();
+        builder.observeMotor("frontRight", m1).observeMotor("backLeft", m2).observeMotor("backRight", m3);
+        SamplingPolicy sampling =
+                selected == Mode.VOLTAGE_PLUS_N_EVERY_LOOP ? SamplingPolicy.everyLoop() : SamplingPolicy.recommended();
         PowerPolicy policy = PowerPolicy.builder()
                 .featureFlags(org.allsparks.amper.AmperFeatureFlags.defaults())
                 .sampling(sampling)

@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import org.allsparks.amper.log.PowerEvent;
 import org.allsparks.amper.measure.ElectricalObservation;
 import org.allsparks.amper.measure.MeasurementValidity;
-import org.allsparks.amper.log.PowerEvent;
 import org.junit.jupiter.api.Test;
 
 class ReplayAndTraceTest {
@@ -16,10 +16,14 @@ class ReplayAndTraceTest {
         List<ElectricalObservation> a = TraceGenerator.healthyBattery();
         List<ElectricalObservation> b = TraceGenerator.healthyBattery();
         assertEquals(a.size(), b.size());
-        assertEquals(a.get(10).filteredVoltage().volts(), b.get(10).filteredVoltage().volts(), 0.0);
+        assertEquals(
+                a.get(10).filteredVoltage().volts(), b.get(10).filteredVoltage().volts(), 0.0);
         List<ElectricalObservation> weak = TraceGenerator.weakHighResistanceBattery();
         assertTrue(weak.get(weak.size() - 1).rawVoltage().volts()
-                < TraceGenerator.healthyBattery().get(TraceGenerator.healthyBattery().size() - 1).rawVoltage().volts());
+                < TraceGenerator.healthyBattery()
+                        .get(TraceGenerator.healthyBattery().size() - 1)
+                        .rawVoltage()
+                        .volts());
         assertTrue(TraceGenerator.voltageNoise().size() > 0);
         assertTrue(TraceGenerator.simultaneousMechanismStarts().size() > 0);
         assertTrue(TraceGenerator.loopTimingSpikes().size() > 0);
@@ -62,7 +66,10 @@ class ReplayAndTraceTest {
                 .featureFlags(org.allsparks.amper.AmperFeatureFlags.passiveTelemetry())
                 .build();
         org.allsparks.amper.AmperSession session = new org.allsparks.amper.AmperSession(
-                policy, clock, hub, java.util.Collections.<org.allsparks.amper.measure.MotorElectricalTelemetry>emptyList());
+                policy,
+                clock,
+                hub,
+                java.util.Collections.<org.allsparks.amper.measure.MotorElectricalTelemetry>emptyList());
         session.start();
         session.observe();
         return session;

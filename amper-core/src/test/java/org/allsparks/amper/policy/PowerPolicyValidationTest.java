@@ -21,21 +21,21 @@ class PowerPolicyValidationTest {
 
     @Test
     void rejectsNonFiniteAndNegativeDurations() {
-        assertThrows(IllegalArgumentException.class, () -> PowerPolicy.builder()
-                .voltageFilterAlpha(Double.NaN)
-                .build());
-        assertThrows(IllegalArgumentException.class, () -> PowerPolicy.builder()
-                .recoveryHoldNanos(-1L)
-                .build());
-        assertThrows(IllegalArgumentException.class, () -> PowerPolicy.builder()
-                .staleAfterNanos(0L)
-                .build());
-        assertThrows(IllegalArgumentException.class, () -> PowerPolicy.builder()
-                .loggerCapacity(0)
-                .build());
-        assertThrows(IllegalArgumentException.class, () -> PowerPolicy.builder()
-                .stallCurrentAmps(-1.0)
-                .build());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> PowerPolicy.builder().voltageFilterAlpha(Double.NaN).build());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> PowerPolicy.builder().recoveryHoldNanos(-1L).build());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> PowerPolicy.builder().staleAfterNanos(0L).build());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> PowerPolicy.builder().loggerCapacity(0).build());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> PowerPolicy.builder().stallCurrentAmps(-1.0).build());
     }
 
     @Test

@@ -19,7 +19,9 @@ class CanonicalLogTypeStabilityTest {
                 .build();
         log.append(mismatch);
         assertEquals(1L, log.typeMismatchCount());
-        assertEquals(LogValueType.DOUBLE, log.schema().get(LogKeys.SYSTEM_BUS_VOLTAGE_VOLTS).type());
+        assertEquals(
+                LogValueType.DOUBLE,
+                log.schema().get(LogKeys.SYSTEM_BUS_VOLTAGE_VOLTS).type());
         assertTrue(log.samples().get(1).get(LogKeys.SYSTEM_BUS_VOLTAGE_VOLTS) == null);
     }
 
@@ -31,9 +33,11 @@ class CanonicalLogTypeStabilityTest {
         assertEquals("frontLeft", names.sanitize("frontLeft"));
         assertEquals("unnamed", names.sanitize("///"));
         assertEquals("Control_Hub", names.sanitize("Control Hub"));
-        assertEquals("Control Hub", names.mapping().get("Control Hub") == null
-                ? names.mapping().keySet().iterator().next()
-                : "Control Hub");
+        assertEquals(
+                "Control Hub",
+                names.mapping().get("Control Hub") == null
+                        ? names.mapping().keySet().iterator().next()
+                        : "Control Hub");
         assertEquals("Control_Hub", names.mapping().get("Control Hub"));
     }
 
@@ -48,9 +52,7 @@ class CanonicalLogTypeStabilityTest {
         assertEquals("amper_test.schema.json", CsvFormat.sidecarFilename("amper test.csv"));
         double[] samples = {0.0, 0.2, 12.4, 12.5, -0.5, 1.23456, 9.0, 0.00004, 0.00006};
         for (int i = 0; i < samples.length; i++) {
-            assertEquals(
-                    String.format(java.util.Locale.US, "%.4f", samples[i]),
-                    CsvFormat.fixed4(samples[i]));
+            assertEquals(String.format(java.util.Locale.US, "%.4f", samples[i]), CsvFormat.fixed4(samples[i]));
         }
         assertEquals("NaN", CsvFormat.fixed4(Double.NaN));
     }

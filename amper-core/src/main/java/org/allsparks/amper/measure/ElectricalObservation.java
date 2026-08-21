@@ -61,8 +61,8 @@ public final class ElectricalObservation {
         this.filteredVoltage = Objects.requireNonNull(filteredVoltage, "filteredVoltage");
         this.voltageMinimumThisMatch = voltageMinimumThisMatch;
         this.batteryCurrent = Objects.requireNonNull(batteryCurrent, "batteryCurrent");
-        this.motors = Collections.unmodifiableList(new ArrayList<MotorSnapshot>(
-                Objects.requireNonNull(motors, "motors")));
+        this.motors =
+                Collections.unmodifiableList(new ArrayList<MotorSnapshot>(Objects.requireNonNull(motors, "motors")));
         List<CurrentSample> currents = new ArrayList<CurrentSample>(this.motors.size());
         for (MotorSnapshot motor : this.motors) {
             currents.add(motor.current());

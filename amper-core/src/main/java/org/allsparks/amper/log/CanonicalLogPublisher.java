@@ -43,9 +43,7 @@ public final class CanonicalLogPublisher {
             return;
         }
         ensureRegistered(observation);
-        Set<String> stalled = stalledMotorIds == null
-                ? Collections.<String>emptySet()
-                : stalledMotorIds;
+        Set<String> stalled = stalledMotorIds == null ? Collections.<String>emptySet() : stalledMotorIds;
         long now = observation.loopStartNanos();
         CanonicalSample.Builder row = this.row.reuse(now);
         row.putString(LogKeys.METADATA_SCHEMA_VERSION, AmperVersion.LOG_SCHEMA_VERSION);
@@ -58,7 +56,9 @@ public final class CanonicalLogPublisher {
         if (!Double.isNaN(observation.voltageMinimumThisMatch())) {
             row.putDouble(LogKeys.SYSTEM_MINIMUM_VOLTAGE_VOLTS, observation.voltageMinimumThisMatch());
         }
-        row.putString(LogKeys.SYSTEM_MEASUREMENT_VALIDITY, observation.rawVoltage().validity().name());
+        row.putString(
+                LogKeys.SYSTEM_MEASUREMENT_VALIDITY,
+                observation.rawVoltage().validity().name());
         row.putString(
                 LogKeys.SYSTEM_POWER_STATE,
                 driver == null ? "NORMAL" : driver.state().name());
@@ -91,9 +91,7 @@ public final class CanonicalLogPublisher {
             }
             if (current.validity() != MeasurementValidity.UNSUPPORTED
                     && current.validity() != MeasurementValidity.MISSING) {
-                row.putDouble(
-                        LogKeys.motorCurrentSampleAgeSeconds(motorKey),
-                        current.ageNanos(now) / 1_000_000_000.0);
+                row.putDouble(LogKeys.motorCurrentSampleAgeSeconds(motorKey), current.ageNanos(now) / 1_000_000_000.0);
             }
             row.putBoolean(LogKeys.motorStallSuspected(motorKey), stalled.contains(motor.motorId()));
         }
@@ -101,13 +99,9 @@ public final class CanonicalLogPublisher {
             row.putDouble(LogKeys.SYSTEM_SELECTED_MOTORS_CURRENT_AMPS, selectedCurrent);
         }
 
-        row.putDouble(
-                LogKeys.PERFORMANCE_UPDATE_DURATION_SECONDS,
-                observation.loopDurationNanos() / 1_000_000_000.0);
+        row.putDouble(LogKeys.PERFORMANCE_UPDATE_DURATION_SECONDS, observation.loopDurationNanos() / 1_000_000_000.0);
         if (previousLoopStartNanos != Long.MIN_VALUE && now >= previousLoopStartNanos) {
-            row.putDouble(
-                    LogKeys.PERFORMANCE_LOOP_DURATION_SECONDS,
-                    (now - previousLoopStartNanos) / 1_000_000_000.0);
+            row.putDouble(LogKeys.PERFORMANCE_LOOP_DURATION_SECONDS, (now - previousLoopStartNanos) / 1_000_000_000.0);
         }
         row.putInt64(LogKeys.PERFORMANCE_DROPPED_RECORDS, droppedRecords);
         if (eventType != null && !eventType.isEmpty()) {

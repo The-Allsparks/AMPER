@@ -84,17 +84,26 @@ public final class AmperAnalyze {
         sb.append(String.format(Locale.US, "- raw/filt voltage max: %.4f\n", maxV));
         sb.append(String.format(Locale.US, "- mean AMPER update ns: %.1f\n", (double) sumLoop / samples.size()));
         sb.append("- max AMPER update ns: ").append(maxLoop).append('\n');
-        sb.append("- valid samples: ").append(valid).append('/').append(samples.size()).append('\n');
+        sb.append("- valid samples: ")
+                .append(valid)
+                .append('/')
+                .append(samples.size())
+                .append('\n');
         sb.append("\n## Voltage vs time\n\n");
         sb.append("| t_ns | raw_v | filt_v | valid | sumAbsCmd |\n|---|---|---|---|---|\n");
         int rows = Math.min(samples.size(), 40);
         for (int i = 0; i < rows; i++) {
             Sample sample = samples.get(i);
-            sb.append("| ").append(sample.t)
-                    .append(" | ").append(fmt(sample.rawV))
-                    .append(" | ").append(fmt(sample.filtV))
-                    .append(" | ").append(sample.valid)
-                    .append(" | ").append(fmt(sample.sumAbsCmd))
+            sb.append("| ")
+                    .append(sample.t)
+                    .append(" | ")
+                    .append(fmt(sample.rawV))
+                    .append(" | ")
+                    .append(fmt(sample.filtV))
+                    .append(" | ")
+                    .append(sample.valid)
+                    .append(" | ")
+                    .append(fmt(sample.sumAbsCmd))
                     .append(" |\n");
         }
         if (samples.size() > rows) {
@@ -106,9 +115,12 @@ public final class AmperAnalyze {
             if (event.type() == PowerEventType.STATE_TRANSITION
                     || event.type() == PowerEventType.STALL_SUSPECTED
                     || event.type() == PowerEventType.VOLTAGE_WARNING) {
-                sb.append("- t=").append(event.timestampNanos())
-                        .append(" ").append(event.type())
-                        .append(" ").append(event.message())
+                sb.append("- t=")
+                        .append(event.timestampNanos())
+                        .append(" ")
+                        .append(event.type())
+                        .append(" ")
+                        .append(event.message())
                         .append('\n');
                 shown++;
             }
@@ -122,9 +134,12 @@ public final class AmperAnalyze {
             sb.append("| t_ns | m0_A | m0_validity |\n|---|---|---|\n");
             for (int i = 0; i < rows; i++) {
                 Sample sample = samples.get(i);
-                sb.append("| ").append(sample.t)
-                        .append(" | ").append(sample.m0A)
-                        .append(" | ").append(sample.m0Validity)
+                sb.append("| ")
+                        .append(sample.t)
+                        .append(" | ")
+                        .append(sample.m0A)
+                        .append(" | ")
+                        .append(sample.m0Validity)
                         .append(" |\n");
             }
         } else {

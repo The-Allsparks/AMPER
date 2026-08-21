@@ -4,8 +4,7 @@ import java.util.Locale;
 
 /** Minimal locale-independent JSON string builder. No third-party parser. */
 public final class Json {
-    private Json() {
-    }
+    private Json() {}
 
     public static String escape(String value) {
         if (value == null) {

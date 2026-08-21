@@ -2,8 +2,7 @@ package org.allsparks.amper.log;
 
 /** Factory for the stable AMPER field catalog. */
 public final class FieldSpecs {
-    private FieldSpecs() {
-    }
+    private FieldSpecs() {}
 
     public static final String UNIT_VOLTS = "volts";
     public static final String UNIT_AMPERES = "amperes";
@@ -16,8 +15,7 @@ public final class FieldSpecs {
             "Numeric cell is empty unless MeasurementValidity is VALID. Never encoded as 0 or NaN.";
 
     public static LogFieldSpec string(String key, String source, String cadence) {
-        return new LogFieldSpec(
-                key, LogValueType.STRING, UNIT_NONE, source, false, false, cadence, "AMPER", "");
+        return new LogFieldSpec(key, LogValueType.STRING, UNIT_NONE, source, false, false, cadence, "AMPER", "");
     }
 
     public static LogFieldSpec metadataString(String key) {
