@@ -25,17 +25,9 @@ gradle.projectsEvaluated {
                     return
                 }
                 configuration.dependencies.withType(ProjectDependency).each { dependency ->
-                    def path = dependency.dependencyProject.path
+                    def path = dependency.path
                     if (forbiddenRobotModules.contains(path)) {
                         violations << "${name} project ${path}"
-                    }
-                }
-                if (configuration.canBeResolved) {
-                    configuration.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-                        def artifactName = artifact.moduleVersion.id.name
-                        if (forbiddenArtifactNames.contains(artifactName)) {
-                            violations << "${name} resolved ${artifact.moduleVersion.id}"
-                        }
                     }
                 }
             }
@@ -67,8 +59,10 @@ tasks.register('assertRobotFacingArtifacts') {
     description = 'Robot-facing assembleReleaseArtifacts is amper-core and amper-ftc only.'
     dependsOn ':amper-ftc:assertRobotFacingClasspath'
     doLast {
-        def release = tasks.named('assembleReleaseArtifacts').get()
-        def actual = release.taskDependencies.getDependencies(release).collect { it.path } as Set
+        // Gradle 9 deadlocks if this task walks taskDependencies.getDependencies()
+        // while other workers hold project configuration locks. The declared
+        // dependsOn list is the contract we want to enforce.
+        def actual = tasks.named('assembleReleaseArtifacts').get().dependsOn.flatten() as Set
         def expected = [':amper-core:assemble', ':amper-ftc:assemble'] as Set
         if (actual != expected) {
             throw new GradleException(

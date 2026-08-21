@@ -33,6 +33,8 @@ The GitHub Actions `sdk-compile` job runs the SDK path and **fails** if `AmperFt
 
 No extra Maven repository or credential is required (same coordinates as [FtcRobotController v11.2 `build.dependencies.gradle`](https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/v11.2/build.dependencies.gradle)). Emergency skip: `-Pamper.skipFtcSdkCompile=true` (do not use this in CI).
 
+AMPER’s own Gradle wrapper is **9.7.0**. FTC SDK 11.2 TeamCode still uses the SDK wrapper (Gradle 9.1 / AGP 8.13.2). Do not change the TeamCode wrapper because AMPER upgraded. Composite `includeBuild` of AMPER into an SDK 11.2 project therefore runs AMPER’s scripts on Gradle 9.1; keep those scripts 9.1-compatible.
+
 ## Upgrade
 
 - `0.1.0-SNAPSHOT` scaffold → `0.1.0-rc.1`: new modules `amper-core` / `amper-ftc`. Prefer `AmperFtc.builder(hardwareMap)` instead of manual suppliers. `AmperSession.observe()` remains. Robot export is AdvantageScope CSV under `/AMPER/...`; `exportCsv()` still returns the internal diagnostic event log.

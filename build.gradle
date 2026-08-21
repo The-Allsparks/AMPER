@@ -27,6 +27,12 @@ subprojects { sub ->
         sub.repositories {
             mavenCentral()
         }
+        // Gradle 9 no longer puts the JUnit Platform launcher on the test
+        // runtime classpath automatically.
+        sub.dependencies {
+            testRuntimeOnly platform("org.junit:junit-bom:${rootProject.ext.junitBomVersion}")
+            testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+        }
         sub.tasks.named('javadoc', Javadoc) { javadoc ->
             javadoc.options.encoding = 'UTF-8'
             javadoc.options.addStringOption('Xdoclint:none', '-quiet')
