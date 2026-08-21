@@ -19,8 +19,7 @@ public final class MechanismActivityTracker {
     private int starts;
     private int stops;
 
-    public List<PowerEvent> update(
-            ElectricalObservation observation, PowerPolicy policy, PowerEventLogger logger) {
+    public List<PowerEvent> update(ElectricalObservation observation, PowerPolicy policy, PowerEventLogger logger) {
         List<PowerEvent> emitted = new ArrayList<>();
         for (MotorSnapshot motor : observation.motors()) {
             double effort = motor.commandedEffort();
@@ -32,8 +31,7 @@ public final class MechanismActivityTracker {
             if (!currently && abs >= policy.mechanismStartEffort()) {
                 active.put(motor.motorId(), true);
                 starts++;
-                PowerEvent event = transition(
-                        observation.loopStartNanos(), motor.motorId(), "start", abs);
+                PowerEvent event = transition(observation.loopStartNanos(), motor.motorId(), "start", abs);
                 emitted.add(event);
                 if (logger != null) {
                     logger.record(event);
@@ -41,8 +39,7 @@ public final class MechanismActivityTracker {
             } else if (currently && abs <= policy.mechanismStopEffort()) {
                 active.put(motor.motorId(), false);
                 stops++;
-                PowerEvent event = transition(
-                        observation.loopStartNanos(), motor.motorId(), "stop", abs);
+                PowerEvent event = transition(observation.loopStartNanos(), motor.motorId(), "stop", abs);
                 emitted.add(event);
                 if (logger != null) {
                     logger.record(event);
@@ -71,10 +68,6 @@ public final class MechanismActivityTracker {
         fields.put("motor", motorId);
         fields.put("activity", activity);
         fields.put("absEffort", Double.toString(absEffort));
-        return new PowerEvent(
-                timestampNanos,
-                PowerEventType.STATE_TRANSITION,
-                "mechanism_" + activity,
-                fields);
+        return new PowerEvent(timestampNanos, PowerEventType.STATE_TRANSITION, "mechanism_" + activity, fields);
     }
 }

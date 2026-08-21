@@ -10,8 +10,7 @@ package org.allsparks.amper.adapters.future;
  * {@code docs/power-management/research.md}.
  */
 public final class SystemCoreAdapterBoundary {
-    private SystemCoreAdapterBoundary() {
-    }
+    private SystemCoreAdapterBoundary() {}
 
     public static final String STATUS =
             "UNIMPLEMENTED_BOUNDARY: await authoritative SystemCore electrical telemetry docs";

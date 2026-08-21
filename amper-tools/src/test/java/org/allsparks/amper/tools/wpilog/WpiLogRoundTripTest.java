@@ -70,14 +70,9 @@ class WpiLogRoundTripTest {
         WpiLogReader.ParsedLog parsed = WpiLogReader.read(bytes);
         assertTrue(parsed.entriesByName.containsKey(LogKeys.SYSTEM_BUS_VOLTAGE_VOLTS));
         assertEquals(4, rebuilt.size());
-        assertEquals(
-                CanonicalLogExamples.representativeSession().schema().size(),
-                parsed.entriesByName.size());
+        assertEquals(CanonicalLogExamples.representativeSession().schema().size(), parsed.entriesByName.size());
         Files.createDirectories(Paths.get("build/wpilog-fixture"));
-        Files.write(
-                Paths.get("build/wpilog-fixture/amper-from-csv.wpilog"),
-                bytes);
-        assertTrue(new String(csv.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8)
-                .startsWith("Timestamp,"));
+        Files.write(Paths.get("build/wpilog-fixture/amper-from-csv.wpilog"), bytes);
+        assertTrue(new String(csv.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).startsWith("Timestamp,"));
     }
 }

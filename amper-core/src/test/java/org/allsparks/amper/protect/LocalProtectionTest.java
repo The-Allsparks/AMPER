@@ -47,8 +47,9 @@ class LocalProtectionTest {
     void stallNoiseDoesNotTripWithoutDwell() {
         org.allsparks.amper.telemetry.StallSuspicionTracker tracker =
                 new org.allsparks.amper.telemetry.StallSuspicionTracker();
-        org.allsparks.amper.policy.PowerPolicy policy =
-                org.allsparks.amper.policy.PowerPolicy.builder().stallDwellNanos(100L).build();
+        org.allsparks.amper.policy.PowerPolicy policy = org.allsparks.amper.policy.PowerPolicy.builder()
+                .stallDwellNanos(100L)
+                .build();
         org.allsparks.amper.sim.SimulatedClock clock = new org.allsparks.amper.sim.SimulatedClock();
         org.allsparks.amper.sim.SimulatedHubSource hub = new org.allsparks.amper.sim.SimulatedHubSource("hub");
         org.allsparks.amper.sim.SimulatedMotor motor = new org.allsparks.amper.sim.SimulatedMotor("intake");
@@ -80,8 +81,7 @@ class LocalProtectionTest {
 
     @Test
     void sessionFlagFalseKeepsFromPolicyIdentityEvenWhenLocallyEnabled() {
-        org.allsparks.amper.policy.PowerPolicy policy =
-                org.allsparks.amper.policy.AmperPolicies.passiveDefaults();
+        org.allsparks.amper.policy.PowerPolicy policy = org.allsparks.amper.policy.AmperPolicies.passiveDefaults();
         assertFalse(policy.featureFlags().isPhase2LocalProtection());
         LocalProtection protection = LocalProtection.fromPolicy(policy, true);
         ConstrainedCommand result = protection.apply(1.0, 500_000_000L);
@@ -93,13 +93,12 @@ class LocalProtectionTest {
 
     @Test
     void bothGatesOpenAllowSlew() {
-        org.allsparks.amper.policy.PowerPolicy policy =
-                org.allsparks.amper.policy.PowerPolicy.builder()
-                        .featureFlags(org.allsparks.amper.AmperFeatureFlags.builder()
-                                .phase2LocalProtection(true)
-                                .build())
-                        .slewMaxDeltaPerSecond(1.0)
-                        .build();
+        org.allsparks.amper.policy.PowerPolicy policy = org.allsparks.amper.policy.PowerPolicy.builder()
+                .featureFlags(org.allsparks.amper.AmperFeatureFlags.builder()
+                        .phase2LocalProtection(true)
+                        .build())
+                .slewMaxDeltaPerSecond(1.0)
+                .build();
         LocalProtection protection = LocalProtection.fromPolicy(policy, true);
         assertEquals(0.0, protection.apply(0.0, 0L).allowed(), 1e-9);
         ConstrainedCommand limited = protection.apply(1.0, 500_000_000L);

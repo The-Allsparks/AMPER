@@ -29,16 +29,9 @@ class PowerPolicyAndCoordinatorTest {
         PowerPolicy policy = PowerPolicy.defaults();
         PowerCoordinator coordinator = new PowerCoordinator(policy);
         PowerRequest request = new PowerRequest(
-                "drive",
-                0.8,
-                0.2,
-                PowerPriority.DRIVETRAIN_NORMAL,
-                false,
-                false,
-                true,
-                0L,
-                Double.NaN);
-        PowerGrant grant = coordinator.allocate(Collections.singletonList(request)).get(0);
+                "drive", 0.8, 0.2, PowerPriority.DRIVETRAIN_NORMAL, false, false, true, 0L, Double.NaN);
+        PowerGrant grant =
+                coordinator.allocate(Collections.singletonList(request)).get(0);
         assertTrue(grant.allowedEffort() == 0.8);
         assertTrue(grant.reason() == PowerLimitReason.FEATURE_DISABLED);
     }

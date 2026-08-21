@@ -15,6 +15,5 @@ public final class AmperVersion {
     /** Canonical /AMPER field catalog and AdvantageScope sidecar schema. */
     public static final String LOG_SCHEMA_VERSION = "1";
 
-    private AmperVersion() {
-    }
+    private AmperVersion() {}
 }

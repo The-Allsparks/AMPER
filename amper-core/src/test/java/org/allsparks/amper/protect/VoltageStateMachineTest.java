@@ -18,7 +18,8 @@ class VoltageStateMachineTest {
         SimulatedHubSource hub = new SimulatedHubSource("hub");
         hub.setMissing();
         ElectricalObservation obs = org.allsparks.amper.measure.PowerMonitor.create(
-                clock, hub, java.util.Collections.emptyList(), policy).update();
+                        clock, hub, java.util.Collections.emptyList(), policy)
+                .update();
         assertEquals(VoltageProtectionState.SENSOR_FAULT, fsm.update(obs, policy));
         assertFalse(fsm.interventionPermitted(policy));
     }
@@ -31,12 +32,14 @@ class VoltageStateMachineTest {
         SimulatedHubSource hub = new SimulatedHubSource("hub");
         hub.setVolts(9.0);
         ElectricalObservation low = org.allsparks.amper.measure.PowerMonitor.create(
-                clock, hub, java.util.Collections.emptyList(), policy).update();
+                        clock, hub, java.util.Collections.emptyList(), policy)
+                .update();
         assertEquals(VoltageProtectionState.CRITICAL, fsm.update(low, policy));
         hub.setVolts(12.0);
         clock.set(50L);
         ElectricalObservation early = org.allsparks.amper.measure.PowerMonitor.create(
-                clock, hub, java.util.Collections.emptyList(), policy).update();
+                        clock, hub, java.util.Collections.emptyList(), policy)
+                .update();
         assertEquals(VoltageProtectionState.CRITICAL, fsm.update(early, policy));
     }
 }

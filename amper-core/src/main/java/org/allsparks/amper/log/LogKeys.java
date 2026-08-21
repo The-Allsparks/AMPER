@@ -14,20 +14,16 @@ public final class LogKeys {
     public static final String SYSTEM_MINIMUM_VOLTAGE_VOLTS = PREFIX + "/System/MinimumVoltageVolts";
     public static final String SYSTEM_MEASUREMENT_VALIDITY = PREFIX + "/System/MeasurementValidity";
     public static final String SYSTEM_POWER_STATE = PREFIX + "/System/PowerState";
-    public static final String SYSTEM_SELECTED_MOTORS_CURRENT_AMPS =
-            PREFIX + "/System/SelectedMotorsCurrentAmps";
+    public static final String SYSTEM_SELECTED_MOTORS_CURRENT_AMPS = PREFIX + "/System/SelectedMotorsCurrentAmps";
 
-    public static final String PERFORMANCE_UPDATE_DURATION_SECONDS =
-            PREFIX + "/Performance/UpdateDurationSeconds";
-    public static final String PERFORMANCE_LOOP_DURATION_SECONDS =
-            PREFIX + "/Performance/LoopDurationSeconds";
+    public static final String PERFORMANCE_UPDATE_DURATION_SECONDS = PREFIX + "/Performance/UpdateDurationSeconds";
+    public static final String PERFORMANCE_LOOP_DURATION_SECONDS = PREFIX + "/Performance/LoopDurationSeconds";
     public static final String PERFORMANCE_DROPPED_RECORDS = PREFIX + "/Performance/DroppedRecords";
 
     public static final String EVENTS_TYPE = PREFIX + "/Events/Type";
     public static final String EVENTS_MESSAGE = PREFIX + "/Events/Message";
 
-    private LogKeys() {
-    }
+    private LogKeys() {}
 
     public static String hubVoltageVolts(String hub) {
         return PREFIX + "/Hubs/" + hub + "/VoltageVolts";

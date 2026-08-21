@@ -6,8 +6,7 @@ import java.util.Locale;
  * Locale-independent CSV helpers. Numbers always use {@link Locale#US}.
  */
 public final class CsvFormat {
-    private CsvFormat() {
-    }
+    private CsvFormat() {}
 
     public static String number(double value) {
         if (Double.isNaN(value)) {

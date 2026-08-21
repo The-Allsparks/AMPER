@@ -46,9 +46,9 @@ class AmperFtcIntegrationTest {
     void missingExpansionNameIsRejected() {
         HardwareMap map = new HardwareMap();
         map.put("Control Hub", voltage(12.0));
-        assertThrows(IllegalArgumentException.class, () -> AmperFtc.builder(map)
-                .controlHubVoltage()
-                .expansionHubVoltage("Expansion Hub 9"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> AmperFtc.builder(map).controlHubVoltage().expansionHubVoltage("Expansion Hub 9"));
     }
 
     @Test
@@ -81,7 +81,8 @@ class AmperFtcIntegrationTest {
                 .persistLogs(false)
                 .build();
         ElectricalObservation obs = session.observe();
-        assertEquals(MeasurementValidity.UNSUPPORTED, obs.motors().get(0).current().validity());
+        assertEquals(
+                MeasurementValidity.UNSUPPORTED, obs.motors().get(0).current().validity());
         assertTrue(Double.isNaN(obs.motors().get(0).current().amps()));
     }
 

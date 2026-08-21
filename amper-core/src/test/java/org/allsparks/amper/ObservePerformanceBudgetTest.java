@@ -78,20 +78,20 @@ class ObservePerformanceBudgetTest {
         long warmupPer = warmupNs / Math.max(1, firstCount);
         long restPer = restNs / Math.max(1, restCount);
 
-        System.out.println(
-                "AMPER desktop observe budget (not Control Hub): "
-                        + "n=" + TOTAL
-                        + " capacity=" + CAPACITY
-                        + " elapsedMs=" + elapsedMs
-                        + " warmupNsPerObserve=" + warmupPer
-                        + " laterNsPerObserve=" + restPer
-                        + " later/warmup=" + (restPer / Math.max(1L, warmupPer))
-                        + " loggerSize=" + fixture.session.logger().snapshot().size()
-                        + " dropped=" + fixture.session.logger().droppedCount());
+        System.out.println("AMPER desktop observe budget (not Control Hub): "
+                + "n=" + TOTAL
+                + " capacity=" + CAPACITY
+                + " elapsedMs=" + elapsedMs
+                + " warmupNsPerObserve=" + warmupPer
+                + " laterNsPerObserve=" + restPer
+                + " later/warmup=" + (restPer / Math.max(1L, warmupPer))
+                + " loggerSize=" + fixture.session.logger().snapshot().size()
+                + " dropped=" + fixture.session.logger().droppedCount());
 
-        assertTrue(elapsedMs < MAX_ELAPSED_MS,
-                "desktop observe budget exceeded " + MAX_ELAPSED_MS + " ms: " + elapsedMs);
-        assertTrue(restPer < warmupPer * (long) RELATIVE_SLOWDOWN_CEILING,
+        assertTrue(
+                elapsedMs < MAX_ELAPSED_MS, "desktop observe budget exceeded " + MAX_ELAPSED_MS + " ms: " + elapsedMs);
+        assertTrue(
+                restPer < warmupPer * (long) RELATIVE_SLOWDOWN_CEILING,
                 "later observes were more than "
                         + RELATIVE_SLOWDOWN_CEILING
                         + "x slower than warmup (possible superlinear logger scan/copy). "
@@ -111,22 +111,13 @@ class ObservePerformanceBudgetTest {
                 .sampling(SamplingPolicy.recommended())
                 .loggerCapacity(capacity)
                 .build();
-        AmperSession session = new AmperSession(
-                policy,
-                clock,
-                RevHubTelemetrySource.voltageOnly("Control Hub", () -> 12.4),
-                motors);
+        AmperSession session =
+                new AmperSession(policy, clock, RevHubTelemetrySource.voltageOnly("Control Hub", () -> 12.4), motors);
         return new Fixture(session, clock);
     }
 
     private static RevMotorTelemetry motor(String id) {
-        return new RevMotorTelemetry(
-                id,
-                () -> 1.2,
-                () -> 0.4,
-                () -> 200.0,
-                () -> 0.0,
-                true);
+        return new RevMotorTelemetry(id, () -> 1.2, () -> 0.4, () -> 200.0, () -> 0.0, true);
     }
 
     private static final class Fixture {

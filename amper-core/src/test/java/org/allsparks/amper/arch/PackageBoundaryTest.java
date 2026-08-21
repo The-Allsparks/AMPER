@@ -71,8 +71,8 @@ class PackageBoundaryTest {
         List<String> hits = new ArrayList<String>();
         Path main = SourceScan.coreMain();
         Set<String> watched = new HashSet<String>(Arrays.asList("measure", "filter", "clock"));
-        Set<String> forbidden = new HashSet<String>(Arrays.asList(
-                "coord", "predict", "protect", "sim", "telemetry", "log", "adapters"));
+        Set<String> forbidden = new HashSet<String>(
+                Arrays.asList("coord", "predict", "protect", "sim", "telemetry", "log", "adapters"));
         for (Path path : SourceScan.javaFiles(main)) {
             String child = SourceScan.amperChildPackage(SourceScan.packageOf(path, main));
             if (!watched.contains(child)) {
@@ -98,8 +98,8 @@ class PackageBoundaryTest {
     void policyDoesNotDependOnHardwareOrIntervention() throws IOException {
         List<String> hits = new ArrayList<String>();
         Path main = SourceScan.coreMain();
-        Set<String> forbidden = new HashSet<String>(Arrays.asList(
-                "measure", "protect", "coord", "predict", "sim", "log", "telemetry", "adapters"));
+        Set<String> forbidden = new HashSet<String>(
+                Arrays.asList("measure", "protect", "coord", "predict", "sim", "log", "telemetry", "adapters"));
         for (Path path : SourceScan.javaFiles(main)) {
             String child = SourceScan.amperChildPackage(SourceScan.packageOf(path, main));
             if (!"policy".equals(child)) {

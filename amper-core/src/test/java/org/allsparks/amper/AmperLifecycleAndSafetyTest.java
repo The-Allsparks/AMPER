@@ -51,7 +51,9 @@ class AmperLifecycleAndSafetyTest {
         AtomicLong time = new AtomicLong(5_000_000L);
         PowerPolicy policy = PowerPolicy.builder()
                 .featureFlags(AmperFeatureFlags.passiveTelemetry())
-                .sampling(SamplingPolicy.builder().duplicateObserveWindowNanos(2_000_000L).build())
+                .sampling(SamplingPolicy.builder()
+                        .duplicateObserveWindowNanos(2_000_000L)
+                        .build())
                 .build();
         AmperSession session = new AmperSession(
                 policy,
@@ -160,10 +162,7 @@ class AmperLifecycleAndSafetyTest {
         PowerPolicy policy = PowerPolicy.builder().loggerCapacity(3).build();
         org.allsparks.amper.sim.SimulatedClock sim = new org.allsparks.amper.sim.SimulatedClock();
         AmperSession bounded = new AmperSession(
-                policy,
-                sim,
-                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
-                Collections.emptyList());
+                policy, sim, RevHubTelemetrySource.voltageOnly("hub", () -> 12.0), Collections.emptyList());
         for (int i = 0; i < 10; i++) {
             sim.set(i * 20_000_000L);
             if (i == 0) {
@@ -183,10 +182,7 @@ class AmperLifecycleAndSafetyTest {
                 .telemetryMinPeriodNanos(50_000_000L)
                 .build();
         AmperSession session = new AmperSession(
-                policy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", () -> 12.3),
-                Collections.emptyList());
+                policy, time::get, RevHubTelemetrySource.voltageOnly("hub", () -> 12.3), Collections.emptyList());
         RecordingSink sink = new RecordingSink();
         session.start();
         session.observe();
@@ -277,14 +273,12 @@ class AmperLifecycleAndSafetyTest {
     void disabledPublishTelemetryShowsStateWithoutVoltage() {
         AtomicLong time = new AtomicLong(0L);
         PowerPolicy policy = PowerPolicy.builder()
-                .featureFlags(AmperFeatureFlags.builder().phase0Measurement(false).build())
+                .featureFlags(
+                        AmperFeatureFlags.builder().phase0Measurement(false).build())
                 .telemetryMinPeriodNanos(50_000_000L)
                 .build();
         AmperSession session = new AmperSession(
-                policy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
-                Collections.emptyList());
+                policy, time::get, RevHubTelemetrySource.voltageOnly("hub", () -> 12.0), Collections.emptyList());
         RecordingSink sink = new RecordingSink();
         session.start();
         session.observe();
@@ -325,10 +319,7 @@ class AmperLifecycleAndSafetyTest {
                 .slewMaxDeltaPerSecond(1.0)
                 .build();
         AmperSession openGate = new AmperSession(
-                openPolicy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
-                Collections.emptyList());
+                openPolicy, time::get, RevHubTelemetrySource.voltageOnly("hub", () -> 12.0), Collections.emptyList());
         org.allsparks.amper.protect.LocalProtection protection = openGate.localProtection(true);
         assertEquals(0.0, openGate.constrain(protection, 0.0).allowed(), 1e-9);
         time.set(500_000_000L);

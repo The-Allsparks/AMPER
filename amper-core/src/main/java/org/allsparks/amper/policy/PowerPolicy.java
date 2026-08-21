@@ -360,11 +360,8 @@ public final class PowerPolicy {
             if (loggerCapacity < 1 || loggerCapacity > 50_000) {
                 throw new IllegalArgumentException("loggerCapacity must be in [1, 50000]");
             }
-            if (mechanismStartEffort < 0.0
-                    || mechanismStopEffort < 0.0
-                    || mechanismStartEffort < mechanismStopEffort) {
-                throw new IllegalArgumentException(
-                        "effort thresholds must be nonnegative and start >= stop");
+            if (mechanismStartEffort < 0.0 || mechanismStopEffort < 0.0 || mechanismStartEffort < mechanismStopEffort) {
+                throw new IllegalArgumentException("effort thresholds must be nonnegative and start >= stop");
             }
             if (stallCurrentAmps < 0.0 || stallVelocityTicksPerSecond < 0.0 || weakBatterySagVolts < 0.0) {
                 throw new IllegalArgumentException("current/velocity/sag thresholds must be nonnegative");

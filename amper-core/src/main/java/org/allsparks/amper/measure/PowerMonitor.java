@@ -81,8 +81,8 @@ public final class PowerMonitor {
             SamplingPolicy sampling,
             double mechanismStartEffort) {
         this.clock = Objects.requireNonNull(clock, "clock");
-        this.telemetrySources = Collections.unmodifiableList(new ArrayList<PowerTelemetrySource>(
-                Objects.requireNonNull(telemetrySources, "telemetrySources")));
+        this.telemetrySources = Collections.unmodifiableList(
+                new ArrayList<PowerTelemetrySource>(Objects.requireNonNull(telemetrySources, "telemetrySources")));
         if (this.telemetrySources.isEmpty()) {
             throw new IllegalArgumentException("at least one voltage source is required");
         }
@@ -90,8 +90,8 @@ public final class PowerMonitor {
             throw new IllegalArgumentException("policySourceIndex out of range");
         }
         this.policySourceIndex = policySourceIndex;
-        this.motors = Collections.unmodifiableList(new ArrayList<MotorElectricalTelemetry>(
-                Objects.requireNonNull(motors, "motors")));
+        this.motors = Collections.unmodifiableList(
+                new ArrayList<MotorElectricalTelemetry>(Objects.requireNonNull(motors, "motors")));
         this.voltageFilter = new LowPassFilter(voltageFilterAlpha);
         this.voltageMinimum = new MinTracker();
         this.staleAfterNanos = staleAfterNanos;
@@ -160,8 +160,7 @@ public final class PowerMonitor {
                 lastVoltageReadNanos[i] = loopStart;
                 lastVoltages[i] = sample;
             } else {
-                sample = VoltageSample.skippedCarry(
-                        lastVoltages[i], loopStart, source.sourceName(), staleAfterNanos);
+                sample = VoltageSample.skippedCarry(lastVoltages[i], loopStart, source.sourceName(), staleAfterNanos);
                 skipped++;
             }
             voltageScratch.add(sample);
@@ -174,12 +173,10 @@ public final class PowerMonitor {
         VoltageSample filtered;
         if (raw.isUsable()) {
             double filteredVolts = voltageFilter.update(raw.volts());
-            filtered = new VoltageSample(
-                    filteredVolts, loopStart, MeasurementValidity.VALID, raw.sourceId());
+            filtered = new VoltageSample(filteredVolts, loopStart, MeasurementValidity.VALID, raw.sourceId());
             voltageMinimum.offer(raw.volts());
         } else {
-            filtered = new VoltageSample(
-                    voltageFilter.value(), loopStart, raw.validity(), raw.sourceId());
+            filtered = new VoltageSample(voltageFilter.value(), loopStart, raw.validity(), raw.sourceId());
         }
 
         PowerTelemetrySource policySource = telemetrySources.get(policySourceIndex);
@@ -198,8 +195,7 @@ public final class PowerMonitor {
             }
             for (int n = 0; n < motors.size() && currentReads < currentBudget; n++) {
                 int index = (start + n) % motors.size();
-                boolean currentDue = due(
-                        lastCurrentReadNanos[index], loopStart, sampling.currentPeriodNanos());
+                boolean currentDue = due(lastCurrentReadNanos[index], loopStart, sampling.currentPeriodNanos());
                 if (currentDue) {
                     readCurrentScratch[index] = true;
                     currentReads++;
@@ -301,9 +297,7 @@ public final class PowerMonitor {
             return new VoltageSample(
                     sample.volts(), sample.capturedAtNanos(), MeasurementValidity.STALE, sample.sourceId());
         }
-        if (Double.isNaN(sample.volts())
-                || sample.volts() < minValidVolts
-                || sample.volts() > maxValidVolts) {
+        if (Double.isNaN(sample.volts()) || sample.volts() < minValidVolts || sample.volts() > maxValidVolts) {
             return new VoltageSample(
                     sample.volts(), sample.capturedAtNanos(), MeasurementValidity.OUT_OF_RANGE, sample.sourceId());
         }
@@ -353,8 +347,7 @@ public final class PowerMonitor {
         }
 
         boolean active = !Double.isNaN(command) && Math.abs(command) >= mechanismStartEffort;
-        return new MotorSnapshot(
-                motor.motorId(), current, command, velocity, position, readCurrent, active);
+        return new MotorSnapshot(motor.motorId(), current, command, velocity, position, readCurrent, active);
     }
 
     private static boolean due(long lastNanos, long nowNanos, long periodNanos) {

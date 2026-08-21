@@ -22,10 +22,7 @@ public final class BatteryEstimator {
         if (!filtered.isUsable()) {
             double[] hints = windowMinMax();
             return new BatteryObservation(
-                    Double.NaN,
-                    hints[0],
-                    hints[1],
-                    EstimateConfidence.none("voltage sensing invalid"));
+                    Double.NaN, hints[0], hints[1], EstimateConfidence.none("voltage sensing invalid"));
         }
 
         double volts = filtered.volts();
@@ -41,9 +38,7 @@ public final class BatteryEstimator {
                 rest,
                 loaded,
                 new EstimateConfidence(
-                        score,
-                        "recent " + (HINT_WINDOW_NANOS / 1_000_000_000L)
-                                + "s window; not a predictive model"));
+                        score, "recent " + (HINT_WINDOW_NANOS / 1_000_000_000L) + "s window; not a predictive model"));
     }
 
     public void reset() {

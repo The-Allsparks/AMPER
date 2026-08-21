@@ -66,10 +66,7 @@ class AmperSessionTest {
         AtomicLong time = new AtomicLong(0L);
         PowerPolicy policy = PowerPolicy.defaults();
         AmperSession session = new AmperSession(
-                policy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", volts::get),
-                Collections.emptyList());
+                policy, time::get, RevHubTelemetrySource.voltageOnly("hub", volts::get), Collections.emptyList());
         session.observe();
         assertEquals("PHASE1_DISABLED", session.driverTelemetry().message());
         boolean hasVoltageWarning = false;
@@ -89,14 +86,12 @@ class AmperSessionTest {
                 .featureFlags(AmperFeatureFlags.passiveTelemetry())
                 .build();
         AmperSession session = new AmperSession(
-                policy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", volts::get),
-                Collections.emptyList());
+                policy, time::get, RevHubTelemetrySource.voltageOnly("hub", volts::get), Collections.emptyList());
         session.start();
         ElectricalObservation obs = session.observe();
         assertTrue(obs.sensingValid());
-        assertEquals(DriverPowerState.SEVERE_VOLTAGE_RISK, session.driverTelemetry().state());
+        assertEquals(
+                DriverPowerState.SEVERE_VOLTAGE_RISK, session.driverTelemetry().state());
         assertTrue(session.exportCsv().contains("SEVERE_VOLTAGE_RISK"));
     }
 
@@ -108,14 +103,13 @@ class AmperSessionTest {
                 .featureFlags(AmperFeatureFlags.passiveTelemetry())
                 .build();
         AmperSession session = new AmperSession(
-                policy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", volts::get),
-                Collections.emptyList());
+                policy, time::get, RevHubTelemetrySource.voltageOnly("hub", volts::get), Collections.emptyList());
         session.start();
         session.observe();
-        assertEquals("VOLTAGE_WARNING", session.logger().lastAnnotatingEvent().type().name());
-        LogValue annotated = session.canonicalLog().samples()
+        assertEquals(
+                "VOLTAGE_WARNING", session.logger().lastAnnotatingEvent().type().name());
+        LogValue annotated = session.canonicalLog()
+                .samples()
                 .get(session.canonicalLog().size() - 1)
                 .get(LogKeys.EVENTS_TYPE);
         assertTrue(annotated != null && annotated.present());
@@ -131,10 +125,7 @@ class AmperSessionTest {
                 .telemetryMinPeriodNanos(100_000_000L)
                 .build();
         AmperSession session = new AmperSession(
-                policy,
-                time::get,
-                RevHubTelemetrySource.voltageOnly("hub", volts::get),
-                Collections.emptyList());
+                policy, time::get, RevHubTelemetrySource.voltageOnly("hub", volts::get), Collections.emptyList());
         session.start();
         assertTrue(session.observe() != null);
         assertTrue(session.driverTelemetry().publishedThisCycle());
@@ -154,17 +145,15 @@ class AmperSessionTest {
                 .featureFlags(AmperFeatureFlags.passiveTelemetry())
                 .build();
         AmperSession session = new AmperSession(
-                policy,
-                advancing,
-                RevHubTelemetrySource.voltageOnly("hub", () -> 12.2),
-                Collections.emptyList());
+                policy, advancing, RevHubTelemetrySource.voltageOnly("hub", () -> 12.2), Collections.emptyList());
         session.start();
         session.observe();
         session.recordMatchSummary();
         assertEquals(1L, session.matchSummary().sampleCount());
         assertTrue(session.matchSummary().maxLoopNanos() > 0L);
         assertTrue(session.matchSummary().p95LoopNanos() > 0L);
-        assertTrue(session.matchSummary().p95LoopNanos() <= session.matchSummary().maxLoopNanos());
+        assertTrue(
+                session.matchSummary().p95LoopNanos() <= session.matchSummary().maxLoopNanos());
         assertTrue(session.exportCsv().contains("MATCH_SUMMARY"));
         assertTrue(session.exportCsv().contains("p95LoopNs="));
     }
@@ -175,13 +164,8 @@ class AmperSessionTest {
             AtomicLong time,
             double currentAmps,
             boolean phase1) {
-        RevMotorTelemetry motor = new RevMotorTelemetry(
-                "intake",
-                () -> currentAmps,
-                effort::get,
-                () -> 200.0,
-                () -> 0.0,
-                true);
+        RevMotorTelemetry motor =
+                new RevMotorTelemetry("intake", () -> currentAmps, effort::get, () -> 200.0, () -> 0.0, true);
         PowerPolicy policy = PowerPolicy.builder()
                 .featureFlags(phase1 ? AmperFeatureFlags.passiveTelemetry() : AmperFeatureFlags.defaults())
                 .build();

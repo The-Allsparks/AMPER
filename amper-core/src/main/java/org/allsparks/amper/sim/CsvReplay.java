@@ -12,8 +12,7 @@ import org.allsparks.amper.log.PowerEventType;
  * Used by desktop analysis and software replay tests. Not hardware validation.
  */
 public final class CsvReplay {
-    private CsvReplay() {
-    }
+    private CsvReplay() {}
 
     public static List<PowerEvent> parse(String csv) {
         List<PowerEvent> events = new ArrayList<PowerEvent>();

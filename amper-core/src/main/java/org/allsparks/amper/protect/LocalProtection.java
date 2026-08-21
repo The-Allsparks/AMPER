@@ -115,8 +115,7 @@ public final class LocalProtection {
      */
     public static void requireGravityDeclaration(boolean gravityCritical, GravityHoldPolicy policy) {
         if (gravityCritical && policy == null) {
-            throw new IllegalArgumentException(
-                    "gravity-critical mechanisms must declare a safe minimum hold effort");
+            throw new IllegalArgumentException("gravity-critical mechanisms must declare a safe minimum hold effort");
         }
     }
 

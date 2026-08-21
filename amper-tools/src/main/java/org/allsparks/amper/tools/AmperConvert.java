@@ -48,12 +48,15 @@ public final class AmperConvert {
             Path dir = Paths.get(args[1]);
             Files.createDirectories(dir);
             CanonicalLog log = CanonicalLogExamples.representativeSession();
-            Files.write(dir.resolve("amper-advantagescope-table.csv"),
+            Files.write(
+                    dir.resolve("amper-advantagescope-table.csv"),
                     org.allsparks.amper.log.AdvantageScopeCsv.table(log).getBytes(StandardCharsets.UTF_8));
-            Files.write(dir.resolve("amper-advantagescope-table.schema.json"),
-                    org.allsparks.amper.log.LogSchemaSidecar.toJson(
-                            log, CanonicalLogExamples.fixtureMetadata()).getBytes(StandardCharsets.UTF_8));
-            Files.write(dir.resolve("amper-advantagescope-list.csv"),
+            Files.write(
+                    dir.resolve("amper-advantagescope-table.schema.json"),
+                    org.allsparks.amper.log.LogSchemaSidecar.toJson(log, CanonicalLogExamples.fixtureMetadata())
+                            .getBytes(StandardCharsets.UTF_8));
+            Files.write(
+                    dir.resolve("amper-advantagescope-list.csv"),
                     org.allsparks.amper.log.AdvantageScopeCsv.list(log).getBytes(StandardCharsets.UTF_8));
             return;
         }
@@ -80,15 +83,7 @@ public final class AmperConvert {
                 type = LogValueType.STRING;
             }
             rebuilt.register(new LogFieldSpec(
-                    key,
-                    type,
-                    "",
-                    "advantagescope-csv",
-                    false,
-                    false,
-                    "imported",
-                    "AMPER",
-                    FieldSpecs.VALID_OR_EMPTY));
+                    key, type, "", "advantagescope-csv", false, false, "imported", "AMPER", FieldSpecs.VALID_OR_EMPTY));
         }
         for (AdvantageScopeCsv.ParsedRow row : table.rows) {
             long timestampNanos = Math.round(row.timestampAsSeconds() * 1_000_000_000.0);

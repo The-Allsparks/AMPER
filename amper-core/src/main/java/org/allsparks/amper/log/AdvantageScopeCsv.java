@@ -20,8 +20,7 @@ public final class AdvantageScopeCsv {
     public static final String KEY_HEADER = "Key";
     public static final String VALUE_HEADER = "Value";
 
-    private AdvantageScopeCsv() {
-    }
+    private AdvantageScopeCsv() {}
 
     public static String table(CanonicalLog log) {
         StringBuilder sb = new StringBuilder();
@@ -48,7 +47,12 @@ public final class AdvantageScopeCsv {
 
     public static String list(CanonicalLog log) {
         StringBuilder sb = new StringBuilder();
-        sb.append(TIMESTAMP_HEADER).append(',').append(KEY_HEADER).append(',').append(VALUE_HEADER).append('\n');
+        sb.append(TIMESTAMP_HEADER)
+                .append(',')
+                .append(KEY_HEADER)
+                .append(',')
+                .append(VALUE_HEADER)
+                .append('\n');
         long origin = log.originNanos();
         for (CanonicalSample sample : log.samples()) {
             long relative = sample.timestampNanos() - origin;

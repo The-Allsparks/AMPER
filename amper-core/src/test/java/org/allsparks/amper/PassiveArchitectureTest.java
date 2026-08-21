@@ -37,20 +37,19 @@ class PassiveArchitectureTest {
         Path main = root.resolve("src/main/java");
         List<String> hits = new ArrayList<String>();
         try (Stream<Path> paths = Files.walk(main)) {
-            paths.filter(path -> path.toString().endsWith(".java"))
-                    .forEach(path -> {
-                        String text = read(path);
-                        String[] lines = text.split("\n");
-                        for (int i = 0; i < lines.length; i++) {
-                            String line = lines[i].trim();
-                            if (line.startsWith("import com.qualcomm")
-                                    || line.startsWith("import org.firstinspires.ftc")
-                                    || line.startsWith("import android.")) {
-                                hits.add(root.relativize(path).toString());
-                                break;
-                            }
-                        }
-                    });
+            paths.filter(path -> path.toString().endsWith(".java")).forEach(path -> {
+                String text = read(path);
+                String[] lines = text.split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i].trim();
+                    if (line.startsWith("import com.qualcomm")
+                            || line.startsWith("import org.firstinspires.ftc")
+                            || line.startsWith("import android.")) {
+                        hits.add(root.relativize(path).toString());
+                        break;
+                    }
+                }
+            });
         }
         if (!hits.isEmpty()) {
             fail("amper-core imported FTC/Android types:\n" + String.join("\n", hits));

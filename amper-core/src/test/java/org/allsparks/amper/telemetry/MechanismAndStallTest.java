@@ -50,10 +50,8 @@ class MechanismAndStallTest {
         PowerPolicy policy = PowerPolicy.builder().stallDwellNanos(100L).build();
         StallSuspicionTracker tracker = new StallSuspicionTracker();
         java.util.concurrent.atomic.AtomicLong time = new java.util.concurrent.atomic.AtomicLong(0L);
-        RevMotorTelemetry stalled = new RevMotorTelemetry(
-                "intake", () -> 12.0, () -> 1.0, () -> 1.0, () -> 0.0, true);
-        RevMotorTelemetry free = new RevMotorTelemetry(
-                "drive", () -> 1.0, () -> 0.2, () -> 200.0, () -> 0.0, true);
+        RevMotorTelemetry stalled = new RevMotorTelemetry("intake", () -> 12.0, () -> 1.0, () -> 1.0, () -> 0.0, true);
+        RevMotorTelemetry free = new RevMotorTelemetry("drive", () -> 1.0, () -> 0.2, () -> 200.0, () -> 0.0, true);
         PowerMonitor monitor = new PowerMonitor(
                 time::get,
                 java.util.Collections.singletonList(RevHubTelemetrySource.voltageOnly("hub", () -> 12.0)),
@@ -72,7 +70,8 @@ class MechanismAndStallTest {
 
         time.set(20L);
         ElectricalObservation skipped = monitor.update();
-        assertEquals(MeasurementValidity.SKIPPED, skipped.motors().get(0).current().validity());
+        assertEquals(
+                MeasurementValidity.SKIPPED, skipped.motors().get(0).current().validity());
         assertEquals(12.0, skipped.motors().get(0).current().amps(), 1e-9);
         assertFalse(tracker.update(skipped, policy, null));
 
@@ -93,16 +92,15 @@ class MechanismAndStallTest {
         assertTrue(tracker.suspectedMotorIds().isEmpty());
     }
 
-    private static ElectricalObservation observation(
-            double effort, double amps, double velocity, double volts) {
+    private static ElectricalObservation observation(double effort, double amps, double velocity, double volts) {
         return observationAt(1L, effort, amps, velocity, volts);
     }
 
     private static ElectricalObservation observationAt(
             long time, double effort, double amps, double velocity, double volts) {
         AmperClock clock = () -> time;
-        RevMotorTelemetry motor = new RevMotorTelemetry(
-                "intake", () -> amps, () -> effort, () -> velocity, () -> 0.0, true);
+        RevMotorTelemetry motor =
+                new RevMotorTelemetry("intake", () -> amps, () -> effort, () -> velocity, () -> 0.0, true);
         PowerMonitor monitor = new PowerMonitor(
                 clock,
                 RevHubTelemetrySource.voltageOnly("hub", () -> volts),

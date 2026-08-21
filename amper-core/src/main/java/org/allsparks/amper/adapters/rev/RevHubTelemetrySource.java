@@ -23,9 +23,7 @@ public final class RevHubTelemetrySource implements PowerTelemetrySource {
     private final Supplier<CurrentReading> batteryCurrent;
 
     public RevHubTelemetrySource(
-            String sourceName,
-            DoubleSupplier busVoltageVolts,
-            Supplier<CurrentReading> batteryCurrent) {
+            String sourceName, DoubleSupplier busVoltageVolts, Supplier<CurrentReading> batteryCurrent) {
         this.sourceName = Objects.requireNonNull(sourceName, "sourceName");
         this.busVoltageVolts = Objects.requireNonNull(busVoltageVolts, "busVoltageVolts");
         this.batteryCurrent = batteryCurrent;
@@ -61,8 +59,7 @@ public final class RevHubTelemetrySource implements PowerTelemetrySource {
             if (Double.isNaN(reading.amps)) {
                 return CurrentSample.missing(nowNanos, sourceName + ":battery");
             }
-            return new CurrentSample(
-                    reading.amps, nowNanos, MeasurementValidity.VALID, sourceName + ":battery");
+            return new CurrentSample(reading.amps, nowNanos, MeasurementValidity.VALID, sourceName + ":battery");
         } catch (RuntimeException ex) {
             return CurrentSample.missing(nowNanos, sourceName + ":battery");
         }

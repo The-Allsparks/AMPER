@@ -96,8 +96,7 @@ public final class AmperSession {
             String exportFilename) {
         this.policy = Objects.requireNonNull(policy, "policy");
         this.clock = clock == null ? new SystemNanoClock() : clock;
-        this.monitor = PowerMonitor.create(
-                this.clock, telemetrySources, policySourceIndex, motors, policy);
+        this.monitor = PowerMonitor.create(this.clock, telemetrySources, policySourceIndex, motors, policy);
         SessionMetadata meta = metadata == null
                 ? SessionMetadata.anonymous(policy.voltageThresholdProvenance().name())
                 : metadata;
@@ -108,17 +107,14 @@ public final class AmperSession {
         this.driverFeedback = new DriverFeedback();
         this.loopStats = new LoopOverheadStats();
         this.logSink = logSink;
-        this.exportFilename = exportFilename == null || exportFilename.trim().isEmpty()
-                ? "amper-session.csv"
-                : exportFilename;
+        this.exportFilename =
+                exportFilename == null || exportFilename.trim().isEmpty() ? "amper-session.csv" : exportFilename;
         this.canonicalLog = new CanonicalLog(policy.loggerCapacity(), new LogNameSanitizer());
         this.canonicalPublisher = new CanonicalLogPublisher(this.canonicalLog, meta);
     }
 
     public static AmperSession create(
-            PowerPolicy policy,
-            PowerTelemetrySource telemetrySource,
-            List<MotorElectricalTelemetry> motors) {
+            PowerPolicy policy, PowerTelemetrySource telemetrySource, List<MotorElectricalTelemetry> motors) {
         return new AmperSession(policy, new SystemNanoClock(), telemetrySource, motors);
     }
 
@@ -262,13 +258,7 @@ public final class AmperSession {
     public MatchSummary matchSummary() {
         if (samples == 0L) {
             return new MatchSummary(
-                    0L,
-                    Double.NaN,
-                    Double.NaN,
-                    loopStats,
-                    activityTracker,
-                    driverFeedback,
-                    logger.droppedCount());
+                    0L, Double.NaN, Double.NaN, loopStats, activityTracker, driverFeedback, logger.droppedCount());
         }
         ElectricalObservation last = monitor.lastObservation();
         if (last == null) {
@@ -276,14 +266,7 @@ public final class AmperSession {
         }
         double minV = last == null ? Double.NaN : last.voltageMinimumThisMatch();
         double maxV = lastBattery == null ? Double.NaN : lastBattery.restingHintVolts();
-        return new MatchSummary(
-                samples,
-                minV,
-                maxV,
-                loopStats,
-                activityTracker,
-                driverFeedback,
-                logger.droppedCount());
+        return new MatchSummary(samples, minV, maxV, loopStats, activityTracker, driverFeedback, logger.droppedCount());
     }
 
     public void recordMatchSummary() {
