@@ -25,6 +25,17 @@ Do not cut `0.1.0` final until [docs/validation/STATUS.md](validation/STATUS.md)
 - [ ] No Phase 3–7 feature enabled by default
 - [ ] Hardware status remains honest
 
+## Branch protection (`main`)
+
+Recorded for #25. Classic branch protection with `enforce_admins`:
+
+- Disallow force-push and branch deletion.
+- Required checks (strict): `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`, `sdk-compile`.
+- Required approving review count: **0** until a second maintainer is available (org decision to raise).
+- Require conversation resolution before merge.
+
+Do not add required checks that do not exist (no hardware CI). See also [CONTRIBUTING.md](../CONTRIBUTING.md).
+
 ## Tagging
 
 ```bash

@@ -28,6 +28,19 @@ Install into TeamCode: [docs/install.md](docs/install.md).
 - Run `.\gradlew.bat check` (or `./gradlew check`) before requesting review.
 - Adapter PRs that touch FTC types should also run `.\gradlew.bat compileAgainstFtcSdk` (CI job `sdk-compile`).
 
+## Branch protection (`main`)
+
+`main` is protected (classic branch protection; enforce admins on):
+
+| Rule | Current policy |
+|------|----------------|
+| Force push / delete | Disallowed |
+| Required status checks | `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure`, `sdk-compile` (strict: branch must be up to date) |
+| Pull request reviews | Required approving review count is **0** (solo-maintainer workflow). Stale reviews dismiss on new pushes. Conversation resolution required before merge. |
+| Admin bypass | Not enabled (`enforce_admins`) |
+
+Do not require hardware jobs that do not exist. Raising the review count above 0 is an org decision when a second reviewer is available. Details: [docs/release.md](docs/release.md).
+
 ## Line endings
 
 The repository stores LF line endings (see [.gitattributes](.gitattributes)).
