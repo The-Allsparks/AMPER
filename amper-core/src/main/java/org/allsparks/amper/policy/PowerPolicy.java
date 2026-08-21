@@ -61,10 +61,19 @@ public final class PowerPolicy {
         this.commandCapEnabled = builder.commandCapEnabled;
     }
 
+    /**
+     * Conservative placeholders plus {@link SamplingPolicy#recommended()}
+     * (at most one motor current read per loop). Not hardware-validated.
+     */
     public static PowerPolicy defaults() {
         return builder().build();
     }
 
+    /**
+     * Builder whose sampling default is {@link SamplingPolicy#recommended()}.
+     * Characterization and tests that need every motor every loop must call
+     * {@link Builder#sampling(SamplingPolicy)} with {@link SamplingPolicy#everyLoop()}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -181,7 +190,7 @@ public final class PowerPolicy {
         private long stallDwellNanos = 150_000_000L;
         private double weakBatterySagVolts = 1.5;
         private int loggerCapacity = 4000;
-        private SamplingPolicy sampling = SamplingPolicy.everyLoop();
+        private SamplingPolicy sampling = SamplingPolicy.recommended();
         private ThresholdProvenance voltageThresholdProvenance = ThresholdProvenance.CONSERVATIVE_PLACEHOLDER;
         private double slewMaxDeltaPerSecond = 4.0;
         private double commandCap = 1.0;

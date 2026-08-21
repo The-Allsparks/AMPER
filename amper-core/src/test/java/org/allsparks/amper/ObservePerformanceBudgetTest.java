@@ -35,6 +35,8 @@ class ObservePerformanceBudgetTest {
         assertEquals(1, AmperPolicies.passiveDefaults().sampling().maxCurrentReadsPerLoop());
         assertEquals(1, AmperPolicies.measurementOnly().sampling().maxCurrentReadsPerLoop());
         assertEquals(1, AmperPolicies.localProtectionAllowed().sampling().maxCurrentReadsPerLoop());
+        assertEquals(1, PowerPolicy.defaults().sampling().maxCurrentReadsPerLoop());
+        assertEquals(1, PowerPolicy.builder().build().sampling().maxCurrentReadsPerLoop());
     }
 
     @Test
