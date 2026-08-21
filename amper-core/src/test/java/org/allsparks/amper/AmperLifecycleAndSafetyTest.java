@@ -301,6 +301,39 @@ class AmperLifecycleAndSafetyTest {
         assertFalse(sink.last.containsKey("AMPER.V"));
     }
 
+    @Test
+    void sessionLocalProtectionHonorsKillSwitchAndClock() {
+        AtomicLong time = new AtomicLong(0L);
+        AmperSession closedGate = new AmperSession(
+                AmperPolicies.passiveDefaults(),
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
+                Collections.emptyList());
+        org.allsparks.amper.protect.ConstrainedCommand identity =
+                closedGate.constrain(closedGate.localProtection(true), 0.8);
+        assertEquals(0.8, identity.allowed(), 0.0);
+        assertFalse(identity.constrained());
+
+        PowerPolicy openPolicy = PowerPolicy.builder()
+                .featureFlags(AmperFeatureFlags.builder()
+                        .phase1PassiveTelemetry(true)
+                        .phase2LocalProtection(true)
+                        .build())
+                .slewMaxDeltaPerSecond(1.0)
+                .build();
+        AmperSession openGate = new AmperSession(
+                openPolicy,
+                time::get,
+                RevHubTelemetrySource.voltageOnly("hub", () -> 12.0),
+                Collections.emptyList());
+        org.allsparks.amper.protect.LocalProtection protection = openGate.localProtection(true);
+        assertEquals(0.0, openGate.constrain(protection, 0.0).allowed(), 1e-9);
+        time.set(500_000_000L);
+        org.allsparks.amper.protect.ConstrainedCommand limited = openGate.constrain(protection, 1.0);
+        assertEquals(0.5, limited.allowed(), 1e-9);
+        assertTrue(limited.constrained());
+    }
+
     private static final class RecordingSink implements TelemetrySink {
         private final Map<String, Object> last = new LinkedHashMap<String, Object>();
         private int updates;

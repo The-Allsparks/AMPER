@@ -28,6 +28,8 @@ import org.allsparks.amper.measure.MotorElectricalTelemetry;
 import org.allsparks.amper.measure.PowerMonitor;
 import org.allsparks.amper.measure.PowerTelemetrySource;
 import org.allsparks.amper.policy.PowerPolicy;
+import org.allsparks.amper.protect.ConstrainedCommand;
+import org.allsparks.amper.protect.LocalProtection;
 import org.allsparks.amper.telemetry.DriverFeedback;
 import org.allsparks.amper.telemetry.DriverTelemetry;
 import org.allsparks.amper.telemetry.MatchSummary;
@@ -41,6 +43,11 @@ import org.allsparks.amper.telemetry.TelemetrySink;
  * <p>Phase 0 samples when {@link AmperFeatureFlags#isPhase0Measurement()} is true.
  * Phase 1 extras (warnings, start/stop, summaries) run only when
  * {@link AmperFeatureFlags#isPhase1PassiveTelemetry()} is true.
+ *
+ * <p>Phase 2 {@link LocalProtection} is optional and subsystem-owned. Use
+ * {@link #localProtection(boolean)} / {@link #constrain(LocalProtection, double)}
+ * so the session feature flag remains a kill switch; this class still never
+ * calls {@code setPower} / {@code setVelocity}.
  *
  * <p>Call {@link #initialize()} from OpMode {@code init}, {@link #start()} from
  * {@code start}/{@code waitForStart}, {@link #observe()} once per control loop,
@@ -365,6 +372,25 @@ public final class AmperSession {
 
     public PowerPolicy policy() {
         return policy;
+    }
+
+    /**
+     * Builds subsystem-owned Phase 2 protection from this session's policy.
+     * Attaches feature flags as the kill switch. Does not enable intervention
+     * unless both {@code enabled} and
+     * {@link AmperFeatureFlags#isPhase2LocalProtection()} are true.
+     */
+    public LocalProtection localProtection(boolean enabled) {
+        return LocalProtection.fromPolicy(policy, enabled);
+    }
+
+    /**
+     * Applies optional local protection using this session's clock.
+     * Still never writes motors — callers must {@code setPower(result.allowed())}.
+     */
+    public ConstrainedCommand constrain(LocalProtection protection, double requested) {
+        Objects.requireNonNull(protection, "protection");
+        return protection.apply(requested, clock.nanoTime());
     }
 
     public AmperLifecycle lifecycle() {

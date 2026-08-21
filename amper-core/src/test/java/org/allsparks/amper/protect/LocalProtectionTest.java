@@ -77,4 +77,55 @@ class LocalProtectionTest {
         assertEquals(0.15, hold.enforce(0.0, 1.0), 1e-9);
         assertEquals(-0.15, hold.enforce(0.0, -1.0), 1e-9);
     }
+
+    @Test
+    void sessionFlagFalseKeepsFromPolicyIdentityEvenWhenLocallyEnabled() {
+        org.allsparks.amper.policy.PowerPolicy policy =
+                org.allsparks.amper.policy.AmperPolicies.passiveDefaults();
+        assertFalse(policy.featureFlags().isPhase2LocalProtection());
+        LocalProtection protection = LocalProtection.fromPolicy(policy, true);
+        ConstrainedCommand result = protection.apply(1.0, 500_000_000L);
+        assertEquals(1.0, result.requested(), 0.0);
+        assertEquals(1.0, result.allowed(), 0.0);
+        assertFalse(result.constrained());
+        assertEquals(PowerLimitReason.FEATURE_DISABLED, result.reason());
+    }
+
+    @Test
+    void bothGatesOpenAllowSlew() {
+        org.allsparks.amper.policy.PowerPolicy policy =
+                org.allsparks.amper.policy.PowerPolicy.builder()
+                        .featureFlags(org.allsparks.amper.AmperFeatureFlags.builder()
+                                .phase2LocalProtection(true)
+                                .build())
+                        .slewMaxDeltaPerSecond(1.0)
+                        .build();
+        LocalProtection protection = LocalProtection.fromPolicy(policy, true);
+        assertEquals(0.0, protection.apply(0.0, 0L).allowed(), 1e-9);
+        ConstrainedCommand limited = protection.apply(1.0, 500_000_000L);
+        assertEquals(0.5, limited.allowed(), 1e-9);
+        assertTrue(limited.constrained());
+        assertEquals(PowerLimitReason.LOCAL_SLEW_LIMIT, limited.reason());
+    }
+
+    @Test
+    void defaultFlagsKeepPhase2Closed() {
+        assertFalse(org.allsparks.amper.AmperFeatureFlags.defaults().isPhase2LocalProtection());
+        assertFalse(org.allsparks.amper.policy.AmperPolicies.passiveDefaults()
+                .featureFlags()
+                .isPhase2LocalProtection());
+        assertTrue(org.allsparks.amper.policy.AmperPolicies.localProtectionAllowed()
+                .featureFlags()
+                .isPhase2LocalProtection());
+    }
+
+    @Test
+    void rawBuilderWithoutSessionFlagsStillHonorsLocalEnabled() {
+        LocalProtection protection = LocalProtection.builder()
+                .enabled(true)
+                .slew(new SlewRateLimiter(1.0))
+                .build();
+        assertEquals(0.0, protection.apply(0.0, 0L).allowed(), 1e-9);
+        assertEquals(0.5, protection.apply(1.0, 500_000_000L).allowed(), 1e-9);
+    }
 }

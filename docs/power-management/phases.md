@@ -61,13 +61,17 @@ Filtering, minima, command/current logging, start/stop events, driver warnings, 
 
 Optional slew limits, accel ramps, stall/jam detection, intake recovery, output caps, timeouts, careful voltage-normalized commands.
 
-**Enable:** subsystem constructs `LocalProtection.builder().enabled(true)...` and applies `ConstrainedCommand` itself. Never auto-wrap every FTC motor. Gravity-critical mechanisms must `GravityHoldPolicy.declare`. Automatic recovery defaults off.
+**Enable:** dual opt-in — open the session gate with `AmperPolicies.localProtectionAllowed()` (or `phase2LocalProtection(true)`), then construct `amper.localProtection(true)` / `LocalProtection.fromPolicy(...)` and apply `ConstrainedCommand` in the subsystem. Never auto-wrap every FTC motor. Gravity-critical mechanisms must `GravityHoldPolicy.declare`. Automatic recovery defaults off.
 
-**Disable:** omit LocalProtection or `LocalProtection.disabled()` — requested command is unchanged.
+**Kill switch:** with session flags attached (`fromPolicy` / `AmperSession.localProtection`), `phase2LocalProtection` false forces identity even if local `enabled` is true. Raw `LocalProtection.builder()` without session flags is not kill-switched.
 
-Explain PWM (Hub) vs ramp limiting vs higher-level time slicing — do not market PWM as a novel AMPER invention.
+**Disable:** omit LocalProtection, call `amper.localProtection(false)`, use `AmperPolicies.passiveDefaults()`, or leave the session flag off — requested command is unchanged.
+
+Explain PWM (Hub) vs ramp vs time-slicing — do not market PWM as a novel AMPER invention.
 
 **Evidence required to advance:** Control Hub characterization of slew/stall on the actual mechanism. Software tests are not that evidence.
+
+**Team pickup:** copy [`AmperLocalProtectionOpMode.java`](../../amper-examples/src/main/java/org/allsparks/amper/examples/AmperLocalProtectionOpMode.java); keep `@Disabled` until a wheels-off practice session.
 
 ## Phase 3 — Reactive voltage protection
 

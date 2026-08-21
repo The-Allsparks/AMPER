@@ -21,6 +21,7 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ### Added
 
+- Phase 2 dual opt-in for team pickup: `AmperPolicies.localProtectionAllowed()`, `AmperSession.localProtection` / `constrain`, session-flag kill switch on `LocalProtection.fromPolicy` (#26), and `AmperLocalProtectionOpMode` example. Still default-off; AMPER does not auto-wrap motors.
 - Sibling electrical contracts for MIMIC, BEACON, HELM, and TRACE: `docs/integration/sibling-contracts.md` (#44).
 - CI compiles `amper-ftc` and `amper-examples` against official `org.firstinspires.ftc:RobotCore:11.2.0` (`./gradlew compileAgainstFtcSdk`). Default `check` still uses `amper-ftc-stubs` for JVM unit tests (#36).
 - Canonical `/AMPER` log model with AdvantageScope table/list CSV, schema sidecar, and desktop WPILOG conversion (WPILib DataLog format 1.0). Robot-side format is AdvantageScope CSV; native WPILOG is not used on the current Control Hub.

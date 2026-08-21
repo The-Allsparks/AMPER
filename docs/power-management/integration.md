@@ -104,13 +104,21 @@ Policy filters/warnings use the selected source. All labeled voltages appear in 
 
 ## Phase 2 opt-in
 
-Do not wrap every motor. A subsystem that wants experimental slew/cap must construct `LocalProtection` itself and apply `ConstrainedCommand.allowed()` **in that subsystem**. Gravity-critical mechanisms must `GravityHoldPolicy.declare(id, minAbsEffort)`. Automatic recovery stays off. This is experimental until [hardware validation](../validation/STATUS.md) exists.
+Do not wrap every motor. Dual gate:
+
+1. Open the session flag with `AmperPolicies.localProtectionAllowed()` (or set `phase2LocalProtection` on your policy).
+2. Build per-subsystem protection with `amper.localProtection(true)` / `LocalProtection.fromPolicy(policy, true)` and apply `ConstrainedCommand.allowed()` **in that subsystem**.
+
+If either gate is off, commands stay identity. Prefer session helpers so the feature flag remains a kill switch; raw `LocalProtection.builder()` without session flags is not kill-switched.
+
+Gravity-critical mechanisms must `GravityHoldPolicy.declare(id, minAbsEffort)`. Automatic recovery stays off. Copy [`AmperLocalProtectionOpMode.java`](../../amper-examples/src/main/java/org/allsparks/amper/examples/AmperLocalProtectionOpMode.java). Experimental until [hardware validation](../validation/STATUS.md) exists.
 
 ## Disable
 
 - `AmperPolicies.disabled()` — no hardware reads
 - `AmperPolicies.measurementOnly()` — Phase 0, no Phase 1 warnings
-- `AmperPolicies.passiveDefaults()` — Phase 0+1, still no motor writes
+- `AmperPolicies.passiveDefaults()` — Phase 0+1, still no motor writes (Phase 2 session gate closed)
+- `AmperPolicies.localProtectionAllowed()` — Phase 0+1 + Phase 2 session gate open; still no auto motor wrap
 
 ## Copying examples
 

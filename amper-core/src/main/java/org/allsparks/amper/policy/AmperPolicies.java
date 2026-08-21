@@ -31,6 +31,26 @@ public final class AmperPolicies {
                 .build();
     }
 
+    /**
+     * Phase 0 + Phase 1, and opens the session gate for Phase 2
+     * {@link org.allsparks.amper.protect.LocalProtection}.
+     *
+     * <p>Still does <strong>not</strong> wrap motors. A subsystem must also
+     * construct protection with local {@code enabled(true)} and apply
+     * {@link org.allsparks.amper.protect.ConstrainedCommand#allowed()} itself.
+     * Experimental until Control Hub characterization exists.
+     */
+    public static PowerPolicy localProtectionAllowed() {
+        return PowerPolicy.builder()
+                .featureFlags(AmperFeatureFlags.builder()
+                        .phase1PassiveTelemetry(true)
+                        .phase2LocalProtection(true)
+                        .build())
+                .sampling(SamplingPolicy.recommended())
+                .voltageThresholdProvenance(ThresholdProvenance.CONSERVATIVE_PLACEHOLDER)
+                .build();
+    }
+
     /** Fully disabled: {@link AmperFeatureFlags#isPhase0Measurement()} is false. */
     public static PowerPolicy disabled() {
         return PowerPolicy.builder()
