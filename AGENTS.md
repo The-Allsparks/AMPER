@@ -69,7 +69,7 @@ The robot control loop calls `AmperSession.observe()` once per cycle.
 
 - Do not allocate unbounded structures. Logger capacity must remain bounded (tested).
 - Prefer reused buffers over per-loop `ArrayList` / `LinkedHashMap` / `String.format` on the observe path. Existing debt is tracked in GitHub issues; do not add more of it.
-- Current sampling: student presets (`AmperPolicies.passiveDefaults()` and friends) must keep `maxCurrentReadsPerLoop() == 1`. Characterization may use `SamplingPolicy.everyLoop()`.
+- Current sampling: `PowerPolicy.defaults()` and student presets (`AmperPolicies.passiveDefaults()` and friends) must keep `maxCurrentReadsPerLoop() == 1`. Characterization may use `SamplingPolicy.everyLoop()`.
 - CSV export belongs in `stop()`, not in `observe()`.
 - Do not add worker threads for logging or hardware. FTC SDK hardware calls stay on the OpMode thread.
 - CI performance tests use **generous desktop ceilings** and relative slowdown limits. They are not Hub SLAs. Hub numbers remain issue #6.

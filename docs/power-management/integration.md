@@ -88,7 +88,7 @@ Same session calls inside `runOpMode()`: `initialize` → `waitForStart` → `st
 
 ## Sampling cadence
 
-`AmperPolicies.passiveDefaults()` uses `SamplingPolicy.recommended()`: voltage every loop, **at most one motor current read per loop**, round-robin. Characterization can use `SamplingPolicy.everyLoop()`. Skipped currents are `SKIPPED` or `STALE`, never labeled fresh `VALID`.
+`AmperPolicies.passiveDefaults()` and `PowerPolicy.defaults()` use `SamplingPolicy.recommended()`: voltage every loop, **at most one motor current read per loop**, round-robin. Characterization can use `SamplingPolicy.everyLoop()`. Skipped currents are `SKIPPED` or `STALE`, never labeled fresh `VALID`.
 
 ## Multi-hub
 
