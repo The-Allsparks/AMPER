@@ -44,7 +44,7 @@ Audit-derived issues include **#25–#36** (several closed), **#41–#44**, and 
 
 - `AmperFtc.builder(hardwareMap)` examples.
 - Composite `includeBuild` install path.
-- **#41** packaging, lifecycle, and install hardening ([#43](https://github.com/The-Allsparks/AMPER/issues/43) merged; [#28](https://github.com/The-Allsparks/AMPER/issues/28) lifecycle slice in progress).
+- **#41** packaging, lifecycle, and install hardening (software checklist done: [#43](https://github.com/The-Allsparks/AMPER/issues/43), [#28](https://github.com/The-Allsparks/AMPER/issues/28), [#44](https://github.com/The-Allsparks/AMPER/issues/44); Hub cost still [#6](https://github.com/The-Allsparks/AMPER/issues/6)). See [ftc-integration-checklist.md](ftc-integration-checklist.md).
 
 ## Advanced integration
 
@@ -77,20 +77,12 @@ Audit-derived issues include **#25–#36** (several closed), **#41–#44**, and 
 
 ## Child issues (dependency order)
 
-Closed software slices (do not re-open as next work): [#18](https://github.com/The-Allsparks/AMPER/pull/18), [#34](https://github.com/The-Allsparks/AMPER/issues/34), [#33](https://github.com/The-Allsparks/AMPER/issues/33), [#35](https://github.com/The-Allsparks/AMPER/issues/35), [#36](https://github.com/The-Allsparks/AMPER/issues/36), [#42](https://github.com/The-Allsparks/AMPER/issues/42).
+Closed software slices (do not re-open as next work): [#18](https://github.com/The-Allsparks/AMPER/pull/18), [#34](https://github.com/The-Allsparks/AMPER/issues/34), [#33](https://github.com/The-Allsparks/AMPER/issues/33), [#35](https://github.com/The-Allsparks/AMPER/issues/35), [#36](https://github.com/The-Allsparks/AMPER/issues/36), [#42](https://github.com/The-Allsparks/AMPER/issues/42), [#43](https://github.com/The-Allsparks/AMPER/issues/43), [#28](https://github.com/The-Allsparks/AMPER/issues/28), [#44](https://github.com/The-Allsparks/AMPER/issues/44), [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software, [#30](https://github.com/The-Allsparks/AMPER/issues/30)–[#32](https://github.com/The-Allsparks/AMPER/issues/32), [#50](https://github.com/The-Allsparks/AMPER/issues/50)–[#59](https://github.com/The-Allsparks/AMPER/issues/59).
 
-1. [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration epic (**first readiness priority**)
-2. [#43](https://github.com/The-Allsparks/AMPER/issues/43) Keep stubs and desktop tools off robot-facing artifacts (this slice)
-3. [#28](https://github.com/The-Allsparks/AMPER/issues/28) init vs match lifecycle
-4. [#25](https://github.com/The-Allsparks/AMPER/issues/25) remaining branch-protection policy (`sdk-compile` required check; review count; docs)
-5. [#44](https://github.com/The-Allsparks/AMPER/issues/44) sibling electrical contracts (docs; no sibling JARs)
-6. [#29](https://github.com/The-Allsparks/AMPER/issues/29) Dependabot major policy (do not merge [#21](https://github.com/The-Allsparks/AMPER/pull/21))
-7. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
-8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
-9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs (**done**, [#73](https://github.com/The-Allsparks/AMPER/pull/73))
-10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline (**done**; 4000-sample bench; #51–#53 merged)
-11. [#50](https://github.com/The-Allsparks/AMPER/issues/50) quality/CI epic (does not outrank #41/#6)
-12. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
-13. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
-14. [#32](https://github.com/The-Allsparks/AMPER/issues/32) security contact (**Private Vulnerability Reporting enabled**)
-15. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
+1. [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration epic (**first readiness priority**; software done — Hub + FORGE remain)
+2. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; feeds #41 cost acceptance)
+3. [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4) combined-stack acceptance (external)
+4. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
+5. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
+6. [#7](https://github.com/The-Allsparks/AMPER/issues/7)–[#16](https://github.com/The-Allsparks/AMPER/issues/16) remain behind readiness gates
+7. [#24](https://github.com/The-Allsparks/AMPER/issues/24) roadmap epic (tracking only)

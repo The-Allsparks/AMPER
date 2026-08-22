@@ -1,6 +1,6 @@
 # Priority ledger
 
-Updated: 2026-08-22. Synced to `main` after #72–#74 merges.
+Updated: 2026-08-22. Synced to `main` after #72–#75 merges.
 
 Priority model: safety blockers → correctness blockers → CI/build → unblocking issues → architectural seams → tests for upcoming work → small user-facing slices → measured performance → docs → optional advanced → cosmetic.
 
@@ -14,7 +14,7 @@ Scores and CI notes: [quality-performance-audit-2026-08-20.md](../audits/quality
 |-------|----------|-----------|--------------|--------|-------------|
 | [#50](https://github.com/The-Allsparks/AMPER/issues/50) | HIGH | **Done** | none | Closed | — |
 | [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#59](https://github.com/The-Allsparks/AMPER/issues/59) | HIGH–LOW | **Done** | #50 | Closed | — |
-| [#31](https://github.com/The-Allsparks/AMPER/issues/31) | MEDIUM | **Done** (`ObservePerformanceBudgetTest` at 4000 samples) | none | Closing | Children #51–#53 merged |
+| [#31](https://github.com/The-Allsparks/AMPER/issues/31) | MEDIUM | **Done** (`ObservePerformanceBudgetTest` at 4000 samples) | none | Closed ([#75](https://github.com/The-Allsparks/AMPER/pull/75)) | — |
 
 **First implementation/readiness priority:** [#41](https://github.com/The-Allsparks/AMPER/issues/41) (FTC integration reference). Combined-stack acceptance is [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4). Tracking epic for 0.1.x phases remains [#24](https://github.com/The-Allsparks/AMPER/issues/24).
 
@@ -28,7 +28,7 @@ No implementation PR is open.
 
 | Issue | Priority | Readiness | Dependencies | Status | Blocker | Next action |
 |-------|----------|-----------|--------------|--------|---------|-------------|
-| [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration reference | HIGH | Epic; #43 done; #28/#44 this PR | Hub evidence for cost items; FORGE#4 for combined stack | Open | Hardware for disabled/passive cost; combined stack is external | After this PR: tag `v0.1.0-rc.1`; then #6 Hub session |
+| [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration reference | HIGH | Software checklist done; Hub + FORGE remain | #6 Hub cost; FORGE#4 combined | Open | Hardware for disabled/passive cost; combined stack external | Run #6 Hub session; see [ftc-integration-checklist.md](ftc-integration-checklist.md) |
 | [#42](https://github.com/The-Allsparks/AMPER/issues/42) Ledger/roadmap list #41 first | HIGH | **Done** | none | Closed via [#45](https://github.com/The-Allsparks/AMPER/pull/45) | none | — |
 | [#43](https://github.com/The-Allsparks/AMPER/issues/43) Stubs/tools off robot artifacts | HIGH | **Done** | none | Closed via [#46](https://github.com/The-Allsparks/AMPER/pull/46) | none | — |
 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | **Done** | none | Closed | none | — |
@@ -40,11 +40,11 @@ No implementation PR is open.
 
 | Issue | Priority | Readiness | Dependencies | Status | Blocker | Next action |
 |-------|----------|-----------|--------------|--------|---------|-------------|
-| [#1](https://github.com/The-Allsparks/AMPER/issues/1) Research | MEDIUM | Ready for maintainer close review | none | Software done | Citation review | Comment + optional close after review |
-| [#2](https://github.com/The-Allsparks/AMPER/issues/2) Phase 0 abstraction | MEDIUM | Software done; hardware not | #6 for Hub evidence | Open | Hardware | Split software vs #6 |
-| [#3](https://github.com/The-Allsparks/AMPER/issues/3) REV adapter | MEDIUM | Software done; hardware not | #6 | Open | Hardware | Keep until Hub data |
-| [#4](https://github.com/The-Allsparks/AMPER/issues/4) Logging | MEDIUM | Software done; on-robot retrieve not | #6 | Open | Hardware retrieve | Keep or split |
-| [#5](https://github.com/The-Allsparks/AMPER/issues/5) Phase 1 | MEDIUM | Software done; hardware not | #6 | Open | Hardware | Keep hardware on #6 |
+| [#1](https://github.com/The-Allsparks/AMPER/issues/1) Research | MEDIUM | **Done** (living docs) | none | Closed | none | — |
+| [#2](https://github.com/The-Allsparks/AMPER/issues/2) Phase 0 abstraction | MEDIUM | **Software done** | none | Closed; Hub on #6 | none | — |
+| [#3](https://github.com/The-Allsparks/AMPER/issues/3) REV adapter | MEDIUM | **Software done** | none | Closed; Hub on #6 | none | — |
+| [#4](https://github.com/The-Allsparks/AMPER/issues/4) Logging | MEDIUM | **Software done** | none | Closed; Hub retrieve on #6 | none | — |
+| [#5](https://github.com/The-Allsparks/AMPER/issues/5) Phase 1 | MEDIUM | **Software done** | none | Closed; Hub on #6 | none | — |
 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Characterization | HIGH | **Blocked** | Control Hub | Open | Hardware unavailable in this environment | Human robot session |
 | [#7](https://github.com/The-Allsparks/AMPER/issues/7) Phase 2 slew | HIGH | **Blocked** | #6, flag gate, #41 cost evidence | Open | Readiness gate | Do not implement actuation |
 | [#8](https://github.com/The-Allsparks/AMPER/issues/8) Phase 2 stall | HIGH | **Blocked** | #6, #7 | Open | Readiness gate | Warning-first remains |
@@ -74,7 +74,7 @@ No implementation PR is open.
 | C6 / S6 | [#27](https://github.com/The-Allsparks/AMPER/issues/27) Gravity hold direction | HIGH | **Blocked** | #6, #26, #7 | Open | Do not implement actuation |
 | C1 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) `observe()` match reset | MEDIUM | **Done** | none | Closed | — |
 | P1 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub overhead | HIGH | **Blocked** | Hardware | Open | Hardware |
-| P2 / P3 | [#31](https://github.com/The-Allsparks/AMPER/issues/31) Logger/allocation baseline | MEDIUM | **Done** | none | Closing | Bench at 4000 samples; #51–#53 merged |
+| P2 / P3 | [#31](https://github.com/The-Allsparks/AMPER/issues/31) Logger/allocation baseline | MEDIUM | **Done** | none | Closed ([#75](https://github.com/The-Allsparks/AMPER/pull/75)) | — |
 | Dep2 | [#30](https://github.com/The-Allsparks/AMPER/issues/30) Pin Actions SHAs | MEDIUM | **Done** ([#73](https://github.com/The-Allsparks/AMPER/pull/73)) | none | Closed | SHA pins with version comments |
 | U2 / D1 / D3 | Doc contradictions | MEDIUM | **Done** in PR #18 | none | Merged | — |
 | D5 | [#32](https://github.com/The-Allsparks/AMPER/issues/32) SECURITY contact | LOW | **Done** ([#74](https://github.com/The-Allsparks/AMPER/pull/74)) | none | Closed | Private Vulnerability Reporting |
