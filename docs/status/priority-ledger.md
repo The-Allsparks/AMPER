@@ -1,6 +1,6 @@
 # Priority ledger
 
-Updated: 2026-08-19. Synced to `main` after #43 merge. Orchestrator identity `TA-C-GHill`. `AUTOMATIC_MERGE=false`.
+Updated: 2026-08-22. Synced to `main` after #72–#74 merges.
 
 Priority model: safety blockers → correctness blockers → CI/build → unblocking issues → architectural seams → tests for upcoming work → small user-facing slices → measured performance → docs → optional advanced → cosmetic.
 
@@ -8,20 +8,13 @@ An issue is **ready** only when requirements are clear, dependencies are resolve
 
 ## 2026-08-20 quality / performance audit
 
-Scores and CI notes: [quality-performance-audit-2026-08-20.md](../audits/quality-performance-audit-2026-08-20.md). Epic [#50](https://github.com/The-Allsparks/AMPER/issues/50). Does **not** outrank [#41](https://github.com/The-Allsparks/AMPER/issues/41) or hardware [#6](https://github.com/The-Allsparks/AMPER/issues/6).
+Scores and CI notes: [quality-performance-audit-2026-08-20.md](../audits/quality-performance-audit-2026-08-20.md). Epic [#50](https://github.com/The-Allsparks/AMPER/issues/50) **closed** ([#60](https://github.com/The-Allsparks/AMPER/pull/60)–[#71](https://github.com/The-Allsparks/AMPER/pull/71)). Does **not** outrank [#41](https://github.com/The-Allsparks/AMPER/issues/41) or hardware [#6](https://github.com/The-Allsparks/AMPER/issues/6).
 
 | Issue | Priority | Readiness | Dependencies | Status | Next action |
 |-------|----------|-----------|--------------|--------|-------------|
-| [#50](https://github.com/The-Allsparks/AMPER/issues/50) | HIGH | Epic; CI/docs landing in the audit PR | none | Open | Merge architecture tests + AGENTS.md |
-| [#51](https://github.com/The-Allsparks/AMPER/issues/51) | HIGH | Ready (characterization tests exist) | #31 | Open | First child: reuse buffers on `observe()` |
-| [#31](https://github.com/The-Allsparks/AMPER/issues/31) | MEDIUM | Desktop budget test added | none | Open | Keep for remaining overflow/scan benches; children #51–#53 |
-| [#53](https://github.com/The-Allsparks/AMPER/issues/53) | MEDIUM | Ready | none | Open | O(1) last-event pointer |
-| [#55](https://github.com/The-Allsparks/AMPER/issues/55) | MEDIUM | Ready | test audit | Open | Flip `PowerPolicy` default sampling |
-| [#52](https://github.com/The-Allsparks/AMPER/issues/52) | MEDIUM | Ready after #31 budget | #31 | Open | Ring buffer |
-| [#54](https://github.com/The-Allsparks/AMPER/issues/54) | MEDIUM | Ready | none | Open | Publish p95 on DS |
-| [#56](https://github.com/The-Allsparks/AMPER/issues/56) [#57](https://github.com/The-Allsparks/AMPER/issues/57) [#58](https://github.com/The-Allsparks/AMPER/issues/58) [#59](https://github.com/The-Allsparks/AMPER/issues/59) | LOW | Ready | none | Open | After P1/P2 children |
-
-Dependabot Gradle updates are now grouped to minor/patch (helps [#29](https://github.com/The-Allsparks/AMPER/issues/29); do not merge [#21](https://github.com/The-Allsparks/AMPER/pull/21)).
+| [#50](https://github.com/The-Allsparks/AMPER/issues/50) | HIGH | **Done** | none | Closed | — |
+| [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#59](https://github.com/The-Allsparks/AMPER/issues/59) | HIGH–LOW | **Done** | #50 | Closed | — |
+| [#31](https://github.com/The-Allsparks/AMPER/issues/31) | MEDIUM | **Done** (`ObservePerformanceBudgetTest` at 4000 samples) | none | Closing | Children #51–#53 merged |
 
 **First implementation/readiness priority:** [#41](https://github.com/The-Allsparks/AMPER/issues/41) (FTC integration reference). Combined-stack acceptance is [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4). Tracking epic for 0.1.x phases remains [#24](https://github.com/The-Allsparks/AMPER/issues/24).
 
@@ -29,12 +22,7 @@ Desktop `./gradlew check` and `sdk-compile` are **not** Control Hub validation. 
 
 ## In-flight
 
-| Issue | Priority | Readiness | Dependencies | Status | Subagent | Branch | Pull request | CI | Merge | Blocker | Next action |
-|-------|----------|-----------|--------------|--------|----------|--------|--------------|----|-------|---------|-------------|
-| [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | This PR | none | In flight | orchestrator | `fix/28-44-forge-readiness-gaps` | this PR | pending | not authorized | Human merge after checks |
-| [#44](https://github.com/The-Allsparks/AMPER/issues/44) Sibling electrical contracts | MEDIUM | This PR (docs) | none | In flight | orchestrator | `fix/28-44-forge-readiness-gaps` | this PR | pending | not authorized | Human merge after checks |
-
-No other implementation PR is open. Dependabot [#21](https://github.com/The-Allsparks/AMPER/pull/21) (Gradle 9.7) failed — do not merge. [#23](https://github.com/The-Allsparks/AMPER/pull/23) (checkout 4→7) is green and unreviewed; SHA pinning remains [#30](https://github.com/The-Allsparks/AMPER/issues/30).
+No implementation PR is open.
 
 ## First readiness epic
 
@@ -43,9 +31,9 @@ No other implementation PR is open. Dependabot [#21](https://github.com/The-Alls
 | [#41](https://github.com/The-Allsparks/AMPER/issues/41) FTC integration reference | HIGH | Epic; #43 done; #28/#44 this PR | Hub evidence for cost items; FORGE#4 for combined stack | Open | Hardware for disabled/passive cost; combined stack is external | After this PR: tag `v0.1.0-rc.1`; then #6 Hub session |
 | [#42](https://github.com/The-Allsparks/AMPER/issues/42) Ledger/roadmap list #41 first | HIGH | **Done** | none | Closed via [#45](https://github.com/The-Allsparks/AMPER/pull/45) | none | — |
 | [#43](https://github.com/The-Allsparks/AMPER/issues/43) Stubs/tools off robot artifacts | HIGH | **Done** | none | Closed via [#46](https://github.com/The-Allsparks/AMPER/pull/46) | none | — |
-| [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | This PR | none | In flight | none | Merge lifecycle PR |
-| [#25](https://github.com/The-Allsparks/AMPER/issues/25) Protect `main` | HIGH | Partial | Human review-count decision | Open | Policy | Protection **exists**; remaining: document policy, decide review count, require `sdk-compile` |
-| [#44](https://github.com/The-Allsparks/AMPER/issues/44) Sibling electrical contracts | MEDIUM | This PR (docs) | none | In flight | none | Merge lifecycle PR |
+| [#28](https://github.com/The-Allsparks/AMPER/issues/28) Init vs match lifecycle | MEDIUM | **Done** | none | Closed | none | — |
+| [#25](https://github.com/The-Allsparks/AMPER/issues/25) Protect `main` | HIGH | **Done** | none | Closed | none | — |
+| [#44](https://github.com/The-Allsparks/AMPER/issues/44) Sibling electrical contracts | MEDIUM | **Done** | none | Closed | none | — |
 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub characterization | HIGH | **Blocked** | Control Hub | Open | Hardware unavailable | Human robot session; #41 consumes these numbers |
 
 ## Existing phase issues
@@ -81,20 +69,20 @@ No other implementation PR is open. Dependabot [#21](https://github.com/The-Alls
 | C8 | [#35](https://github.com/The-Allsparks/AMPER/issues/35) | HIGH | **Done** | none | Closed via [#39](https://github.com/The-Allsparks/AMPER/pull/39) | — |
 | Dep4 | [#36](https://github.com/The-Allsparks/AMPER/issues/36) | HIGH | **Done** (desktop SDK compile) | none | Closed via [#40](https://github.com/The-Allsparks/AMPER/pull/40) | `sdk-compile` exists; **not** a required check; not Hub validation |
 | R1 | [#25](https://github.com/The-Allsparks/AMPER/issues/25) Protect `main` | HIGH | **Done** | none | Closed after policy docs + `sdk-compile` required; review count 0 by solo-maintainer decision | — |
-| Dep1 | [#29](https://github.com/The-Allsparks/AMPER/issues/29) Gradle/JUnit majors | HIGH | Ready | none | Open; [#20](https://github.com/The-Allsparks/AMPER/pull/20) closed unmerged; [#21](https://github.com/The-Allsparks/AMPER/pull/21) still open **failed** | Close #21 with a pointer here; group Dependabot |
+| Dep1 | [#29](https://github.com/The-Allsparks/AMPER/issues/29) Gradle/JUnit majors | HIGH | **Done** (Gradle 9.7 analyzed) | none | Closed ([#72](https://github.com/The-Allsparks/AMPER/pull/72)) | JUnit 6 still rejected |
 | A3 / S5 | [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection flag gate | HIGH | **Software done** (session gate + example) | none for the seam | Open until Hub enable decision | Keep default-off; do not claim competition-ready |
 | C6 / S6 | [#27](https://github.com/The-Allsparks/AMPER/issues/27) Gravity hold direction | HIGH | **Blocked** | #6, #26, #7 | Open | Do not implement actuation |
-| C1 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) `observe()` match reset | MEDIUM | Ready | none | Open | Child of #41 lifecycle |
+| C1 | [#28](https://github.com/The-Allsparks/AMPER/issues/28) `observe()` match reset | MEDIUM | **Done** | none | Closed | — |
 | P1 | [#6](https://github.com/The-Allsparks/AMPER/issues/6) Hub overhead | HIGH | **Blocked** | Hardware | Open | Hardware |
-| P2 / P3 | [#31](https://github.com/The-Allsparks/AMPER/issues/31) Logger/allocation baseline | MEDIUM | Ready | none | Open | Desktop bench, then decide |
+| P2 / P3 | [#31](https://github.com/The-Allsparks/AMPER/issues/31) Logger/allocation baseline | MEDIUM | **Done** | none | Closing | Bench at 4000 samples; #51–#53 merged |
 | Dep2 | [#30](https://github.com/The-Allsparks/AMPER/issues/30) Pin Actions SHAs | MEDIUM | **Done** ([#73](https://github.com/The-Allsparks/AMPER/pull/73)) | none | Closed | SHA pins with version comments |
 | U2 / D1 / D3 | Doc contradictions | MEDIUM | **Done** in PR #18 | none | Merged | — |
-| D5 | [#32](https://github.com/The-Allsparks/AMPER/issues/32) SECURITY contact | LOW | **Done** (Private Vulnerability Reporting enabled) | none | Closed when PR merges | Prefer advisories over public issues |
+| D5 | [#32](https://github.com/The-Allsparks/AMPER/issues/32) SECURITY contact | LOW | **Done** ([#74](https://github.com/The-Allsparks/AMPER/pull/74)) | none | Closed | Private Vulnerability Reporting |
 
 ## Stop conditions currently true
 
 - Hardware for #6 is unavailable in this environment.
 - Automatic merge is **not** authorized.
 - Phase 2+ actuation is behind a readiness gate. Do not start #7–#16 because #41 exists.
+- Do not merge unanalyzed JUnit 6 Dependabot majors.
 - Do not claim FTC-ready from desktop tests, `sdk-compile`, or this ledger.
-- Do not merge Dependabot [#21](https://github.com/The-Allsparks/AMPER/pull/21) (Gradle 9.7; CI failed).

@@ -38,7 +38,7 @@ Audit-derived issues include **#25–#36** (several closed), **#41–#44**, and 
 - Desktop unit tests and replay traces (implemented).
 - Official RobotCore 11.2 compile in CI (#36, done). Default `check` still uses stubs.
 - Control Hub characterization (#6) — **required before 0.1.0 final** and for #41 cost acceptance.
-- Desktop allocation microbench (predicted performance only).
+- Desktop allocation microbench at production logger capacity (4000 samples; `ObservePerformanceBudgetTest`).
 
 ## Basic integration
 
@@ -58,8 +58,7 @@ Audit-derived issues include **#25–#36** (several closed), **#41–#44**, and 
 
 ## Performance optimization
 
-- Only after measured Hub data or a desktop microbench. Do not tune from folklore.
-- Desktop observe budget: `ObservePerformanceBudgetTest` (generous ceilings; not Hub SLAs). Implementation children: [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#55](https://github.com/The-Allsparks/AMPER/issues/55). Hub remains [#6](https://github.com/The-Allsparks/AMPER/issues/6).
+- Desktop observe budget: `ObservePerformanceBudgetTest` at **4000** samples (generous ceilings; not Hub SLAs). Implementation children [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#55](https://github.com/The-Allsparks/AMPER/issues/55) **merged**. Hub remains [#6](https://github.com/The-Allsparks/AMPER/issues/6).
 
 ## Release readiness
 
@@ -89,7 +88,7 @@ Closed software slices (do not re-open as next work): [#18](https://github.com/T
 7. [#1](https://github.com/The-Allsparks/AMPER/issues/1)–[#5](https://github.com/The-Allsparks/AMPER/issues/5) software vs hardware split onto #6
 8. [#6](https://github.com/The-Allsparks/AMPER/issues/6) Control Hub characterization (**hardware**; also feeds #41 cost acceptance)
 9. [#30](https://github.com/The-Allsparks/AMPER/issues/30) pin Actions SHAs (**done**, [#73](https://github.com/The-Allsparks/AMPER/pull/73))
-10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline (budget test added; follow-ups [#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#53](https://github.com/The-Allsparks/AMPER/issues/53))
+10. [#31](https://github.com/The-Allsparks/AMPER/issues/31) desktop logger baseline (**done**; 4000-sample bench; #51–#53 merged)
 11. [#50](https://github.com/The-Allsparks/AMPER/issues/50) quality/CI epic (does not outrank #41/#6)
 12. [#26](https://github.com/The-Allsparks/AMPER/issues/26) LocalProtection feature-flag gate (**software done**; competition enable still needs #6)
 13. [#27](https://github.com/The-Allsparks/AMPER/issues/27) gravity hold direction (**blocked** on #6; avoid lifts/arms Phase 2 until fixed)
