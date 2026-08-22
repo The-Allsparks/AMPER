@@ -24,9 +24,9 @@ import org.junit.jupiter.api.Test;
  */
 class ObservePerformanceBudgetTest {
 
-    private static final int CAPACITY = 256;
+    private static final int CAPACITY = 4000;
     private static final int WARMUP = 200;
-    private static final int TOTAL = 1200;
+    private static final int TOTAL = 4400;
     private static final long MAX_ELAPSED_MS = 30_000L;
     private static final int RELATIVE_SLOWDOWN_CEILING = 80;
 

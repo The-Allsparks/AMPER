@@ -7,7 +7,7 @@
 .\gradlew.bat compileAgainstFtcSdk
 ```
 
-`check` includes architecture tests and `ObservePerformanceBudgetTest`. The budget test prints desktop ns/observe and uses a 30 s ceiling plus an 80× relative slowdown limit. **Those numbers are not Control Hub loop times.** Driver Station `AMPER.loopUs` / `AMPER.p95Us` / `AMPER.maxUs` are AMPER `observe()` durations from `LoopOverheadStats`, also not full OpMode period until issue #6.
+`check` includes architecture tests and `ObservePerformanceBudgetTest`. The budget test uses the production default logger capacity (**4000** samples), prints desktop ns/observe, and uses a 30 s ceiling plus an 80× relative slowdown limit. **Those numbers are not Control Hub loop times.** Follow-up logger work ([#51](https://github.com/The-Allsparks/AMPER/issues/51)–[#53](https://github.com/The-Allsparks/AMPER/issues/53)) landed after this bench; Hub loop histograms remain [#6](https://github.com/The-Allsparks/AMPER/issues/6). Driver Station `AMPER.loopUs` / `AMPER.p95Us` / `AMPER.maxUs` are AMPER `observe()` durations from `LoopOverheadStats`, also not full OpMode period until issue #6.
 
 ## Unit tests
 
