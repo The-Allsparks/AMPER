@@ -4,10 +4,12 @@ Adult supervision. Wheels-off or restrained as appropriate. **Do not intentional
 
 AMPER OpMode: `AmperCharacterizationOpMode` (copy from `amper-examples`, remove `@Disabled`). Change `mode` in code between runs. Existing teleop must still set motor powers; AMPER must not.
 
+Full procedure (install, mode table, what to file after): [hub-session.md](hub-session.md).
+
 | Step | Mode | What to do | Record |
 |------|------|------------|--------|
-| 1 | AMPER disabled | Run your normal loop 30 s, wheels off | Baseline loop time (DS or logger) |
-| 2 | Voltage only | Same motions | AMPER update us, DS telemetry cadence |
+| 1 | AMPER disabled | Run your normal loop 30 s, wheels off | Baseline **OpMode** loop time (DS or logger). This is #41 disabled-mode cost. |
+| 2 | Voltage only | Same motions | AMPER `meanUs`/`maxUs` **and** OpMode loop us. This is #41 passive cost. |
 | 3 | Voltage + 1 motor current every loop | Light intake or one drive motor | Current-poll overhead vs step 2 |
 | 4 | Voltage + N motors every loop | N = drivetrain motors you care about | Overhead; note if loop feels worse |
 | 5 | Voltage + N round-robin (recommended) | Same as 4 | Overhead; pick a cadence that stays acceptable |

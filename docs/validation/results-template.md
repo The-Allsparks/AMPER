@@ -9,7 +9,7 @@ robot:
 control_hub_firmware:
 expansion_hub: none | present
 ftc_sdk:
-amper_version: 0.1.0-rc.1
+amper_version: 0.1.0-rc.2 # or main SHA; do not invent numbers
 battery_healthy_id:
 battery_weaker_id:
 notes: >
