@@ -40,8 +40,8 @@ Do not add required checks that do not exist (no hardware CI). See also [CONTRIB
 ## Tagging
 
 ```bash
-git tag v0.1.0-rc.1
-git push origin v0.1.0-rc.1
+git tag v0.1.0-rc.2
+git push origin v0.1.0-rc.2
 ```
 
 `.github/workflows/release.yml` builds jars. Publishing to GitHub Packages or Maven Central is a maintainer step after secrets exist. JitPack can build from the tag without extra credentials.

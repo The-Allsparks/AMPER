@@ -64,6 +64,7 @@ Audit-derived issues include **#25–#36** (several closed), **#41–#44**, and 
 
 - [x] Merge PR #18 to `main`.
 - [x] Tag `v0.1.0-rc.1` as **software** rc (cut after Phase 2 dual-opt-in #26 / #48).
+- [x] Tag `v0.1.0-rc.2` as **software** rc (quality/CI, Gradle 9.7, Action SHA pins; Hub still open).
 - [x] Finish [#25](https://github.com/The-Allsparks/AMPER/issues/25): protection documented; `sdk-compile` required; review count remains 0 by solo-maintainer policy (raise when a second reviewer exists).
 - [ ] `0.1.0` final only when `docs/validation/STATUS.md` is no longer “not yet run”.
 
