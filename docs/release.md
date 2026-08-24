@@ -7,6 +7,7 @@ AMPER follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and [Ke
 | Label | Meaning |
 |-------|---------|
 | `0.1.0-rc.1` | First **software** release candidate for passive Phase 0/1. Hardware validation outstanding. |
+| `0.1.0-rc.2` | Same software gates after quality/CI, Gradle 9.7, Action SHA pins, and Phase 0/1 tracker split. Hardware still outstanding (#6). |
 | `0.1.0` | Same software gates **plus** documented Control Hub characterization in `docs/validation/` |
 | `1.x` | Compatibility commitments after teams have used the library in season |
 

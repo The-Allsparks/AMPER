@@ -7,6 +7,28 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
+Software since `v0.1.0-rc.1` (intended `0.1.0-rc.2` software tag). Hardware validation is still **not yet run**.
+
+### Added
+
+- Architecture tests, desktop observe budget at 4000-sample logger capacity, Spotless, CodeQL required check.
+- Private vulnerability reporting (`SECURITY.md`); GitHub secret scanning and Dependabot security updates enabled on the repo.
+- Control Hub session runbook: `docs/validation/hub-session.md` (#6 / remaining #41 cost rows).
+- FTC integration software checklist: `docs/status/ftc-integration-checklist.md`.
+
+### Changed
+
+- Gradle wrapper **9.7.0**; GitHub Actions pinned to commit SHAs (checkout v7, setup-java v5, upload-artifact v7, CodeQL v4).
+- `PowerPolicy` default sampling is the recommended current cadence.
+- Canonical last-event O(1); ring-buffer log overflow; reuse observe-path buffers.
+- Driver Station / match summary publishes observe p95 and max.
+- Experimental Phase 2–5 types marked non-student API; `amper-core` `-Werror` on unchecked/deprecation.
+- Phase 0/1 software issues #1–#5 closed; Hub evidence lives only on #6.
+
+### Safety
+
+- Motor-output intervention remains default-off. Do not enable Phase 2 from desktop CI.
+
 ## [0.1.0-rc.1] - 2026-08-20
 
 ### Added

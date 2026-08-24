@@ -18,7 +18,7 @@ Desktop `./gradlew check` and `sdk-compile` are **not** Control Hub validation.
 
 ## Hardware / external (still open)
 
-- [ ] Disabled-mode and passive-mode loop cost measured on a Control Hub ([#6](https://github.com/The-Allsparks/AMPER/issues/6))
+- [ ] Disabled-mode and passive-mode loop cost measured on a Control Hub ([#6](https://github.com/The-Allsparks/AMPER/issues/6), [hub-session.md](../validation/hub-session.md))
 - [ ] Record results in [validation/STATUS.md](../validation/STATUS.md) and [results-template.md](../validation/results-template.md)
 - [ ] Combined-stack acceptance through [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4)
 
