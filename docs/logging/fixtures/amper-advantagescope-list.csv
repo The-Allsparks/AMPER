@@ -1,6 +1,6 @@
 Timestamp,Key,Value
 0.000000000,/AMPER/Metadata/SchemaVersion,"1"
-0.000000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.1"
+0.000000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.2"
 0.000000000,/AMPER/Metadata/SessionId,"fixture-session"
 0.000000000,/AMPER/Metadata/HardwarePlatform,"FTC_REV_HUB"
 0.000000000,/AMPER/System/BusVoltageVolts,12.730000
@@ -20,7 +20,7 @@ Timestamp,Key,Value
 0.000000000,/AMPER/Performance/UpdateDurationSeconds,0.001200
 0.000000000,/AMPER/Performance/DroppedRecords,0
 0.020000000,/AMPER/Metadata/SchemaVersion,"1"
-0.020000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.1"
+0.020000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.2"
 0.020000000,/AMPER/Metadata/SessionId,"fixture-session"
 0.020000000,/AMPER/Metadata/HardwarePlatform,"FTC_REV_HUB"
 0.020000000,/AMPER/System/BusVoltageVolts,12.410000
@@ -46,7 +46,7 @@ Timestamp,Key,Value
 0.020000000,/AMPER/Events/Type,"STATE_TRANSITION"
 0.020000000,/AMPER/Events/Message,"mechanism_start"
 0.040000000,/AMPER/Metadata/SchemaVersion,"1"
-0.040000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.1"
+0.040000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.2"
 0.040000000,/AMPER/Metadata/SessionId,"fixture-session"
 0.040000000,/AMPER/Metadata/HardwarePlatform,"FTC_REV_HUB"
 0.040000000,/AMPER/System/FilteredVoltageVolts,12.480000
@@ -67,7 +67,7 @@ Timestamp,Key,Value
 0.040000000,/AMPER/Events/Type,"VOLTAGE_WARNING"
 0.040000000,/AMPER/Events/Message,"sag, warning"
 0.060000000,/AMPER/Metadata/SchemaVersion,"1"
-0.060000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.1"
+0.060000000,/AMPER/Metadata/LibraryVersion,"0.1.0-rc.2"
 0.060000000,/AMPER/Metadata/SessionId,"fixture-session"
 0.060000000,/AMPER/Metadata/HardwarePlatform,"FTC_REV_HUB"
 0.060000000,/AMPER/System/BusVoltageVolts,12.100000

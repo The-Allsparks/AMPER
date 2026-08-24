@@ -34,8 +34,8 @@ includeBuild('../AMPER')
 
 ```gradle
 dependencies {
-    implementation 'org.allsparks:amper-core:0.1.0-rc.1'
-    implementation 'org.allsparks:amper-ftc:0.1.0-rc.1'
+    implementation 'org.allsparks:amper-core:0.1.0-rc.2'
+    implementation 'org.allsparks:amper-ftc:0.1.0-rc.2'
 }
 ```
 
@@ -49,7 +49,7 @@ This compiles AMPER from source with your project. No Maven login is required.
 
 ## Method B — JitPack (after a git tag exists)
 
-When maintainers publish a git tag such as `v0.1.0-rc.1`:
+When maintainers publish a git tag such as `v0.1.0-rc.2`:
 
 ```gradle
 repositories {
@@ -57,8 +57,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.The-Allsparks.AMPER:amper-core:v0.1.0-rc.1'
-    implementation 'com.github.The-Allsparks.AMPER:amper-ftc:v0.1.0-rc.1'
+    implementation 'com.github.The-Allsparks.AMPER:amper-core:v0.1.0-rc.2'
+    implementation 'com.github.The-Allsparks.AMPER:amper-ftc:v0.1.0-rc.2'
 }
 ```
 

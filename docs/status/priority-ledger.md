@@ -63,7 +63,7 @@ No implementation PR is open.
 |----------|-------|----------|-----------|--------------|--------|-------------|
 | Roadmap | [#24](https://github.com/The-Allsparks/AMPER/issues/24) | HIGH | Tracking | none | Open epic | 0.1.x tracking; does **not** outrank #41 |
 | FTC integration | [#41](https://github.com/The-Allsparks/AMPER/issues/41) | HIGH | First readiness priority | #6 for Hub cost; FORGE#4 combined | Open epic | After #42 |
-| R2 | PR [#18](https://github.com/The-Allsparks/AMPER/pull/18) | HIGH | **Done** | none | Merged 2026-08-17 | `0.1.0-rc.1` software is on `main`; git tag still missing |
+| R2 | PR [#18](https://github.com/The-Allsparks/AMPER/pull/18) | HIGH | **Done** | none | Merged 2026-08-17 | `v0.1.0-rc.1` and `v0.1.0-rc.2` software tags |
 | U6 | [#34](https://github.com/The-Allsparks/AMPER/issues/34) | HIGH | **Done** | none | Closed via [#37](https://github.com/The-Allsparks/AMPER/pull/37) | — |
 | C7 | [#33](https://github.com/The-Allsparks/AMPER/issues/33) | HIGH | **Done** | none | Closed via [#38](https://github.com/The-Allsparks/AMPER/pull/38) | — |
 | C8 | [#35](https://github.com/The-Allsparks/AMPER/issues/35) | HIGH | **Done** | none | Closed via [#39](https://github.com/The-Allsparks/AMPER/pull/39) | — |

@@ -2,7 +2,7 @@
 
 Every phase must be independently feature-flagged, testable, observable, reversible, fail-safe on missing measurements, and **disabled by default** until acceptance tests pass.
 
-| Phase | Name | Motor intervention | Status in `0.1.0-rc.1` |
+| Phase | Name | Motor intervention | Status in `0.1.0-rc.2` |
 |-------|------|--------------------|-------------------------|
 | 0 | Measurement validation | No | **Software implemented and unit-tested. Not Control Hub validated.** |
 | 1 | Passive instrumentation | No | **Software implemented** (enable `AmperPolicies.passiveDefaults()`). Not hardware-validated |

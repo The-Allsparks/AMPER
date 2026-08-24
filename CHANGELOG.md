@@ -7,7 +7,9 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
-Software since `v0.1.0-rc.1` (intended `0.1.0-rc.2` software tag). Hardware validation is still **not yet run**.
+## [0.1.0-rc.2] - 2026-08-23
+
+Software since `v0.1.0-rc.1`. Hardware validation is still **not yet run**.
 
 ### Added
 

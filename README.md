@@ -25,7 +25,7 @@ Repository: **[The-Allsparks/AMPER](https://github.com/The-Allsparks/AMPER)**
 
 | Item | Status |
 |------|--------|
-| **Version** | `0.1.0-rc.1` (prerelease) |
+| **Version** | `0.1.0-rc.2` (prerelease) |
 | **Implemented phase** | **Phase 0** (measurement) and **Phase 1** (passive telemetry, flag default off; enable with `AmperPolicies.passiveDefaults()`) |
 | **Phase 2** | Experimental foundations, **disabled by default**, not robot-characterized |
 | **Phases 3–7** | Designed / experimental / **disabled**. Not production-ready |

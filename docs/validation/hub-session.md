@@ -6,7 +6,7 @@ Goal: fill [results-template.md](results-template.md) and update [STATUS.md](STA
 
 ## Before you start (~10 min)
 
-1. Install AMPER into the season FTC SDK project per [install.md](../install.md). Use `main` or a tag **newer than** `v0.1.0-rc.1` (quality and Gradle 9.7 landed after that tag).
+1. Install AMPER into the season FTC SDK project per [install.md](../install.md). Prefer tag `v0.1.0-rc.2` or `main` (quality and Gradle 9.7 landed after `v0.1.0-rc.1`).
 2. Copy `AmperCharacterizationOpMode` from `amper-examples` into TeamCode. Remove `@Disabled`.
 3. Match motor names (`frontLeft`, `frontRight`, `backLeft`, `backRight`) to the hardware map, or change the OpMode.
 4. Print this card and [hardware-test-card.md](hardware-test-card.md).
