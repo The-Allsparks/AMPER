@@ -75,13 +75,11 @@ Hardware and firmware protections (Hub resets, Driver Station disconnect symptom
 ```java
 AmperSession amper = AmperFtc.builder(hardwareMap)
     .controlHubVoltage()
-    .expansionHubVoltage("Expansion Hub 1") // optional, explicit name
-    .observeMotor("frontLeft", frontLeft)
-    .observeMotor("frontRight", frontRight)
-    .observeMotor("lift", lift)
-    .policy(AmperPolicies.passiveDefaults())
+    .policy(AmperPolicies.measurementOnly())
     .build();
 ```
+
+Drive should **not** call `.observeMotor(...)` on the mecanum wheels. Per-motor `getCurrent` is slow on the Control Hub. AMPER's student presets sample hub voltage (and hub battery current when an adapter supports it). Use `.observeMotor` only in a characterization OpMode, and prefer `MotorObserveOptions.withoutCurrent()` unless you are measuring that channel on purpose.
 
 Call `amper.initialize()` from `init`, `amper.start()` when the match starts, `amper.observe()` **once** per loop, `amper.publishTelemetry(...)` for rate-limited DS lines, and `amper.stop()` from `stop` so the AdvantageScope CSV is written.
 

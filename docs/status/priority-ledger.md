@@ -22,7 +22,7 @@ Desktop `./gradlew check` and `sdk-compile` are **not** Control Hub validation. 
 
 ## In-flight
 
-No implementation PR is open.
+Shop lock 15 Sep 2026: student presets use hub voltage / hub battery current only (`SamplingPolicy.hubCurrentPreferred()`). Do not poll per-drive motor current on BumbleBee. REV `readBatteryCurrent` still `UNSUPPORTED` until a verified SDK API is wired (#6 can measure one hub sample vs four `getCurrent` calls).
 
 ## First readiness epic
 

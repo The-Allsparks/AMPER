@@ -7,6 +7,11 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
+### Changed
+
+- Student presets (`measurementOnly`, `passiveDefaults`, `localProtectionAllowed`, `disabled`) use `SamplingPolicy.hubCurrentPreferred()`: hub voltage every loop, **zero** per-motor current reads. Drive must not call `DcMotorEx.getCurrent` on the four wheels. Characterization OpModes may still use `SamplingPolicy.recommended()` (one motor per loop) or `everyLoop()`.
+- REV hub-level battery current remains `UNSUPPORTED` until a verified SDK API is wired. Do not fake total current by summing motor channels.
+
 ## [0.1.0-rc.2] - 2026-08-23
 
 Software since `v0.1.0-rc.1`. Hardware validation is still **not yet run**.
