@@ -6,7 +6,7 @@ Accessed **2026-08-17**.
 |-------|---------|----------------|--------------------------------|--------|
 | `0.1.0-rc.2` | 11.2.0 / 11.2.1 DECODE | 8 bytecode, CI Temurin 17 | 1.8 per SDK `build.common.gradle` | Software prerelease. **Not Control Hub validated** |
 
-Hardware: REV Control Hub and Expansion Hub voltage via FTC `VoltageSensor`. Motor current via `DcMotorEx.getCurrent(CurrentUnit.AMPS)` where the SDK/firmware supports it. Servo-rail current is not exposed (REV integrated-sensors docs).
+Hardware: REV Control Hub and Expansion Hub voltage via FTC `VoltageSensor`. Motor current via `DcMotorEx.getCurrent(CurrentUnit.AMPS)` where the SDK/firmware supports it. Servo-rail current is not exposed (REV integrated-sensors docs). Student Drive presets do **not** poll per-motor current. Hub-level battery current is the intended system-wide sample; the REV adapter still reports it `UNSUPPORTED` until a verified SDK call is wired. Do not treat the sum of four drive-motor currents as battery current.
 
 ## Logging visualization
 

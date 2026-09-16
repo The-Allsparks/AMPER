@@ -13,6 +13,8 @@ import org.allsparks.amper.AmperSession;
 import org.allsparks.amper.measure.ElectricalObservation;
 import org.allsparks.amper.measure.MeasurementValidity;
 import org.allsparks.amper.policy.AmperPolicies;
+import org.allsparks.amper.policy.PowerPolicy;
+import org.allsparks.amper.policy.SamplingPolicy;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +62,8 @@ class AmperFtcIntegrationTest {
         AmperSession session = AmperFtc.builder(map)
                 .controlHubVoltage()
                 .observeMotor("frontLeft", motor)
-                .policy(AmperPolicies.passiveDefaults())
+                // Characterization sampling: this test must actually call getCurrent.
+                .policy(PowerPolicy.builder().sampling(SamplingPolicy.everyLoop()).build())
                 .persistLogs(false)
                 .build();
         ElectricalObservation obs = session.observe();
@@ -78,6 +81,7 @@ class AmperFtcIntegrationTest {
         AmperSession session = AmperFtc.builder(map)
                 .controlHubVoltage()
                 .observeMotor("intake", motor, MotorObserveOptions.withoutCurrent())
+                .policy(PowerPolicy.builder().sampling(SamplingPolicy.everyLoop()).build())
                 .persistLogs(false)
                 .build();
         ElectricalObservation obs = session.observe();

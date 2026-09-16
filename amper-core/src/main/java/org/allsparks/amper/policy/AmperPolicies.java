@@ -9,23 +9,27 @@ import org.allsparks.amper.AmperFeatureFlags;
 public final class AmperPolicies {
     private AmperPolicies() {}
 
-    /** Phase 0 only: measure, log, no Phase 1 warnings, no intervention. */
+    /**
+     * Phase 0 only: measure, log, no Phase 1 warnings, no intervention.
+     * Hub voltage every loop. No per-motor current reads.
+     */
     public static PowerPolicy measurementOnly() {
         return PowerPolicy.builder()
                 .featureFlags(AmperFeatureFlags.defaults())
-                .sampling(SamplingPolicy.recommended())
+                .sampling(SamplingPolicy.hubCurrentPreferred())
                 .voltageThresholdProvenance(ThresholdProvenance.CONSERVATIVE_PLACEHOLDER)
                 .build();
     }
 
     /**
      * Phase 0 + Phase 1 warnings. Motor outputs are still never modified.
-     * Current sampling uses recommended round-robin cadence.
+     * Hub voltage every loop. No per-motor current reads. Use
+     * {@link SamplingPolicy#recommended()} only in a characterization OpMode.
      */
     public static PowerPolicy passiveDefaults() {
         return PowerPolicy.builder()
                 .featureFlags(AmperFeatureFlags.passiveTelemetry())
-                .sampling(SamplingPolicy.recommended())
+                .sampling(SamplingPolicy.hubCurrentPreferred())
                 .voltageThresholdProvenance(ThresholdProvenance.CONSERVATIVE_PLACEHOLDER)
                 .build();
     }
@@ -45,7 +49,7 @@ public final class AmperPolicies {
                         .phase1PassiveTelemetry(true)
                         .phase2LocalProtection(true)
                         .build())
-                .sampling(SamplingPolicy.recommended())
+                .sampling(SamplingPolicy.hubCurrentPreferred())
                 .voltageThresholdProvenance(ThresholdProvenance.CONSERVATIVE_PLACEHOLDER)
                 .build();
     }
@@ -55,7 +59,7 @@ public final class AmperPolicies {
         return PowerPolicy.builder()
                 .featureFlags(
                         AmperFeatureFlags.builder().phase0Measurement(false).build())
-                .sampling(SamplingPolicy.recommended())
+                .sampling(SamplingPolicy.hubCurrentPreferred())
                 .build();
     }
 }

@@ -32,11 +32,13 @@ class ObservePerformanceBudgetTest {
 
     @Test
     void studentPresetsCapCurrentReadsPerLoop() {
-        assertEquals(1, AmperPolicies.passiveDefaults().sampling().maxCurrentReadsPerLoop());
-        assertEquals(1, AmperPolicies.measurementOnly().sampling().maxCurrentReadsPerLoop());
-        assertEquals(1, AmperPolicies.localProtectionAllowed().sampling().maxCurrentReadsPerLoop());
+        assertEquals(0, AmperPolicies.passiveDefaults().sampling().maxCurrentReadsPerLoop());
+        assertEquals(0, AmperPolicies.measurementOnly().sampling().maxCurrentReadsPerLoop());
+        assertEquals(0, AmperPolicies.localProtectionAllowed().sampling().maxCurrentReadsPerLoop());
         assertEquals(1, PowerPolicy.defaults().sampling().maxCurrentReadsPerLoop());
         assertEquals(1, PowerPolicy.builder().build().sampling().maxCurrentReadsPerLoop());
+        assertEquals(1, SamplingPolicy.recommended().maxCurrentReadsPerLoop());
+        assertEquals(0, SamplingPolicy.hubCurrentPreferred().maxCurrentReadsPerLoop());
     }
 
     @Test

@@ -38,8 +38,25 @@ public final class SamplingPolicy {
     }
 
     /**
+     * Voltage (and hub battery current when the adapter supports it) every
+     * update. Zero motor-channel current reads.
+     *
+     * <p>Shop lock for Drive: per-motor {@code getCurrent} is too slow on the
+     * Control Hub. System-wide current is one hub sample, not four drive motors.
+     */
+    public static SamplingPolicy hubCurrentPreferred() {
+        return builder()
+                .voltagePeriodNanos(0L)
+                .currentPeriodNanos(0L)
+                .velocityPeriodNanos(0L)
+                .commandPeriodNanos(0L)
+                .maxCurrentReadsPerLoop(0)
+                .build();
+    }
+
+    /**
      * Voltage every loop; at most one motor current read per loop, round-robin.
-     * Not hardware-validated; a starting cadence for student characterization.
+     * Characterization / stall research only. Not the student Drive preset.
      */
     public static SamplingPolicy recommended() {
         return builder()
