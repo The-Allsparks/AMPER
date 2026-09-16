@@ -63,7 +63,9 @@ class AmperFtcIntegrationTest {
                 .controlHubVoltage()
                 .observeMotor("frontLeft", motor)
                 // Characterization sampling: this test must actually call getCurrent.
-                .policy(PowerPolicy.builder().sampling(SamplingPolicy.everyLoop()).build())
+                .policy(PowerPolicy.builder()
+                        .sampling(SamplingPolicy.everyLoop())
+                        .build())
                 .persistLogs(false)
                 .build();
         ElectricalObservation obs = session.observe();
@@ -81,7 +83,9 @@ class AmperFtcIntegrationTest {
         AmperSession session = AmperFtc.builder(map)
                 .controlHubVoltage()
                 .observeMotor("intake", motor, MotorObserveOptions.withoutCurrent())
-                .policy(PowerPolicy.builder().sampling(SamplingPolicy.everyLoop()).build())
+                .policy(PowerPolicy.builder()
+                        .sampling(SamplingPolicy.everyLoop())
+                        .build())
                 .persistLogs(false)
                 .build();
         ElectricalObservation obs = session.observe();
