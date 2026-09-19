@@ -1,6 +1,6 @@
 # Sibling electrical contracts (AMPER provider view)
 
-AMPER observes electrical state on an FTC robot. It **does not own actuators** and has **no compile-time dependency** on MIMIC, BEACON, HELM, or TRACE. The robot OpMode is the composition root.
+AMPER does not own actuators and has **no compile-time dependency** on MIMIC, BEACON, HELM, TRACE, or PULSE. The robot OpMode is the composition root. Voltage capture cadence is declared on `allsparks-contracts` (`SignalKey` / `InputRegistrar`). AMPER's local `SamplingPolicy` remains the current-read budget.
 
 Combined-stack acceptance is owned by [FORGE#4](https://github.com/The-Allsparks/FORGE/issues/4). This page is a **written contract only** — no sibling JARs are required for Phase 0/1.
 
@@ -10,10 +10,11 @@ Schema authority: existing `/AMPER` keys in [field-selection.md](../logging/fiel
 
 | Consumer | What AMPER provides today | Transport / API | Version | When absent |
 | -------- | ------------------------- | --------------- | ------- | ----------- |
+| **PULSE** | Voltage and motor `SignalKey`s (`AmperSignals`) plus `InputRegistrar` / `InputValues` / `InputDemand` observe path. AMPER does **not** import PULSE; TeamCode binds physical getters. Over-current follow-up uses `requestOnce` / `isRequested` + `tryGetDouble`. | contracts input SPI; `AmperFtc.Builder.declareInputs` / `readFrom` / `requestThrough` / `watchMotor` | contracts SNAPSHOT, library `0.1.0-rc.2` | AMPER keeps `VoltageSensor.getVoltage()` on the standalone builder path; no motor-current follow-up |
 | **MIMIC** | Observed bus voltage, per-motor command/current snapshots, Phase 0/1 identity grants (`RequestedEffort` = `GrantedEffort`, `Constrained` = false) | `/AMPER/System/*`, `/AMPER/Motors/*`, `/AMPER/Mechanisms/*` in AdvantageScope CSV; future narrow Java snapshot type TBD | schema `1`, library `0.1.0-rc.2` | MIMIC runs unchanged; no power envelope from AMPER |
 | **BEACON** | Driver-facing `PowerState`, validity, stall suspicion flags, loop overhead counters | `/AMPER/System/PowerState`, `/AMPER/System/MeasurementValidity`, `/AMPER/Motors/*/StallSuspected`, `/AMPER/Performance/*`; DS keys `AMPER`, `AMPER.V`, `AMPER.valid` | schema `1` | BEACON omits electrical health; conventional teleop continues |
 | **HELM** | Passive capability envelope: filtered voltage, min match voltage, selected-motors current sum, `PowerState` classification | Read-only snapshot from `AmperSession` + `/AMPER/System/*` exports; **no** chassis or mechanism authority | schema `1` | HELM stays `OFF` / observe-only per FORGE enablement |
-| **TRACE** | Time-series rows under `/AMPER` with monotonic seconds timestamps; event rows `/AMPER/Events/Type` + `Message` | AdvantageScope table CSV + `.schema.json` sidecar; optional DS telemetry mirror | schema `1`, event names from `PowerEventType` | TRACE records other namespaces; AMPER CSV still written locally |
+| **TRACE** | Time-series rows under `AMPER/...` via TeamCode `TraceAmperAdapter` | Library `ElectricalObservationSink` (NOOP default) called from `observe()` / `start()` / `stop()`. AMPER CSV ring stays. | schema `1` | Leave NOOP; AMPER still observes |
 
 ## Future request/grant (Phase 4+, not implemented)
 

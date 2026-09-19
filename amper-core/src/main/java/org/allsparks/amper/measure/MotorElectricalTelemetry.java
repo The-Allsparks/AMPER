@@ -17,4 +17,13 @@ public interface MotorElectricalTelemetry {
 
     /** Encoder position when available; {@link Double#NaN} if unsupported. */
     double positionTicks();
+
+    /**
+     * True when {@link #readCurrent(long)} only peeks a published snapshot and
+     * never calls Hub {@code getCurrent}. PowerMonitor still invokes it when
+     * the current-read budget is zero.
+     */
+    default boolean currentIsCachePeek() {
+        return false;
+    }
 }

@@ -11,6 +11,7 @@ import org.allsparks.amper.battery.BatteryEstimator;
 import org.allsparks.amper.battery.BatteryObservation;
 import org.allsparks.amper.clock.AmperClock;
 import org.allsparks.amper.clock.SystemNanoClock;
+import org.allsparks.amper.input.OvercurrentFollowUp;
 import org.allsparks.amper.log.AdvantageScopeCsv;
 import org.allsparks.amper.log.CanonicalLog;
 import org.allsparks.amper.log.CanonicalLogPublisher;
@@ -27,6 +28,7 @@ import org.allsparks.amper.measure.LoopOverheadStats;
 import org.allsparks.amper.measure.MotorElectricalTelemetry;
 import org.allsparks.amper.measure.PowerMonitor;
 import org.allsparks.amper.measure.PowerTelemetrySource;
+import org.allsparks.amper.observe.ElectricalObservationSink;
 import org.allsparks.amper.policy.PowerPolicy;
 import org.allsparks.amper.protect.ConstrainedCommand;
 import org.allsparks.amper.protect.LocalProtection;
@@ -76,6 +78,8 @@ public final class AmperSession {
     private int sinkFailures;
     private ElectricalObservation lastObservation;
     private long lastTelemetryPublishNanos = Long.MIN_VALUE / 4;
+    private ElectricalObservationSink observationSink = ElectricalObservationSink.NOOP;
+    private OvercurrentFollowUp overcurrentFollowUp;
 
     public AmperSession(
             PowerPolicy policy,
@@ -116,6 +120,24 @@ public final class AmperSession {
     public static AmperSession create(
             PowerPolicy policy, PowerTelemetrySource telemetrySource, List<MotorElectricalTelemetry> motors) {
         return new AmperSession(policy, new SystemNanoClock(), telemetrySource, motors);
+    }
+
+    /**
+     * TRACE or tests implement the sink. NOOP default. AMPER still writes its
+     * own ring logger. Must be set before {@link #start()}.
+     */
+    public AmperSession observationSink(ElectricalObservationSink observationSink) {
+        this.observationSink = observationSink == null ? ElectricalObservationSink.NOOP : observationSink;
+        return this;
+    }
+
+    /**
+     * After each snapshot, demand at most one on-demand motor current for the
+     * next capture when a bulk over-current flag is set. Null disables.
+     */
+    public AmperSession overcurrentFollowUp(OvercurrentFollowUp overcurrentFollowUp) {
+        this.overcurrentFollowUp = overcurrentFollowUp;
+        return this;
     }
 
     /** Optional init-time probe. Safe to call more than once. */
@@ -159,6 +181,7 @@ public final class AmperSession {
         if (!policy.featureFlags().isPhase0Measurement()) {
             lastObservation = ElectricalObservation.disabled(clock.nanoTime());
             lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "AMPER_DISABLED");
+            notifyObservation(lastObservation);
             return lastObservation;
         }
         long now = clock.nanoTime();
@@ -172,9 +195,14 @@ public final class AmperSession {
         }
 
         ElectricalObservation observation = monitor.update();
+        if (overcurrentFollowUp != null) {
+            overcurrentFollowUp.afterSnapshot();
+        }
         lastObservation = observation;
         if (lifecycle != AmperLifecycle.STARTED) {
-            return observeBeforeMatchStart(observation);
+            ElectricalObservation init = observeBeforeMatchStart(observation);
+            notifyObservation(init);
+            return init;
         }
 
         samples++;
@@ -190,6 +218,7 @@ public final class AmperSession {
             lastDriver = new DriverTelemetry(DriverPowerState.NORMAL, false, "PHASE1_DISABLED");
         }
         publishCanonical(observation);
+        notifyObservation(observation);
         return observation;
     }
 
@@ -404,6 +433,9 @@ public final class AmperSession {
         lastObservation = null;
         sinkFailures = 0;
         lastTelemetryPublishNanos = Long.MIN_VALUE / 4;
+        if (overcurrentFollowUp != null) {
+            overcurrentFollowUp.reset();
+        }
     }
 
     private void publishCanonical(ElectricalObservation observation) {
@@ -435,5 +467,15 @@ public final class AmperSession {
         Map<String, String> fields = new LinkedHashMap<String, String>();
         fields.put("lifecycle", lifecycle.name());
         logger.record(new PowerEvent(clock.nanoTime(), PowerEventType.LIFECYCLE, name, fields));
+        if (observationSink != ElectricalObservationSink.NOOP) {
+            observationSink.onLifecycle(name);
+        }
+    }
+
+    private void notifyObservation(ElectricalObservation observation) {
+        if (observationSink == ElectricalObservationSink.NOOP) {
+            return;
+        }
+        observationSink.onObservation(observation, lastDriver);
     }
 }

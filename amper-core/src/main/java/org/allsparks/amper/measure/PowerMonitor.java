@@ -216,7 +216,11 @@ public final class PowerMonitor {
             for (int i = 0; i < motors.size(); i++) {
                 MotorSnapshot snap = readMotor(i, loopStart, false);
                 motorScratch.add(snap);
-                skipped++;
+                MeasurementValidity cv = snap.current().validity();
+                failed += countFailed(cv);
+                stale += cv == MeasurementValidity.STALE ? 1 : 0;
+                unsupported += cv == MeasurementValidity.UNSUPPORTED ? 1 : 0;
+                skipped += cv == MeasurementValidity.SKIPPED ? 1 : 0;
             }
         }
 
@@ -306,8 +310,10 @@ public final class PowerMonitor {
 
     private MotorSnapshot readMotor(int index, long nowNanos, boolean readCurrent) {
         MotorElectricalTelemetry motor = motors.get(index);
+        boolean peekCache = motor.currentIsCachePeek();
+        boolean sampleCurrent = readCurrent || peekCache;
         CurrentSample current;
-        if (readCurrent) {
+        if (sampleCurrent) {
             try {
                 current = motor.readCurrent(nowNanos);
             } catch (RuntimeException ex) {
@@ -347,7 +353,8 @@ public final class PowerMonitor {
         }
 
         boolean active = !Double.isNaN(command) && Math.abs(command) >= mechanismStartEffort;
-        return new MotorSnapshot(motor.motorId(), current, command, velocity, position, readCurrent, active);
+        boolean currentReadThisLoop = sampleCurrent && current.validity() != MeasurementValidity.SKIPPED;
+        return new MotorSnapshot(motor.motorId(), current, command, velocity, position, currentReadThisLoop, active);
     }
 
     private static boolean due(long lastNanos, long nowNanos, long periodNanos) {

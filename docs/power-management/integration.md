@@ -90,6 +90,8 @@ Same session calls inside `runOpMode()`: `initialize` → `waitForStart` → `st
 
 `AmperPolicies.measurementOnly()` / `passiveDefaults()` use `SamplingPolicy.hubCurrentPreferred()`: hub voltage every loop, **zero** per-motor current reads. That is the Drive preset. `PowerPolicy.defaults()` still uses `SamplingPolicy.recommended()` (at most one motor current per loop, round-robin) for characterization. Characterization can also use `SamplingPolicy.everyLoop()`. Skipped currents are `SKIPPED` or `STALE`, never labeled fresh `VALID`.
 
+When a sampler (PULSE) owns Hub I/O, TeamCode must call `declareInputs` then bind each `physicalVoltages()` getter, then `readFrom` (and `requestThrough` plus `watchMotor` for over-current follow-up), **before** the sampler freeze. `observe()` then reads `InputValues` and does not call `VoltageSensor.getVoltage()` or `DcMotorEx.getCurrent()`. Without those calls, `controlHubVoltage()` still reads the sensor itself so AMPER remains usable without PULSE.
+
 ## Multi-hub
 
 ```java

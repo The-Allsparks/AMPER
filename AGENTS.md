@@ -21,8 +21,8 @@ Format with `.\gradlew.bat spotlessApply` (Palantir Java Format, 4-space). Do no
 
 | Module | May depend on | Must not |
 |--------|----------------|----------|
-| `amper-core` | Pure Java 8 | FTC SDK, Android, `amper-ftc`, `amper-tools` |
-| `amper-ftc` | `amper-core` + FTC types | `amper-tools`, actuator writes (`setPower` / `setVelocity`) |
+| `amper-core` | Pure Java 8 + `allsparks-contracts` | FTC SDK, Android, `amper-ftc`, `amper-tools`, `org.allsparks.pulse` |
+| `amper-ftc` | `amper-core` + FTC types + contracts SPI | `amper-tools`, actuator writes (`setPower` / `setVelocity`), `org.allsparks.pulse` |
 | `amper-examples` | `amper-ftc` | Desktop tools on the robot path |
 | `amper-tools` | `amper-core` | Robot runtime, FTC SDK |
 | `amper-ftc-stubs` | none | Publication, TeamCode |
@@ -36,7 +36,7 @@ clock, filter
     ↑
 measure  ←  policy (thresholds / sampling config only)
     ↑
-battery, log, telemetry, adapters.rev
+battery, log, telemetry, adapters.rev, input
     ↑
 AmperSession (composition root)
     ↑
@@ -70,7 +70,7 @@ The robot control loop calls `AmperSession.observe()` once per cycle.
 
 - Do not allocate unbounded structures. Logger capacity must remain bounded (tested).
 - Prefer reused buffers over per-loop `ArrayList` / `LinkedHashMap` / `String.format` on the observe path. Existing debt is tracked in GitHub issues; do not add more of it.
-- Current sampling: student presets (`AmperPolicies.measurementOnly()`, `passiveDefaults()`, `disabled()`) must keep `maxCurrentReadsPerLoop() == 0`. Drive must not poll per-motor `getCurrent`. System-wide current is `PowerTelemetrySource.readBatteryCurrent` (one hub sample). Characterization OpModes may use `SamplingPolicy.recommended()` (round-robin 1) or `SamplingPolicy.everyLoop()`.
+- Current sampling: student presets (`AmperPolicies.measurementOnly()`, `passiveDefaults()`, `disabled()`) must keep `maxCurrentReadsPerLoop() == 0`. Drive must not poll per-motor `getCurrent`. Over-current follow-up uses `InputDemand.requestOnce` / `isRequested` so PULSE captures at most one motor current on the next loop (PULSE also caps on-demand OTHER at one per capture). System-wide current is `PowerTelemetrySource.readBatteryCurrent` (one hub sample). Characterization OpModes may use `SamplingPolicy.recommended()` (round-robin 1) or `SamplingPolicy.everyLoop()`.
 - CSV export belongs in `stop()`, not in `observe()`.
 - Do not add worker threads for logging or hardware. FTC SDK hardware calls stay on the OpMode thread.
 - CI performance tests use **generous desktop ceilings** and relative slowdown limits. They are not Hub SLAs. Hub numbers remain issue #6.
@@ -83,6 +83,7 @@ The robot control loop calls `AmperSession.observe()` once per cycle.
 - `amper-core` JavaCompile uses `-Werror` for `-Xlint:unchecked` and `-Xlint:deprecation`. Do not add those warnings. `compileAgainstFtcSdk` stays without `-Werror`.
 - Do not merge unanalyzed JUnit 6 majors.
 - New Maven coordinates need a reason, Android/FTC compatibility note, and a test.
+- `allsparks-contracts` is the input SPI (`SignalKey`, `InputRegistrar`, `InputValues`). Do not add `org.allsparks.pulse` to AMPER. Keep a sibling `allsparks-contracts` checkout so `includeBuild` substitutes the SNAPSHOT. AMPER bytecode stays Java 8 (`disableAutoTargetJvm` so Gradle can consume the Java 11 contracts jar).
 - ArchUnit, Spotless, PMD, and SpotBugs were evaluated and **not** added: they are either redundant with source architecture tests, or would fail the whole tree without a dedicated formatting/baseline PR.
 
 ## Safety

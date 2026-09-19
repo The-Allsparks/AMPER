@@ -7,6 +7,12 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased]
 
+### Added
+
+- Optional `ElectricalObservationSink` on `AmperSession` / `AmperFtc.Builder` (NOOP default). TRACE adapters implement it; AMPER does not import TRACE.
+- Contracts input SPI: `AmperSignals`, `InputValuesPowerSource`, `InputValuesMotorTelemetry`, `OvercurrentFollowUp`, and `AmperFtc.Builder.declareInputs` / `readFrom` / `requestThrough` / `watchMotor` / `physicalVoltages`. AMPER declares voltage and motor keys and can observe a published snapshot. Over-current flags are watched every cycle; a trip `requestOnce`s motor current for the next capture. AMPER does **not** depend on `org.allsparks.pulse` and does **not** call `DcMotorEx.getCurrent` on the Drive path. Standalone `controlHubVoltage()` still calls `VoltageSensor.getVoltage()` when no registrar is supplied. AMPER's current-read `SamplingPolicy` is unchanged (`maxCurrentReadsPerLoop == 0` on student presets). Over-current follow-up uses `InputDemand.isRequested` so a key already queued (PULSE cap or OTHER budget) counts as this cycle's one demand. Primitive peek uses `tryGetBoolean` / `tryGetDouble` (no `Sample` allocation).
+- `InputValuesPowerSource` reads `getDouble` plus `validity` / `captureTimestampNanos` instead of `InputValues.get()`, so observe does not box a `Sample`.
+
 ### Changed
 
 - Student presets (`measurementOnly`, `passiveDefaults`, `localProtectionAllowed`, `disabled`) use `SamplingPolicy.hubCurrentPreferred()`: hub voltage every loop, **zero** per-motor current reads. Drive must not call `DcMotorEx.getCurrent` on the four wheels. Characterization OpModes may still use `SamplingPolicy.recommended()` (one motor per loop) or `everyLoop()`.

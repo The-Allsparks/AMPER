@@ -44,7 +44,8 @@ class PassiveArchitectureTest {
                     String line = lines[i].trim();
                     if (line.startsWith("import com.qualcomm")
                             || line.startsWith("import org.firstinspires.ftc")
-                            || line.startsWith("import android.")) {
+                            || line.startsWith("import android.")
+                            || line.startsWith("import org.allsparks.pulse")) {
                         hits.add(root.relativize(path).toString());
                         break;
                     }
@@ -52,7 +53,7 @@ class PassiveArchitectureTest {
             });
         }
         if (!hits.isEmpty()) {
-            fail("amper-core imported FTC/Android types:\n" + String.join("\n", hits));
+            fail("amper-core imported FTC/Android/PULSE types:\n" + String.join("\n", hits));
         }
         assertFalse(hits.size() > 0);
     }

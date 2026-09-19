@@ -102,7 +102,10 @@ gradle.projectsEvaluated {
         targetCompatibility = '1.8'
         options.encoding = 'UTF-8'
         options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
-        classpath = files(
+        // amper-ftc imports contracts.input (SignalKey, InputValues) directly.
+        // amper-core output does not bundle that jar, so compileClasspath must
+        // ride along. Do not use amper-ftc compileClasspath: it includes stubs.
+        classpath = project(':amper-core').sourceSets.main.compileClasspath + files(
                 project(':amper-core').sourceSets.main.output,
                 robotCoreClassesJar,
                 androidCompileJarFile
@@ -124,7 +127,7 @@ gradle.projectsEvaluated {
         targetCompatibility = '1.8'
         options.encoding = 'UTF-8'
         options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
-        classpath = files(
+        classpath = project(':amper-core').sourceSets.main.compileClasspath + files(
                 project(':amper-core').sourceSets.main.output,
                 project(':amper-ftc').sourceSets.main.output,
                 robotCoreClassesJar,

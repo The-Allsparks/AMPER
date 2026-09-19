@@ -47,6 +47,8 @@ Do **not** add `org.allsparks:amper-tools` or `amper-ftc-stubs` to TeamCode. Too
 
 This compiles AMPER from source with your project. No Maven login is required.
 
+`amper-core` depends on [`allsparks-contracts`](https://github.com/The-Allsparks/allsparks-contracts) (`SignalKey`, `InputRegistrar`, `InputValues`). Keep that repo as a sibling checkout (or nested under AMPER) so AMPER's own `includeBuild` can substitute it. TeamCode that already `includeBuild`s contracts does not need a second copy.
+
 ## Method B — JitPack (after a git tag exists)
 
 When maintainers publish a git tag such as `v0.1.0-rc.2`:

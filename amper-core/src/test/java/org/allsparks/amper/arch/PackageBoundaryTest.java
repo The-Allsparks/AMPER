@@ -22,7 +22,8 @@ class PackageBoundaryTest {
             "org.firstinspires.ftc.",
             "android.",
             "org.allsparks.amper.ftc.",
-            "org.allsparks.amper.tools."));
+            "org.allsparks.amper.tools.",
+            "org.allsparks.pulse."));
 
     @Test
     void coreDoesNotImportFtcAndroidOrDesktopTools() throws IOException {
@@ -43,7 +44,7 @@ class PackageBoundaryTest {
                 }
             }
         }
-        failIf(hits, "amper-core imported FTC, Android, amper-ftc, or amper-tools");
+        failIf(hits, "amper-core imported FTC, Android, amper-ftc, amper-tools, or PULSE");
     }
 
     @Test

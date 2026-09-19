@@ -67,6 +67,30 @@ class FtcArchitectureTest {
         }
     }
 
+    @Test
+    void ftcDoesNotDependOnPulse() throws IOException {
+        Path main = ftcMain();
+        List<String> hits = new ArrayList<String>();
+        try (java.util.stream.Stream<Path> walk = Files.walk(main)) {
+            walk.forEach(path -> {
+                if (!path.toString().endsWith(".java") || !Files.isRegularFile(path)) {
+                    return;
+                }
+                String[] lines = read(path).split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    String trimmed = lines[i].trim();
+                    if (trimmed.startsWith("import org.allsparks.pulse")) {
+                        hits.add(main.relativize(path).toString().replace('\\', '/') + ":" + (i + 1));
+                    }
+                }
+            });
+        }
+        if (!hits.isEmpty()) {
+            fail("amper-ftc imported org.allsparks.pulse (use contracts InputRegistrar/InputValues):\n"
+                    + String.join("\n", hits));
+        }
+    }
+
     private static Path ftcMain() {
         Path cwd = Paths.get("").toAbsolutePath().normalize();
         Path cur = cwd;
