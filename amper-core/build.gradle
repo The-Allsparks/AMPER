@@ -4,6 +4,9 @@ plugins {
 }
 
 dependencies {
+    // Contracts SPI only (SignalKey, InputRegistrar, InputValues). AMPER must
+    // not depend on org.allsparks.pulse — PULSE implements the SPI.
+    api "org.allsparks:allsparks-contracts:${rootProject.ext.contractsVersion}"
     testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

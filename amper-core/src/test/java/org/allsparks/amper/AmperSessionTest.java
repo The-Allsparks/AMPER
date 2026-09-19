@@ -175,4 +175,32 @@ class AmperSessionTest {
                 RevHubTelemetrySource.voltageOnly("hub", volts::get),
                 Collections.singletonList(motor));
     }
+
+    @Test
+    void observationSinkSeesObserveAndLifecycle() {
+        AtomicReference<Double> volts = new AtomicReference<>(12.4);
+        AtomicLong time = new AtomicLong(1_000_000L);
+        java.util.concurrent.atomic.AtomicInteger observations = new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicReference<String> lastLife =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        AmperSession session = session(new AtomicReference<>(0.0), volts, time, 0.0, false)
+                .observationSink(new org.allsparks.amper.observe.ElectricalObservationSink() {
+                    @Override
+                    public void onObservation(
+                            ElectricalObservation observation, org.allsparks.amper.telemetry.DriverTelemetry driver) {
+                        observations.incrementAndGet();
+                    }
+
+                    @Override
+                    public void onLifecycle(String name) {
+                        lastLife.set(name);
+                    }
+                });
+        session.initialize();
+        session.start();
+        session.observe();
+        session.stop();
+        assertTrue(observations.get() >= 1);
+        assertEquals("stop", lastLife.get());
+    }
 }

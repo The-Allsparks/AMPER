@@ -17,7 +17,7 @@ clock, filter
     ↑
 measure  ←  policy (sampling and numeric thresholds; not intervention)
     ↑
-battery, log, telemetry, adapters.rev
+battery, log, telemetry, adapters.rev, input
     ↑
 org.allsparks.amper.AmperSession   (composition root; OpMode façade)
     ↑
@@ -25,7 +25,7 @@ protect / coord / predict          (experimental; default-off)
 
 sim → production is allowed.
 production → sim is forbidden.
-amper-core → FTC / Android / amper-ftc / amper-tools is forbidden.
+amper-core → FTC / Android / amper-ftc / amper-tools / org.allsparks.pulse is forbidden.
 ```
 
 `PowerMonitor` currently takes a `PowerPolicy` for convenience. That is an accepted 0.1.x inversion (measure depending on policy config), not a license for measure to depend on `protect` or `coord`.
@@ -34,8 +34,8 @@ amper-core → FTC / Android / amper-ftc / amper-tools is forbidden.
 
 | Module | Dependency | Role |
 |--------|------------|------|
-| `amper-core` | Pure Java 8 | Models, filters, policy, logging, simulation. **No** `com.qualcomm` / Android |
-| `amper-ftc` | `amper-core` + FTC SDK at compile time on the robot | `AmperFtc`, `HardwareMap` / `DcMotorEx` / `VoltageSensor` adapters, FTC log sink |
+| `amper-core` | Pure Java 8 + `allsparks-contracts` | Models, filters, policy, logging, simulation, input SPI. **No** `com.qualcomm` / Android / PULSE |
+| `amper-ftc` | `amper-core` + FTC SDK at compile time on the robot | `AmperFtc`, `HardwareMap` / `DcMotorEx` / `VoltageSensor` adapters, FTC log sink. **No** PULSE import |
 | `amper-examples` | `amper-ftc` | Compile-checked OpModes |
 | `amper-tools` | `amper-core` | Desktop CSV analysis |
 | `amper-ftc-stubs` | none | Default desktop compile + JVM tests; **not published**, **not for TeamCode**. CI also compiles adapters against official RobotCore 11.2.0. |

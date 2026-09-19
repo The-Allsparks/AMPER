@@ -6,6 +6,8 @@ AMPER is maintained by [The Allsparks](https://github.com/The-Allsparks) (FTC Te
 
 ```powershell
 git clone https://github.com/The-Allsparks/AMPER.git
+# Sibling contracts checkout so includeBuild can substitute the input SPI.
+git clone https://github.com/The-Allsparks/allsparks-contracts.git
 cd AMPER
 .\gradlew.bat check
 .\gradlew.bat compileAgainstFtcSdk

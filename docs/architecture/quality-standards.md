@@ -8,9 +8,9 @@ These rules are enforced by tests where practical. Documentation alone is not ar
 |-------|----------|
 | `./gradlew check` | Broken compile, failing unit tests, examples that do not compile, stubs/tools leaking into robot artifacts |
 | `PassiveArchitectureTest` | `amper-core` calling `setPower`/`setVelocity` or importing FTC/Android |
-| `PackageBoundaryTest` | Core depending on FTC/Android/`amper-ftc`/`amper-tools`; production → `sim`; measure/filter/clock → intervention/log; policy → hardware |
+| `PackageBoundaryTest` | Core depending on FTC/Android/`amper-ftc`/`amper-tools`/PULSE; production → `sim`; measure/filter/clock → intervention/log; policy → hardware |
 | `HotPathGuardTest` | `Thread.sleep`, filesystem/network I/O, extra threads, or Stream/Collectors on the observe path |
-| `FtcArchitectureTest` | FTC adapters writing motors or depending on desktop tools |
+| `FtcArchitectureTest` | FTC adapters writing motors, depending on desktop tools, or importing PULSE |
 | `ObservePerformanceBudgetTest` | Unbounded logs; student presets polling every motor current; catastrophic desktop superlinear `observe()` cost |
 | `LoopOverheadStatsTest` | Broken percentile helpers used for DS `AMPER.p95Us` and match-summary p50/p95/p99 |
 | `compileAgainstFtcSdk` | Stub drift from RobotCore 11.2.0 |
@@ -22,6 +22,7 @@ GitHub Actions also runs `check` on Ubuntu and Windows, `sdk-compile`, `docs-str
 ## Java and Android compatibility
 
 - Ship Java 8 bytecode (`sourceCompatibility` / `targetCompatibility` 1.8).
+- `disableAutoTargetJvm()` is required so AMPER can compile against `allsparks-contracts` (Java 11) without raising Hub bytecode.
 - CI compiles with Temurin 17, matching FTC SDK 11.2 TeamCode.
 - Do not add a JVM-only library to robot modules without an Android/FTC note.
 - ArchUnit, PMD, and SpotBugs are **not** in this repository. Spotless (Palantir Java Format) is part of `check` except on `amper-ftc-stubs`. PMD/SpotBugs would fail hundreds of existing findings without a baseline.
