@@ -14,7 +14,7 @@ Schema authority: existing `/AMPER` keys in [field-selection.md](../logging/fiel
 | **MIMIC** | Observed bus voltage, per-motor command/current snapshots, Phase 0/1 identity grants (`RequestedEffort` = `GrantedEffort`, `Constrained` = false) | `/AMPER/System/*`, `/AMPER/Motors/*`, `/AMPER/Mechanisms/*` in AdvantageScope CSV; future narrow Java snapshot type TBD | schema `1`, library `0.1.0-rc.2` | MIMIC runs unchanged; no power envelope from AMPER |
 | **BEACON** | Driver-facing `PowerState`, validity, stall suspicion flags, loop overhead counters | `/AMPER/System/PowerState`, `/AMPER/System/MeasurementValidity`, `/AMPER/Motors/*/StallSuspected`, `/AMPER/Performance/*`; DS keys `AMPER`, `AMPER.V`, `AMPER.valid` | schema `1` | BEACON omits electrical health; conventional teleop continues |
 | **HELM** | Passive capability envelope: filtered voltage, min match voltage, selected-motors current sum, `PowerState` classification | Read-only snapshot from `AmperSession` + `/AMPER/System/*` exports; **no** chassis or mechanism authority | schema `1` | HELM stays `OFF` / observe-only per FORGE enablement |
-| **TRACE** | Time-series rows under `AMPER/...` via TeamCode `TraceAmperAdapter` | Library `ElectricalObservationSink` (NOOP default) called from `observe()` / `start()` / `stop()`. AMPER CSV ring stays. | schema `1` | Leave NOOP; AMPER still observes |
+| **TRACE** | Time-series rows under `AMPER/...` via TeamCode `AmperAdapter` | Library `ElectricalObservationSink` (NOOP default) called from `observe()` / `start()` / `stop()`. AMPER CSV ring stays. | schema `1` | Leave NOOP; AMPER still observes |
 
 ## Future request/grant (Phase 4+, not implemented)
 
