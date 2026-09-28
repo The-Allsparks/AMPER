@@ -25,3 +25,7 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # JUnit 6 needs Java 17; Hub libraries still compile tests for Java 8 bytecode.
+      - dependency-name: "org.junit:junit-bom"
+        update-types: ["version-update:semver-major"]
